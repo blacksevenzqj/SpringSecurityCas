@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.visa.dao.mybatis.VisaOrderDao">
+
+    <!-- 关联的嵌套查询（在collection中添加select属性）,二次查询。
+        不能使用，因为 在主查询 getVisaOrderMasterVo 执行后，动态数据库切面就返回了，并且 DynamicSwitchDataSourceHolder.clearDataSource(); 清除了 ThreadLocal<DynamicSwitchDataSourceGlobal>。
+        第二个SQL查询执行时，ThreadLocal<DynamicSwitchDataSourceGlobal> 为NULL，导致动态数据源不能切换。
+     -->
+    <!--<resultMap id="visaOrderMasterVoResultMap" type="school.management.business.visa.entity.order.VisaOrderMasterVo" >-->
+        <!--<collection column="{orderNo=order_num}" property="orderDetailList" ofType="school.management.business.visa.entity.order.VisaOrderDetail" select="getOrderDetailByOrderNum" >-->
+        <!--</collection>-->
+    <!--</resultMap>-->
+
+    <!--<select id="getVisaOrderMasterVo" resultMap="visaOrderMasterVoResultMap">-->
+        <!--SELECT a.* FROM dd_visa_order_master a where a.id = #{orderMasterId}-->
+    <!--</select>-->
+
+    <!--<resultMap id="visaOrderDetailResultMap" type="school.management.business.visa.entity.order.VisaOrderDetail" >-->
+        <!--<id column="id" property="id"/>-->
+        <!--<result column="order_no" property="orderNo"/>-->
+        <!--<result column="handle_visa_people_name" property="handleVisaPeopleName"/>-->
+        <!--<result column="handle_visa_people_phone" property="handleVisaPeoplePhone"/>-->
+        <!--<result column="price" property="price"/>-->
+        <!--<result column="create_time" property="createTime"/>-->
+        <!--<result column="del_flag" property="delFlag"/>-->
+    <!--</resultMap>-->
+
+    <!--<select id="getOrderDetailByOrderNum" resultMap="visaOrderDetailResultMap">-->
+        <!--SELECT a.* FROM dd_visa_order_detail a where a.order_no = #{orderNo}-->
+    <!--</select>-->
+
+
+    <!-- 关联一次性查询 -->
+    <resultMap id="visaOrderMasterVoResultMap" type="ass.management.business.visa.entity.order.VisaOrderMasterVo">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+        <result column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="visa_id" jdbcType="INTEGER" property="visaId" />
+        <result column="country_name" jdbcType="VARCHAR" property="countryName" />
+        <result column="combo_id" jdbcType="INTEGER" property="comboId" />
+        <result column="combo_name" jdbcType="VARCHAR" property="comboName" />
+        <result column="contact_user_name" jdbcType="VARCHAR" property="contactUserName" />
+        <result column="contact_user_phone" jdbcType="VARCHAR" property="contactUserPhone" />
+        <result column="contact_user_email" jdbcType="VARCHAR" property="contactUserEmail" />
+        <result column="buy_num" jdbcType="INTEGER" property="buyNum" />
+        <result column="order_payment_price" jdbcType="DECIMAL" property="orderAmount" />
+        <result column="order_status" jdbcType="INTEGER" property="orderStatus" />
+        <result column="order_cancel_remark" jdbcType="VARCHAR" property="orderCancelRemark" />
+        <result column="back_price" jdbcType="DECIMAL" property="backPrice" />
+        <result column="visa_type" jdbcType="VARCHAR" property="visaType" />
+        <result column="visa_address" jdbcType="VARCHAR" property="visaAddress" />
+        <result column="user_remark" jdbcType="VARCHAR" property="userRemark" />
+        <result column="send_visa_time" jdbcType="DATE" property="sendVisaTime" />
+        <result column="send_visa_info" jdbcType="VARCHAR" property="sendVisaInfo" />
+        <result column="create_time" jdbcType="DATE" property="createTime" />
+        <result column="del_flag" jdbcType="INTEGER" property="delFlag" />
+        <result column="order_name" jdbcType="VARCHAR" property="orderName" />
+        <result column="trade_type" jdbcType="VARCHAR" property="tradeType" />
+        <result column="uniform_payment_time" jdbcType="DATE" property="uniformPaymentTime" />
+        <result column="uniform_payment_result" jdbcType="VARCHAR" property="uniformPaymentResult" />
+        <result column="notify_payment_time" jdbcType="DATE" property="notifyPaymentTime" />
+        <result column="notify_payment_result" jdbcType="VARCHAR" property="notifyPaymentResult" />
+        <result column="payment_transaction_id" jdbcType="VARCHAR" property="paymentTransactionId" />
+        <collection property="orderDetailList" ofType="ass.management.business.visa.entity.order.VisaOrderDetail" >
+            <id column="detai_id" property="id"/>
+            <result column="order_no" property="orderNo"/>
+            <result column="handle_visa_people_name" property="handleVisaPeopleName"/>
+            <result column="handle_visa_people_phone" property="handleVisaPeoplePhone"/>
+            <result column="price" property="price"/>
+            <result column="create_time" property="createTime"/>
+            <result column="del_flag" property="delFlag"/>
+        </collection>
+    </resultMap>
+
+    <select id="getById" resultMap="visaOrderMasterVoResultMap">
+        SELECT a.*,b.id detai_id,b.order_no,b.handle_visa_people_name,b.handle_visa_people_phone,b.price,b.create_time,b.del_flag,
+        c.`userp_name` user_name, d.`national_name` country_name, e.`name` combo_name
+                FROM dd_visa_order_master a,dd_visa_order_detail b, yh_userp c, qz_visa d, qz_visa_combo e
+        WHERE a.order_num = b.order_no AND a.`user_id` = c.`userp_id` AND a.`visa_id` = d.`id` AND a.`combo_id` = e.`combo_id` AND a.id = #{id}
+    </select>
+
+
+    <select id="queryList" resultMap="visaOrderMasterVoResultMap">
+      SELECT a.*,c.`userp_name` user_name, d.`national_name` country_name, e.`name` combo_name
+        FROM dd_visa_order_master a,dd_visa_order_detail b, yh_userp c, qz_visa d, qz_visa_combo e
+        WHERE a.order_num = b.order_no AND a.`user_id` = c.`userp_id` AND a.`visa_id` = d.`id` AND a.`combo_id` = e.`combo_id`
+        <if test="orderNum != null and orderNum.length()>0"> AND a.order_num = #{orderNum} </if>
+        <if test="userName != null and userName.length()>0"> AND c.userp_name = #{userName} </if>
+        <if test="countryName != null and countryName.length()>0"> AND  d.national_name = #{countryName} </if>
+        <if test="comboName != null and comboName.length()>0"> AND e.name like CONCAT('%',#{comboName},'%')  </if>
+        ORDER BY a.create_time DESC
+    </select>
+
+
+    <update id="updateVisaOrderMaster" parameterType="ass.management.business.visa.entity.order.VisaOrderMaster">
+        UPDATE dd_visa_order_master
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="visaType != null and visaType.length()>0"> visa_type = #{visaType} , </if>
+            <if test="visaAddress != null and visaAddress.length()>0"> visa_address = #{visaAddress} , </if>
+            <if test="delFlag != null"> del_flag = #{delFlag} , </if>
+        </trim>
+    </update>
+
+    <update id="updateVisaOrderDetail" parameterType="ass.management.business.visa.entity.order.VisaOrderDetail">
+        update dd_visa_order_detail
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="handleVisaPeopleName != null and handleVisaPeopleName.length()>0"> handle_visa_people_name = #{handleVisaPeopleName} , </if>
+            <if test="handleVisaPeoplePhone != null and handleVisaPeoplePhone.length()>0"> handle_visa_people_phone = #{handleVisaPeoplePhone} , </if>
+            <if test="delFlag != null"> del_flag = #{delFlag} , </if>
+        </trim>
+    </update>
+
+</mapper>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.admin.modules.sys.dao.SysUserDao">
+
+	<select id="get" resultType="ass.management.admin.modules.sys.entity.SysUserEntity">
+		SELECT a.* FROM `sys_user` a WHERE a.`username` = #{username}
+	</select>
+
+	<select id="getById" resultType="ass.management.admin.modules.sys.entity.SysUserEntity">
+		SELECT a.* FROM `sys_user` a WHERE a.`user_id` = #{id}
+	</select>
+
+	<select id="queryList" resultType="ass.management.admin.modules.sys.entity.SysUserEntity">
+		select a.* from sys_user a
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="username != null and username.length()>0"> AND a. username = #{username}
+			</if>
+		</trim>
+	</select>
+
+	<!-- 查询用户的所有权限 -->
+	<select id="queryAllPerms" resultType="string">
+		select m.perms from sys_user_role ur 
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+			LEFT JOIN sys_menu m on rm.menu_id = m.menu_id 
+		where ur.user_id = #{userId}
+	</select>
+	
+	<!-- 查询用户的所有菜单ID --> 
+	<select id="queryAllMenuId" resultType="long">
+		select distinct rm.menu_id from sys_user_role ur 
+			LEFT JOIN sys_role_menu rm on ur.role_id = rm.role_id 
+		where ur.user_id = #{userId}
+	</select>
+	
+	<delete id="deleteBatchByIds">
+		delete from sys_user where user_id in 
+		<foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="userId" parameterType="ass.management.admin.modules.sys.entity.SysUserEntity">
+		insert into sys_user
+        (
+          `username`,
+          `password`,
+          `salt`,
+          `email`,
+		  `mobile`,
+		  `status`,
+		  `create_date`
+        )
+        VALUES (
+          #{username},
+          #{password},
+          #{salt},
+          #{email},
+          #{mobile},
+          #{status},
+          #{createDate}
+        )
+	</insert>
+
+	<update id="update" parameterType="ass.management.admin.modules.sys.entity.SysUserEntity">
+		UPDATE sys_user
+		<trim prefix="set" suffixOverrides="," suffix=" where user_id = #{userId} ">
+			<if test="username != null and username.length()>0"> username = #{username} , </if>
+			<if test="password != null and password.length()>0"> password = #{password} , </if>
+			<if test="salt != null and salt.length()>0"> salt = #{salt} , </if>
+			<if test="email != null and email.length()>0"> email = #{email} , </if>
+			<if test="mobile != null and mobile.length()>0"> mobile = #{mobile} , </if>
+			<if test="status != null"> status = #{status} , </if>
+		</trim>
+	</update>
+
+	<update id="updatePassword" >
+		update sys_user set password = #{newPassword}
+		where user_id = #{userId}
+	</update>
+
+
+</mapper>

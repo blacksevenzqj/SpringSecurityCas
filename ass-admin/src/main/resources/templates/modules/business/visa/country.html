@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>国家列表</title>
+	<#include "/header.html">
+		</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-3">
+				<input type="text" class="form-control" v-model="q.nationalName" @keyup.enter="query" placeholder="国家名称">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+			<#if shiro.hasPermission("business:visa:country:save")>
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("business:visa:country:update")>
+				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("business:visa:country:del")>
+				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+		</div>
+		<table id="jqGrid"></table>
+		<div id="jqGridPager"></div>
+	</div>
+
+	<div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-3 control-label">国家名称</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="country.nationalName" placeholder="国家名称"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">国家英文名称</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="country.nationalEnglishName" placeholder="国家英文名称"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">国家二字码</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="country.nationalCode" placeholder="国家二字码"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">国旗图片</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="country.nationalFlag" placeholder="国旗图片"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">地区</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="country.area" placeholder="地区"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">热门签证配置</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="country.hotVisa" placeholder="热门签证配置"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">置顶信息描述</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="country.topDescription" placeholder="置顶信息描述"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">顶部签证宣传标志</div>
+				<label class="radio-inline">
+					<input type="radio" name="topFlag" value="0" v-model="country.topFlag"/> 默认
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="topFlag" value="1" v-model="country.topFlag"/> 顶部设置
+				</label>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">热门签证排序设置</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="country.orderFlag" placeholder="热门签证排序设置"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">是否上线标志</div>
+				<label class="radio-inline">
+					<input type="radio" name="onlineFlag" value="1" v-model="country.onlineFlag"/> 上线
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="onlineFlag" value="2" v-model="country.onlineFlag"/> 下线
+				</label>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">办理签证最低价格</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="country.minPrice" placeholder="办理签证最低价格"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">办理签证最高价格</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="country.maxPrice" placeholder="办理签证最高价格"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">状态</div>
+				<label class="radio-inline">
+					<input type="radio" name="delFlag" value="-1" v-model="country.delFlag"/> 禁用
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="delFlag" value="0" v-model="country.delFlag"/> 正常
+				</label>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+<script src="${request.contextPath}/statics/js/modules/business/visa/country.js?_${.now?long}"></script>
+</body>
+</html>

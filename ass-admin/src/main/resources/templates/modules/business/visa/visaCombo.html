@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>套餐列表</title>
+	<#include "/header.html">
+		</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-3">
+				<input type="text" class="form-control" v-model="q.visaName" @keyup.enter="query" placeholder="签证名称">
+			</div>
+			<div class="form-group col-sm-3">
+				<input type="text" class="form-control" v-model="q.name" @keyup.enter="query" placeholder="套餐名称">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+			<#if shiro.hasPermission("business:visa:visaCombo:save")>
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<!--<#if shiro.hasPermission("sys:user:update")>-->
+				<!--<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>-->
+			<!--</#if>-->
+			<#if shiro.hasPermission("business:visa:visaCombo:del")>
+				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+		</div>
+		<table id="jqGrid"></table>
+		<div id="jqGridPager"></div>
+	</div>
+
+	<div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+			<div class="form-group">
+				<div class="col-sm-2 control-label">签证国家</div>
+				<div class="col-sm-10">
+					<label v-for="country in countryList" class="radio-inline">
+						<input type="radio" :value="country.id" name="visaId" v-model="visaCombo.visaId">{{country.nationalName}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">基本信息</div>
+				<div class="col-sm-10">
+					<label v-for="baseInformation in baseInformationList" class="radio-inline">
+						<input type="radio" :value="baseInformation.baseInformationId"  name="baseInformationId" v-model="visaCombo.baseInformationId">{{baseInformation.name}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">预定须知</div>
+				<div class="col-sm-10">
+					<label v-for="needKnow in needKnowList" class="checkbox-inline">
+						<input type="checkbox" :value="needKnow.id"  v-model="visaCombo.needKnowIds">{{needKnow.title}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">办理流程</div>
+				<div class="col-sm-10">
+					<label v-for="procedures in proceduresList" class="checkbox-inline">
+						<input type="checkbox" :value="procedures.id"  v-model="visaCombo.proceduresIds">{{procedures.title}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">在校学生</div>
+				<div class="col-sm-10">
+					<label v-for="material in materialList" class="checkbox-inline">
+						<input type="checkbox" :value="material.id"  v-model="visaCombo.studentMaterialIds">{{material.title}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">在校学生资料描述</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.studentMaterialDesc" placeholder="在校学生资料描述"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">在职人员</div>
+				<div class="col-sm-10">
+					<label v-for="material in materialList" class="checkbox-inline">
+						<input type="checkbox" :value="material.id"  v-model="visaCombo.officersMaterialIds">{{material.title}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">在职人员资料描述</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.officersMaterialDesc" placeholder="在职人员资料描述"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">退休人员</div>
+				<div class="col-sm-10">
+					<label v-for="material in materialList" class="checkbox-inline">
+						<input type="checkbox" :value="material.id"  v-model="visaCombo.retireesMaterialIds">{{material.title}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">退休人员资料描述</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.retireesMaterialDesc" placeholder="退休人员资料描述"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-2 control-label">自由职业者</div>
+				<div class="col-sm-10">
+					<label v-for="material in materialList" class="checkbox-inline">
+						<input type="checkbox" :value="material.id"  v-model="visaCombo.freelancerMaterialIds">{{material.title}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">自由职业者资料描述</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.freelancerMaterialDesc" placeholder="自由职业者资料描述"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">资料邮箱</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.acceptEmail" placeholder="资料邮箱"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">资料邮寄地址</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.acceptAddress" placeholder="资料邮寄地址"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-3 control-label">套餐序号</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.comboNum" placeholder="套餐序号"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">套餐名字</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.name" placeholder="套餐名字"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">套餐描述</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.description" placeholder="套餐描述"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">行情价</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.marketPrice" placeholder="行情价"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">套餐价格</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="visaCombo.price" placeholder="套餐价格"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">套餐上线标识</div>
+				<label class="radio-inline">
+					<input type="radio" name="onlineFlag" value="1" v-model="visaCombo.onlineFlag"/> 上线
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="onlineFlag" value="2" v-model="visaCombo.onlineFlag"/> 下线
+				</label>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">状态</div>
+				<label class="radio-inline">
+					<input type="radio" name="delFlag" value="-1" v-model="visaCombo.delFlag"/> 禁用
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="delFlag" value="0" v-model="visaCombo.delFlag"/> 正常
+				</label>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+<script src="${request.contextPath}/statics/js/modules/business/visa/visaCombo.js?_${.now?long}"></script>
+</body>
+</html>

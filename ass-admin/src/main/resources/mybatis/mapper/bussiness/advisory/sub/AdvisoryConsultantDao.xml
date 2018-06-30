@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.advisory.dao.AdvisoryConsultantDao">
+
+    <select id="queryList" resultType="ass.management.business.advisory.entity.AdvisoryConsultant">
+        select a.* from advisory_consultant a
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="consultantName != null and consultantName.length()>0"> AND a. consultant_name like CONCAT('%',#{consultantName},'%') </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getById" resultType="ass.management.business.advisory.entity.AdvisoryConsultant">
+        select a.* from advisory_consultant a where a.id = #{id}
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ass.management.business.advisory.entity.AdvisoryConsultant">
+        insert into advisory_consultant
+        (
+        `userp_id`,
+        `photo_url`,
+        `motto`,
+        `consultant_name`,
+        `job_title`,
+        `consultant_type`,
+        `consultant_level`,
+        `create_time`
+        )
+        VALUES (
+        #{userpId},
+        #{photoUrl},
+        #{motto},
+        #{consultantName},
+        #{jobTitle},
+        #{consultantType},
+        #{consultantLevel},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="ass.management.business.advisory.entity.AdvisoryConsultant">
+        UPDATE advisory_consultant
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="userpId != null"> userp_id = #{userpId} , </if>
+            <if test="photoUrl != null"> photo_url = #{photoUrl} , </if>
+            <if test="motto != null and motto.length()>0"> motto = #{motto} , </if>
+            <if test="consultantName != null and consultantName.length()>0"> consultant_name = #{consultantName} , </if>
+            <if test="jobTitle != null "> job_title = #{jobTitle} , </if>
+            <if test="consultantType != null"> consultant_type = #{consultantType} , </if>
+            <if test="consultantLevel != null "> consultant_level = #{consultantLevel} , </if>
+            <if test="createTime != null"> create_time = #{createTime} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from advisory_consultant where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

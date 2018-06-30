@@ -1,0 +1,105 @@
+# Tomcat
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-threads: 1000
+    min-spare-threads: 30
+  port: 8082
+  context-path: /ass-admin
+
+# mysql
+spring:
+  # DataSource Config
+  datasource:
+    write:
+      url: jdbc:mysql://127.0.0.1:3306/renren_security_nodept?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true
+      username: root
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
+      max-active: 20
+      initial-size: 1
+      min-idle: 3
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x' FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,log4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=3000
+      # 合并多个DruidDataSource的监控数据
+      #spring.datasource.useGlobalDataSourceStat=true
+    read:
+      url: jdbc:mysql://127.0.0.1:3306/renren_security_nodept?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true
+      username: root
+      password: root
+      driver-class-name: com.mysql.jdbc.Driver
+      max-active: 20
+      initial-size: 1
+      min-idle: 3
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x' FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+      filters: stat,wall,log4j
+      # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=3000
+      # 合并多个DruidDataSource的监控数据
+      #spring.datasource.useGlobalDataSourceStat=true
+
+  # jackson时间格式化
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+
+  http:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+      enabled: true
+
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password:      # 密码（默认为空）
+    timeout: 6000  # 连接超时时长（毫秒）
+    pool:
+      max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+      max-wait: -1      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-idle: 10      # 连接池中的最大空闲连接
+      min-idle: 5       # 连接池中的最小空闲连接
+
+  freemarker:
+    suffix: .html
+    request-context-attribute: request
+
+  aop:
+    proxy-target-class: true
+
+
+# Mybatis配置
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/**/*.xml
+
+# reasonable分页参数合理化
+pagehelper:
+  reasonable: false
+
+# 日志级别
+logging:
+  config: classpath:config/logback/logback-spring.xml
+
+ass:
+  redisSwitch:
+    globalOpen: false  # 是否开启redis缓存  true开启   false关闭
+    shiroRedisOpen: false # true表示shiro session存到redis里，需要开启redis，才会生效【分布式场景】
+

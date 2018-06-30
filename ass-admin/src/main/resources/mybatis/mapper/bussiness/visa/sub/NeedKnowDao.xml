@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.visa.dao.mybatis.NeedKnowDao">
+
+    <select id="queryList" resultType="ass.management.business.visa.entity.NeedKnow">
+        select a.* from qz_need_know a
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="title != null and title.length()>0"> AND a. title like CONCAT('%',#{title},'%') </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getById" resultType="ass.management.business.visa.entity.NeedKnow">
+        select * from qz_need_know where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="ass.management.business.visa.entity.NeedKnow">
+    insert into qz_need_know
+    (
+    `title`,
+    `content`,
+    `create_time`,
+    `del_flag`
+    )
+    VALUES (
+      #{title},
+      #{content},
+      #{createTime},
+      #{delFlag}
+    )
+    </insert>
+
+    <update id="update" parameterType="ass.management.business.visa.entity.NeedKnow">
+        UPDATE qz_need_know
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="title != null and title.length()>0"> title = #{title} , </if>
+            <if test="content != null and content.length()>0"> content = #{content} , </if>
+            <if test="createTime != null" > create_time = #{createTime} , </if>
+            <if test="delFlag != null" > del_flag = #{delFlag} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from qz_need_know where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

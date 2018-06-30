@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.admin.modules.sys.dao.SysMenuDao">
+
+	<select id="getById" resultType="ass.management.admin.modules.sys.entity.SysMenuEntity">
+		SELECT a.* FROM `sys_menu` a WHERE a.`menu_id` = #{id}
+	</select>
+
+	<select id="queryListParentId" resultType="ass.management.admin.modules.sys.entity.SysMenuEntity">
+		select * from sys_menu where parent_id = #{parentId} order by order_num asc 
+	</select>
+	
+	<select id="queryNotButtonList" resultType="ass.management.admin.modules.sys.entity.SysMenuEntity">
+		select * from sys_menu where type != 2 order by order_num asc 
+	</select>
+
+	<select id="findList" parameterType="ass.management.admin.modules.sys.entity.SysMenuEntity" resultType="ass.management.admin.modules.sys.entity.SysMenuEntity">
+		select * from sys_menu order by order_num asc
+	</select>
+
+	<insert id="insert" useGeneratedKeys="true" keyProperty="menuId" parameterType="ass.management.admin.modules.sys.entity.SysMenuEntity">
+		insert into sys_menu
+		(
+		`parent_id`,
+		`name`,
+		`url`,
+		`perms`,
+		`type`,
+		`icon`,
+		`order_num`,
+		`create_date`
+		)
+		VALUES (
+		#{parentId},
+		#{name},
+		#{url},
+		#{perms},
+		#{type},
+		#{icon},
+		#{orderNum},
+		#{createDate}
+		)
+	</insert>
+
+	<update id="update" parameterType="ass.management.admin.modules.sys.entity.SysMenuEntity">
+		UPDATE sys_menu
+		<trim prefix="set" suffixOverrides="," suffix=" where menu_id = #{menuId} ">
+			<if test="parentId != null"> parent_id = #{parentId} , </if>
+			<if test="name != null and name.length()>0"> name = #{name} ,</if>
+			<if test="url != null and url.length()>0"> url = #{url} ,</if>
+			<if test="perms != null and perms.length()>0"> perms = #{perms} ,</if>
+			<if test="type != null"> type = #{type} ,</if>
+			<if test="icon != null and icon.length()>0"> icon = #{icon} ,</if>
+			<if test="orderNum != null"> order_num = #{orderNum} ,</if>
+		</trim>
+	</update>
+
+</mapper>

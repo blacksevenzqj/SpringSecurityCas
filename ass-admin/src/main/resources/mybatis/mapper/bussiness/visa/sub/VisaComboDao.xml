@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.visa.dao.mybatis.VisaComboDao">
+
+    <select id="queryList" resultType="ass.management.business.visa.entity.VisaCombo">
+        select a.* from qz_visa_combo a
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="name != null and name.length()>0"> AND a. name like CONCAT('%',#{name},'%') </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getById" resultType="ass.management.business.visa.entity.VisaCombo">
+        select * from qz_visa_combo where combo_id = #{comboId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="comboId" parameterType="ass.management.business.visa.entity.VisaCombo">
+    insert into qz_visa_combo
+    (
+    `visa_id`,
+    `combo_num`,
+    `name`,
+    `description`,
+    `market_price`,
+    `price`,
+    `online_flag`,
+    `create_time`,
+    `del_flag`
+    )
+    VALUES (
+      #{visaId},
+      #{comboNum},
+      #{name},
+      #{description},
+      #{marketPrice},
+      #{price},
+      #{onlineFlag},
+      #{createTime},
+      #{delFlag}
+    )
+    </insert>
+
+    <update id="update" parameterType="ass.management.business.visa.entity.VisaCombo">
+        UPDATE qz_visa_combo
+        <trim prefix="set" suffixOverrides="," suffix=" where combo_id = #{comboId} ">
+            <if test="comboNum != null"> combo_num = #{comboNum} , </if>
+            <if test="name != null and name.length()>0"> name = #{name} , </if>
+            <if test="description != null and description.length()>0"> description = #{description} , </if>
+            <if test="marketPrice != null"> market_price = #{marketPrice} , </if>
+            <if test="price != null" > price = #{price} , </if>
+            <if test="onlineFlag != null" > online_flag = #{onlineFlag} , </if>
+            <if test="createTime != null" > create_time = #{createTime} , </if>
+            <if test="delFlag != null" > del_flag = #{delFlag} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from qz_visa_combo where combo_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

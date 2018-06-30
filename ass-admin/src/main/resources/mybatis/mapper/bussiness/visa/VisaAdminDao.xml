@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.admin.modules.business.visa.dao.VisaAdminDao">
+
+    <select id="visaComboVoQueryList" resultType="ass.management.admin.modules.business.visa.entity.VisaComboVo">
+        SELECT a.*,b.`national_name` as visaName FROM `qz_visa_combo` a JOIN `qz_visa` b ON a.`visa_id` = b.`id`
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="name != null and name.length()>0"> AND a.name like CONCAT('%',#{name},'%') </if>
+            <if test="visaName != null and visaName.length()>0"> AND b.national_name like CONCAT('%',#{visaName},'%') </if>
+        </trim>
+        ORDER BY a.visa_id ASC, a.create_time DESC
+    </select>
+
+
+    <delete id="cbaseInformationDelBatchBycomboIds">
+        delete from qz_combo_ralation_base_information where combo_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="cneedKnowDelBatchBycomboIds">
+        delete from qz_combo_ralation_need_know where combo_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="handleProceduresDelBatchBycomboIds">
+        delete from qz_handle_procedures where combo_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="roleMaterialDelBatchBycomboIds">
+        delete from qz_role_material where combo_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

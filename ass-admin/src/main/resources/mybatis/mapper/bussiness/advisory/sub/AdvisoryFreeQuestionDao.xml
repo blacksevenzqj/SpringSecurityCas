@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.advisory.dao.AdvisoryFreeQuestionDao">
+
+    <select id="queryList" resultType="ass.management.business.advisory.entity.AdvisoryFreeQuestion">
+        select a.* from advisory_free_question a
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="question != null and question.length()>0"> AND a. question like CONCAT('%',#{question},'%') </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getById" resultType="ass.management.business.advisory.entity.AdvisoryFreeQuestion">
+        select * from advisory_free_question where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="ass.management.business.advisory.entity.AdvisoryFreeQuestion">
+    insert into advisory_free_question
+    (
+    `consultant_id`,
+    `userp_id`,
+    `duty_day`,
+    `question`,
+    `question_media_type`,
+    `question_time`,
+    `answer`,
+    `answer_media_type`,
+    `answer_time`,
+    `create_time`
+    )
+    VALUES (
+      #{consultantId},
+      #{userpId},
+      #{dutyDay},
+      #{question},
+      #{questionMediaType},
+      #{questionTime},
+      #{answer},
+      #{answerMediaType},
+      #{answerTime},
+      #{createTime}
+    )
+    </insert>
+
+    <update id="update" parameterType="ass.management.business.advisory.entity.AdvisoryFreeQuestion">
+        UPDATE advisory_free_question
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="consultantId != null "> consultant_id = #{consultantId} , </if>
+            <if test="userpId != null "> userp_id = #{userpId} , </if>
+            <if test="dutyDay != null "> duty_day = #{dutyDay} , </if>
+            <if test="questionTime != null "> question_time = #{questionTime} , </if>
+            <if test="answerTime != null "> answer_time = #{answerTime} , </if>
+            <if test="question != null and question.length()>0"> question = #{question} , </if>
+            <if test="questionMediaType != null "> question_media_type = #{questionMediaType} , </if>
+            <if test="answer != null and answer.length()>0"> answer = #{answer} , </if>
+            <if test="answerMediaType != null "> answer_media_type = #{answerMediaType} , </if>
+            <if test="createTime != null" > create_time = #{createTime} , </if>
+            <if test="delFlag != null" > del_flag = #{delFlag} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from advisory_free_question where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

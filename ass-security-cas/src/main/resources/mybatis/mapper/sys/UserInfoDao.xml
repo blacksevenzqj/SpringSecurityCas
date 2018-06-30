@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.security.modules.sys.dao.UserInfoDao">
+
+	<!-- 关联一次性查询 -->
+	<resultMap id="userInfoMap" type="ass.management.security.modules.sys.entity.UserInfo">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="username" jdbcType="VARCHAR" property="username" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="salt" jdbcType="VARCHAR" property="salt" />
+		<result column="state" jdbcType="INTEGER" property="state" />
+		<result column="persontype" jdbcType="INTEGER" property="persontype" />
+		<collection property="authorities" ofType="ass.management.security.modules.sys.entity.AuthorityInfo" >
+			<result column="authority" jdbcType="VARCHAR" property="authority" />
+		</collection>
+	</resultMap>
+
+	<select id="get" resultType="ass.management.security.modules.sys.entity.UserInfo">
+		SELECT a.* FROM `lszw_account` a WHERE a.`username` = #{username}
+	</select>
+
+	<select id="getById" resultType="ass.management.security.modules.sys.entity.UserInfo">
+		SELECT a.* FROM `lszw_account` a WHERE a.`id` = #{id}
+	</select>
+
+	<!-- 查询用户的所有权限 -->
+	<select id="queryAllPerms" resultMap="userInfoMap">
+		SELECT a.id,a.username,a.password,a.salt,a.state,a.persontype,d.id oid,d.permission authority FROM lszw_account a
+			LEFT JOIN lszw_account_role b ON a.id = b.account_id
+			LEFT JOIN lszw_role_menu c ON b.role_id = c.role_id
+			LEFT JOIN lszw_menu d ON c.menu_id = d.id
+		WHERE a.username = #{username} AND d.permission IS NOT NULL AND LENGTH(TRIM(d.permission))> 0
+	</select>
+
+</mapper>

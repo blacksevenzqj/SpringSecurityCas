@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.admin.modules.sys.dao.SysRoleDao">
+
+    <select id="getById" resultType="ass.management.admin.modules.sys.entity.SysRoleEntity">
+        SELECT a.* FROM `sys_role` a WHERE a.`role_id` = #{id}
+    </select>
+
+    <select id="queryList" resultType="ass.management.admin.modules.sys.entity.SysRoleEntity">
+        select a.* from sys_role a order by a.create_date desc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="roleId" parameterType="ass.management.admin.modules.sys.entity.SysRoleEntity">
+        insert into sys_role
+        (
+        `role_name`,
+        `remark`,
+        `create_date`
+        )
+        VALUES (
+        #{roleName},
+        #{remark},
+        #{createDate}
+        )
+    </insert>
+
+    <update id="update" parameterType="ass.management.admin.modules.sys.entity.SysRoleEntity">
+        UPDATE sys_role
+        <trim prefix="set" suffixOverrides="," suffix=" where role_id = #{roleId} ">
+            <if test="roleName != null and roleName.length()>0"> role_name = #{roleName} , </if>
+            <if test="remark != null and remark.length()>0"> remark = #{remark} ,
+            </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from sys_role
+        where role_id IN
+        <foreach collection="ids" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

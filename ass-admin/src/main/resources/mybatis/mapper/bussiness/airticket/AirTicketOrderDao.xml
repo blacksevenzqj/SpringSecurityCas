@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.admin.modules.business.airticket.dao.AirTicketOrderDao">
+
+    <!-- 关联一次性查询 -->
+    <resultMap id="airTicketOrderResultMap" type="ass.management.business.airticket.entity.vo.AirTicketOrderVo">
+        <id column="main_id" jdbcType="INTEGER" property="id" />
+        <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+        <result column="ticket_order_type" jdbcType="VARCHAR" property="ticketOrderType" />
+        <result column="order_changing_type" jdbcType="VARCHAR" property="orderChangingType" />
+        <result column="userp_id" jdbcType="INTEGER" property="userpId" />
+        <result column="user_name" jdbcType="VARCHAR" property="userName" />
+        <result column="order_people_num" jdbcType="INTEGER" property="orderPeopleNum" />
+        <result column="order_payment_price" jdbcType="DOUBLE" property="orderAmount" />
+        <result column="main_order_status" jdbcType="VARCHAR" property="orderStatus" />
+        <result column="contact_user_name" jdbcType="VARCHAR" property="contactUserName" />
+        <result column="contact_user_phone" jdbcType="VARCHAR" property="contactUserPhone" />
+        <result column="reimbursement_voucher" jdbcType="VARCHAR" property="reimbursementVoucher" />
+        <result column="create_date" jdbcType="DATE" property="createDate" />
+        <result column="update_date" jdbcType="DATE" property="updateDate" />
+        <result column="del_flag" jdbcType="VARCHAR" property="delFlag" />
+        <collection property="routingList" ofType="ass.management.business.airticket.entity.fobook.DailyLowestPriceVO" >
+            <id column="id" jdbcType="INTEGER" property="id"/>
+            <result column="order_num" jdbcType="VARCHAR" property="orderNum"/>
+            <result column="ticket_order_type" jdbcType="VARCHAR" property="ticketOrderType"/>
+            <result column="ticket_routing_type" jdbcType="VARCHAR" property="ticketRoutingType"/>
+            <result column="org_city_name" jdbcType="VARCHAR" property="orgCityName"/>
+            <result column="dst_city_name" jdbcType="VARCHAR" property="dstCityName"/>
+            <result column="distance" jdbcType="DOUBLE" property="distance"/>
+            <result column="airline_company" jdbcType="VARCHAR" property="airlineCompany"/>
+            <result column="flight_no" jdbcType="VARCHAR" property="flightNo"/>
+            <result column="org_airport_name" jdbcType="VARCHAR" property="orgAirportName"/>
+            <result column="arr_airport_name" jdbcType="VARCHAR" property="arrAirportName"/>
+            <result column="dep_date_time" jdbcType="DATE" property="depDateTime"/>
+            <result column="arri_date_time" jdbcType="DATE" property="arriDateTime"/>
+            <result column="meal" jdbcType="VARCHAR" property="meal"/>
+            <result column="plane_type" jdbcType="VARCHAR" property="planeType"/>
+            <result column="stop_num" jdbcType="INTEGER" property="stopnum"/>
+            <result column="seat_code" jdbcType="VARCHAR" property="seatCode"/>
+            <result column="seat_msg" jdbcType="VARCHAR" property="seatMsg"/>
+            <result column="order_status" jdbcType="VARCHAR" property="orderStatus"/>
+            <result column="create_date" jdbcType="DATE" property="createDate"/>
+            <result column="update_date" jdbcType="DATE" property="updateDate"/>
+            <result column="del_flag" jdbcType="VARCHAR" property="delFlag"/>
+        </collection>
+    </resultMap>
+
+
+    <select id="airTicketOrderQueryPageMap" resultMap="airTicketOrderResultMap">
+        SELECT a.id main_id, a.order_num, a.ticket_order_type ticket_order_type, a.order_changing_type, a.userp_id, a.order_people_num, a.order_payment_price, a.main_order_status,
+                a.contact_user_name, a.contact_user_phone, a.reimbursement_voucher, a.create_date, a.update_date, a.del_flag,
+                b.*,c.`userp_name` user_name
+        FROM `air_ticket_order` a JOIN `air_ticket_routing` b ON a.`order_num` = b.`order_num` JOIN `yh_userp` c ON a.`userp_id` = c.`userp_id`
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="orderNum != null and orderNum.length()>0"> AND a. order_num = #{orderNum} </if>
+            <if test="userpName != null and userpName.length()>0"> AND c.`userp_name` = #{userpName} </if>
+            <if test="contactUserName != null and contactUserName.length()>0"> AND a.`contact_user_name` = #{contactUserName} </if>
+            <if test="ticketOrderType != null and ticketOrderType.length()>0"> AND a.`ticket_order_type` = #{ticketOrderType} </if>
+        </trim>
+        ORDER BY a.create_date DESC
+    </select>
+
+
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.visa.dao.mybatis.RoleMaterialDao">
+
+    <insert id="insert" parameterType="ass.management.business.visa.entity.RoleMaterial">
+    insert into qz_role_material
+    (
+    `visa_id`,
+    `combo_id`,
+    `role_name`,
+    `role_type`,
+    `material_num`,
+    `descrption`,
+    `material_ids`,
+    `accept_email`,
+    `accept_address`,
+    `create_time`,
+    `del_flag`
+    )
+    VALUES (
+      #{visaId},
+      #{comboId},
+      #{roleName},
+      #{roleType},
+      #{materialNum},
+      #{descrption},
+      #{materialIds},
+      #{acceptEmail},
+      #{acceptAddress},
+      #{createTime},
+      #{delFlag}
+    )
+    </insert>
+
+    <update id="update" parameterType="ass.management.business.visa.entity.RoleMaterial">
+        UPDATE qz_role_material
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="visaId != null"> visa_id = #{visaId} , </if>
+            <if test="comboId != null"> combo_id = #{comboId} , </if>
+            <if test="roleName != null and roleName.length()>0"> role_name = #{roleName} , </if>
+            <if test="roleType != null"> role_type = #{roleType} , </if>
+            <if test="materialNum != null" > material_num = #{materialNum} , </if>
+            <if test="descrption != null and descrption.length()>0" > descrption = #{descrption} , </if>
+            <if test="materialIds != null and materialIds.length()>0" > material_ids = #{materialIds} , </if>
+            <if test="acceptEmail != null and acceptEmail.length()>0" > accept_email = #{acceptEmail} , </if>
+            <if test="acceptAddress != null and acceptAddress.length()>0" > accept_address = #{acceptAddress} , </if>
+            <if test="createTime != null" > create_time = #{createTime} , </if>
+            <if test="delFlag != null" > del_flag = #{delFlag} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from qz_role_material where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

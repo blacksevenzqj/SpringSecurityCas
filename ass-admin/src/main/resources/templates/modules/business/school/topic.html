@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>今日热点列表</title>
+	<#include "/header.html">
+	</head>
+	<body>
+		<div id="rrapp" v-cloak>
+			<div v-show="showList">
+				<div class="grid-btn">
+					<div class="form-group col-sm-2">
+						<input type="text" class="form-control" v-model="q.title" @keyup.enter="query" placeholder="话题标题">
+					</div>
+					<a class="btn btn-default" @click="query">查询</a>
+					<#if shiro.hasPermission("business:school:topic:save")>
+					<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+					</#if>
+					<#if shiro.hasPermission("business:school:topic:update")>
+					<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+					</#if>
+					<#if shiro.hasPermission("business:school:topic:del")>
+					<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+					</#if>
+				</div>
+				<table id="jqGrid"></table>
+				<div id="jqGridPager"></div>
+			</div>
+
+			<div v-show="!showList" class="panel panel-default">
+				<div class="panel-heading">{{title}}</div>
+				<form class="form-horizontal">
+					<div class="form-group">
+						<div class="col-sm-2 control-label">话题标题</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" v-model="topic.title" placeholder="话题标题"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">话题封面</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" v-model="topic.topicImgUrl" placeholder="话题封面"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">话题内容</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" v-model="topic.content" placeholder="话题内容"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">话题说明</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" v-model="topic.instraction" placeholder="话题说明"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">热点话题设置</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" v-model="topic.hotTopic" placeholder="热点话题设置：1,2,3"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">话题类型</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" v-model="topic.topicType" placeholder="话题类型：1，图文，2，声音，3，视频，4，文章"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">状态</div>
+						<label class="radio-inline">
+							<input type="radio" name="delFlag" value="-1" v-model="topic.delFlag"/> 禁用
+						</label>
+						<label class="radio-inline">
+							<input type="radio" name="delFlag" value="0" v-model="topic.delFlag"/> 正常
+						</label>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label"></div>
+						<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+						&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+					</div>
+				</form>
+			</div>
+		</div>
+	<script src="${request.contextPath}/statics/js/modules/business/school/topic.js?_${.now?long}"></script>
+	</body>
+</html>

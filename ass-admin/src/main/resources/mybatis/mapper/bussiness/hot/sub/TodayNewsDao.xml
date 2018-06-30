@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.hot.dao.TodayNewsDao">
+
+    <select id="queryList" resultType="ass.management.business.hot.entity.TodayNews">
+        select a.* from hot_todaynews a
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="title != null and title.length()>0"> AND a. title like CONCAT('%',#{title},'%') </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getById" resultType="ass.management.business.hot.entity.TodayNews">
+        select a.* from hot_todaynews a where a.id = #{id}
+    </select>
+
+ 	<!-- 新增 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ass.management.business.hot.entity.TodayNews">
+        insert into hot_todaynews
+        (
+        `sys_user_id`,
+        `title`,
+        `case_cover_url`,
+        `news_text_url`,
+        `hot_time`,
+        `create_time`
+        )
+        VALUES (
+        #{sysUserId},
+        #{title},
+        #{caseCoverUrl},
+        #{newsTextUrl},
+        #{hotTime},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="ass.management.business.hot.entity.TodayNews">
+        UPDATE hot_todaynews
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="sysUserId != null"> sys_user_id = #{sysUserId} , </if>
+            <if test="title != null and title.length()>0"> title = #{title} , </if>
+            <if test="caseCoverUrl != null"> case_cover_url = #{caseCoverUrl} , </if>
+            <if test="newsTextUrl != null and newsTextUrl.length()>0"> news_text_url = #{newsTextUrl} , </if>
+            <if test="hotTime != null"> hot_time = #{hotTime} , </if>
+            <if test="createTime != null"> create_time = #{createTime} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from hot_todaynews where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

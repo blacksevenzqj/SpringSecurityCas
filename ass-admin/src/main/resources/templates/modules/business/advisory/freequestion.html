@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>往期免费问答列表</title>
+	<#include "/header.html">
+		</head>
+<body>
+<div id="rrapp" v-cloak>
+	<div v-show="showList">
+		<div class="grid-btn">
+			<div class="form-group col-sm-3">
+				<input type="text" class="form-control" v-model="q.question" @keyup.enter="query" placeholder="提问">
+			</div>
+			<a class="btn btn-default" @click="query">查询</a>
+			<#if shiro.hasPermission("business:advisory:freequestion:save")>
+				<a class="btn btn-primary" @click="add"><i class="fa fa-plus"></i>&nbsp;新增</a>
+			</#if>
+			<#if shiro.hasPermission("business:advisory:freequestion:update")>
+				<a class="btn btn-primary" @click="update"><i class="fa fa-pencil-square-o"></i>&nbsp;修改</a>
+			</#if>
+			<#if shiro.hasPermission("business:advisory:freequestion:del")>
+				<a class="btn btn-primary" @click="del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
+			</#if>
+		</div>
+		<table id="jqGrid"></table>
+		<div id="jqGridPager"></div>
+	</div>
+
+	<div v-show="!showList" class="panel panel-default">
+		<div class="panel-heading">{{title}}</div>
+		<form class="form-horizontal">
+		<div class="form-group">
+				<div class="col-sm-3 control-label">付费咨询师ID</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="freequestion.consultantId" placeholder="付费咨询师ID"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">咨询者ID</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="freequestion.userpId" placeholder="咨询者ID"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">提问</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="freequestion.question" placeholder="提问"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">提问类型</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="freequestion.questionMediaType" placeholder="提问类型：1:文字，2:语音，3:视频"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">提问时间</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="freequestion.questionTime" placeholder="提问时间"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">回答</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="freequestion.answer" placeholder="回答"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">回答类型</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="freequestion.answerMediaType" placeholder="回答类型：1:文字，2:语音，3:视频"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">回答时间</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="freequestion.answerTime" placeholder="回答时间"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">付费咨询师值班日</div>
+				<div class="col-sm-10">
+					<input type="text" class="form-control" v-model="freequestion.dutyDay" placeholder="付费咨询师值班日"/>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label">状态</div>
+				<label class="radio-inline">
+					<input type="radio" name="delFlag" value="-1" v-model="freequestion.delFlag"/> 禁用
+				</label>
+				<label class="radio-inline">
+					<input type="radio" name="delFlag" value="0" v-model="freequestion.delFlag"/> 正常
+				</label>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-3 control-label"></div>
+				<input type="button" class="btn btn-primary" @click="saveOrUpdate" value="确定"/>
+				&nbsp;&nbsp;<input type="button" class="btn btn-warning" @click="reload" value="返回"/>
+			</div>
+		</form>
+	</div>
+</div>
+<script src="${request.contextPath}/statics/js/modules/business/advisory/freequestion.js?_${.now?long}"></script>
+</body>
+</html>

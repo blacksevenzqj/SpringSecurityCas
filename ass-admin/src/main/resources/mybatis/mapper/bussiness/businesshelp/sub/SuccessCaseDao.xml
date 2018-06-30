@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.businesshelp.dao.SuccessCaseDao">
+	<!-- 查询所有 -->
+    <select id="queryList" resultType="ass.management.business.businesshelp.entity.SuccessCase">
+        select a.* from cy_success_case a
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="title != null and title.length()>0"> AND a. title like CONCAT('%',#{title},'%')</if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+    <!-- 条件查询 -->
+    <select id="getById" resultType="ass.management.business.businesshelp.entity.SuccessCase">
+        select a.* from cy_success_case a where a.id = #{id}
+    </select>
+    <!-- 新增 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ass.management.business.businesshelp.entity.SuccessCase">
+        insert into cy_success_case
+        (
+        `sys_user_id`,
+        `startbusiness_id`,
+        `project_type_id`,
+        `qr_code_url`,
+        `title`,
+        `case_cover_url`,
+        `case_text_url`,
+        `create_time`
+        )
+        VALUES (
+        #{sysUserId},
+        #{startbusinessId},
+        #{projectTypeId},
+        #{qrCodeUrl},
+        #{title},
+        #{caseCoverUrl},
+        #{caseTextUrl},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="ass.management.business.businesshelp.entity.SuccessCase">
+        UPDATE cy_success_case
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="sysUserId != null"> sys_user_id = #{sysUserId} , </if>
+            <if test="title != null and title.length()>0"> title = #{title} , </if>
+            <if test="caseCoverUrl != null"> case_cover_url = #{caseCoverUrl} , </if>
+            <if test="caseTextUrl != null and caseTextUrl.length()>0"> case_text_url = #{caseTextUrl} , </if>
+            <if test="createTime != null"> create_time = #{createTime} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from cy_success_case where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>

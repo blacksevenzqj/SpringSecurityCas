@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.businesshelp.dao.BusinessHeadlinesDao">
+
+    <select id="queryList" resultType="ass.management.business.businesshelp.entity.BusinessHeadlines">
+        select a.* from cy_business_headlines a
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="title != null and title.length()>0"> AND a. title like CONCAT('%',#{title},'%') </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getById" resultType="ass.management.business.businesshelp.entity.BusinessHeadlines">
+        select a.* from cy_business_headlines a where a.id = #{id}
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ass.management.business.businesshelp.entity.BusinessHeadlines">
+        insert into cy_business_headlines
+        (
+        `sys_user_id`,
+        `title`,
+        `headline_level`,
+        `headline_text_url`,
+        `create_time`
+        )
+        VALUES (
+        #{sysUserId},
+        #{title},
+        #{headLineLevel},
+        #{headLineTextUrl},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="ass.management.business.businesshelp.entity.BusinessHeadlines">
+        UPDATE cy_business_headlines
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="sysUserId != null"> sys_user_id = #{sysUserId} , </if>
+            <if test="title != null and title.length()>0"> title = #{title} , </if>
+            <if test="headLineLevel != null"> headline_level = #{headLineLevel} , </if>
+            <if test="headLineTextUrl != null and headLineTextUrl.length()>0"> headline_text_url = #{headLineTextUrl} , </if>
+            <if test="createTime != null"> create_time = #{createTime} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from cy_business_headlines where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

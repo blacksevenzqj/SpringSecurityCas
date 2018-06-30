@@ -1,0 +1,8 @@
+spring:
+  profiles:
+#    active: dev
+#    active: dev_single
+    active: dev_switch
+#    active: test_switch
+
+

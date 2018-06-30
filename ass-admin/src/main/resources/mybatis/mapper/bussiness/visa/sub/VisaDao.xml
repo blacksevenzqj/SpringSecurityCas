@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.visa.dao.mybatis.VisaDao">
+
+    <select id="queryList" resultType="ass.management.business.visa.entity.Visa">
+        select a.* from qz_visa a
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="nationalName != null and nationalName.length()>0"> AND a. national_name like CONCAT('%',#{nationalName},'%') </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getById" resultType="ass.management.business.visa.entity.Visa">
+        select * from qz_visa where id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="ass.management.business.visa.entity.Visa">
+    insert into qz_visa
+    (
+    `national_name`,
+    `national_english_name`,
+    `national_code`,
+    `national_flag`,
+    `area`,
+    `hot_visa`,
+    `top_description`,
+    `top_flag`,
+    `order_flag`,
+    `online_flag`,
+    `min_price`,
+    `max_price`,
+    `create_time`,
+    `del_flag`
+    )
+    VALUES (
+      #{nationalName},
+      #{nationalEnglishName},
+      #{nationalCode},
+      #{nationalFlag},
+      #{area},
+      #{hotVisa},
+      #{topDescription},
+      #{topFlag},
+      #{orderFlag},
+      #{onlineFlag},
+      #{minPrice},
+      #{maxPrice},
+      #{createTime},
+      #{delFlag}
+    )
+    </insert>
+
+    <update id="update" parameterType="ass.management.business.visa.entity.Visa">
+        UPDATE qz_visa
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="nationalName != null and nationalName.length()>0"> national_name = #{nationalName} , </if>
+            <if test="nationalEnglishName != null and nationalEnglishName.length()>0"> national_english_name = #{nationalEnglishName} , </if>
+            <if test="nationalCode != null and nationalCode.length()>0"> national_code = #{nationalCode} , </if>
+            <if test="nationalFlag != null and nationalFlag.length()>0"> national_flag = #{nationalFlag} , </if>
+            <if test="area != null and area.length()>0" > area = #{area} , </if>
+            <if test="hotVisa != null" > hot_visa = #{hotVisa} , </if>
+            <if test="topDescription != null and topDescription.length()>0" > top_description = #{topDescription} , </if>
+            <if test="topFlag != null" > top_flag = #{topFlag} , </if>
+            <if test="orderFlag != null" > order_flag = #{orderFlag} , </if>
+            <if test="onlineFlag != null" > online_flag = #{onlineFlag} , </if>
+            <if test="minPrice != null" > min_price = #{minPrice} , </if>
+            <if test="maxPrice != null" > max_price = #{maxPrice} , </if>
+            <if test="createTime != null" > create_time = #{createTime} , </if>
+            <if test="delFlag != null" > del_flag = #{delFlag} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from qz_visa where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

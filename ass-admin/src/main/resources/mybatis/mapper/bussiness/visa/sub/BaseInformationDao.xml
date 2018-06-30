@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.business.visa.dao.mybatis.BaseInformationDao">
+
+    <select id="queryList" resultType="ass.management.business.visa.entity.BaseInformation">
+        select a.* from qz_base_information a
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="name != null and name.length()>0"> AND a. name like CONCAT('%',#{name},'%') </if>
+        </trim>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getById" resultType="ass.management.business.visa.entity.BaseInformation">
+        select * from qz_base_information where base_information_id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="ass.management.business.visa.entity.BaseInformation">
+    insert into qz_base_information
+    (
+    `name`,
+    `description`,
+    `enter_country_num`,
+    `stay_day`,
+    `validity_time`,
+    `combo_content`,
+    `handle_time`,
+    `visa_interview`,
+    `cash_deposit`,
+    `handle_range`,
+    `combo_description`,
+    `create_time`,
+    `del_flag`
+    )
+    VALUES (
+      #{name},
+      #{description},
+      #{enterCountryNum},
+      #{stayDay},
+      #{validityTime},
+      #{comboContent},
+      #{handleTime},
+      #{visaInterview},
+      #{cashDeposit},
+      #{handleRange},
+      #{comboDescription},
+      #{createTime},
+      #{delFlag}
+    )
+    </insert>
+
+    <update id="update" parameterType="ass.management.business.visa.entity.BaseInformation">
+        UPDATE qz_base_information
+        <trim prefix="set" suffixOverrides="," suffix=" where base_information_id = #{baseInformationId} ">
+            <if test="name != null and name.length()>0"> name = #{name} , </if>
+            <if test="description != null and description.length()>0"> description = #{description} , </if>
+            <if test="enterCountryNum != null"> enter_country_num = #{enterCountryNum} , </if>
+            <if test="stayDay != null"> stay_day = #{stayDay} , </if>
+            <if test="validityTime != null and validityTime.length()>0" > validity_time = #{validityTime} , </if>
+            <if test="comboContent != null and comboContent.length()>0" > combo_content = #{comboContent} , </if>
+            <if test="handleTime != null and handleTime.length()>0" > handle_time = #{handleTime} , </if>
+            <if test="visaInterview != null and visaInterview.length()>0" > visa_interview = #{visaInterview} , </if>
+            <if test="cashDeposit != null" > cash_deposit = #{cashDeposit} , </if>
+            <if test="handleRange != null and handleRange.length()>0" > handle_range = #{handleRange} , </if>
+            <if test="comboDescription != null and comboDescription.length()>0" > combo_description = #{comboDescription} , </if>
+            <if test="createTime != null" > create_time = #{createTime} , </if>
+            <if test="delFlag != null" > del_flag = #{delFlag} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from qz_base_information where base_information_id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+
+</mapper>
