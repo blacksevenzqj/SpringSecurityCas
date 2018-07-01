@@ -2,6 +2,7 @@ package ass.management.security.common.config.security.cas.security;
 
 import ass.management.security.common.config.security.cas.properties.CasProperties;
 import ass.management.security.common.config.security.cas.custom.CustomUserDetailsService;
+import ass.management.security.modules.sys.service.UserInfoServiceImpl;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.validation.Cas20ServiceTicketValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private CasProperties casProperties;
+
+	@Autowired
+	private UserInfoServiceImpl userInfoServiceImpl;
+
 	
 	/**定义认证用户信息获取来源，密码校验规则等*/
 	@Override
@@ -51,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()//配置安全策略
-			//.antMatchers("/","/hello").permitAll()//定义/请求不需要验证
+			.antMatchers("/login", "/static/**").permitAll()//定义/请求不需要验证
 			.anyRequest().authenticated()//其余的所有请求都需要验证
 			.and()
 		.logout()
@@ -99,25 +104,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public CasAuthenticationProvider casAuthenticationProvider() {
 		CasAuthenticationProvider casAuthenticationProvider = new CasAuthenticationProvider();
+
 		casAuthenticationProvider.setAuthenticationUserDetailsService(customUserDetailsService());
 		//casAuthenticationProvider.setUserDetailsService(customUserDetailsService()); //这里只是接口类型，实现的接口不一样，都可以的。
+
 		casAuthenticationProvider.setServiceProperties(serviceProperties());
 		casAuthenticationProvider.setTicketValidator(cas20ServiceTicketValidator());
 		casAuthenticationProvider.setKey("casAuthenticationProviderKey");
 		return casAuthenticationProvider;
 	}
-	
+
+	/**用户自定义的AuthenticationUserDetailsService*/
+	@Bean
+	public AuthenticationUserDetailsService<CasAssertionAuthenticationToken> customUserDetailsService(){
+		return new CustomUserDetailsService(userInfoServiceImpl);
+	}
 	/*@Bean
 	public UserDetailsService customUserDetailsService(){
 		return new CustomUserDetailsService();
 	}*/
-	
-	/**用户自定义的AuthenticationUserDetailsService*/
-	@Bean
-	public AuthenticationUserDetailsService<CasAssertionAuthenticationToken> customUserDetailsService(){
-		return new CustomUserDetailsService();
-	}
-	
+
 	@Bean
 	public Cas20ServiceTicketValidator cas20ServiceTicketValidator() {
 		return new Cas20ServiceTicketValidator(casProperties.getCasServerUrl());

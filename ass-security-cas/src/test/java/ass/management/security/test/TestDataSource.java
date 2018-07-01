@@ -25,7 +25,7 @@ public class TestDataSource {
 //        UserInfo userInfo = userInfoServiceImpl.get(1L);
 //        System.out.println(userInfo);
 
-        UserInfo userInfo2 = userInfoServiceImpl.queryAllPerms("thinkgem");
+        UserInfo userInfo2 = userInfoServiceImpl.queryAllPerms("123");
         System.out.println(userInfo2);
     }
 
