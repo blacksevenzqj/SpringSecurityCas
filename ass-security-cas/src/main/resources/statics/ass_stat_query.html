@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>辅助调度系统ASS | 统计分析 - 条件查询</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="font-awesome/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Morris -->
+    <link href="css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+
+    <link href="css/plugins/datapicker/bootstrap-datepicker3.css" rel="stylesheet">
+
+    <link href="css/plugins/dataTables/datatables.min.css" rel="stylesheet">
+
+    <!-- Toastr style -->
+    <link href="css/plugins/toastr/toastr.min.css" rel="stylesheet">
+
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    
+</head>
+
+<body class="top-navigation">
+
+<div id="wrapper">
+
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                <h2>条件查询</h2>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="index.html">首页</a>
+                    </li>
+                    <li>
+                        <a>统计查询</a>
+                    </li>
+                    <li class="active">
+                        <strong>条件查询</strong>
+                    </li>
+                </ol>
+            </div>
+            <div class="col-lg-2">
+
+            </div>
+        </div>
+
+        <div class="wrapper wrapper-content">
+            <div class="row">
+
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>查询条件 </h5>
+                            <div class="ibox-tools">
+                                <a class="collapse-link">
+                                    <i class="fa fa-chevron-up"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="ibox-content">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label" for="area">分区</label>
+                                        <select name="area" id="area" class="form-control">
+                                            <option value="-1" selected>选择分区</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label" for="district">灌区</label>
+                                        <select name="district" id="district" class="form-control">
+                                            <option value="-1" selected>选择灌区</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label" for="site">泵站</label>
+                                        <select name="site" id="site" class="form-control">
+                                            <option value="-1" selected>选择泵站</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label" for="device">设备组</label>
+                                        <select name="device" id="device" class="form-control">
+                                            <option value="-1" selected>选择设备组</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label" for="time_type">数据粒度</label>
+                                        <select name="time_type" id="time_type" class="form-control" onchange="changeTimeType();">
+                                            <option value="0">小时</option>
+                                            <option value="1">天</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label" for="data_type">数据值</label>
+                                        <select name="data_type" id="data_type" class="form-control">
+                                            <option value="-1" selected>请选择</option>
+                                            <option value="0">用水量</option>
+                                            <option value="1">压力</option>
+                                            <option value="2">总电能</option>
+                                            <option value="3">A相电流</option>
+                                            <option value="4">B相电流</option>
+                                            <option value="5">C相电流</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label" for="begin_time">开始日期</label>
+                                        <div class="input-group date">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="begin_time" name="begin_time" value="" placeholder="选择开始日期" class="form-control" value="03/04/2014">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label" for="end_time">结束日期</label>
+                                        <div class="input-group date">
+                                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span><input type="text" id="end_time" name="end_time" value="" placeholder="选择结束日期" class="form-control" value="03/04/2014">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="btn-group" data-toggle="buttons">
+                                        <button id="btn_table" class="btn btn-primary" type="button"><i class="fa fa-table"></i></button>
+                                        <button id="btn_line" class="btn btn-white" type="button"><i class="fa fa-line-chart"></i></button>
+                                        <button id="btn_bar" class="btn btn-white" type="button"><i class="fa fa-bar-chart"></i></button>
+                                        <button id="btn_stack_bar" class="btn btn-white" type="button"><i class="fa fa-bar-chart"></i>堆叠</button>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button type="button" id="btn_reset" class="btn btn-sm btn-default">重置</button>
+                                    <button type="button" id="btn_export" class="btn btn-sm btn-primary">导出</button>
+                                    <button type="button" id="btn_search" class="btn btn-sm btn-primary">查询</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div id="table-container" class="row">
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>表格 </h5>
+                        </div>
+                        <div class="ibox-content" style="position: relative">
+                            <h4 id="summary"></h4>
+                            <div class="table-responsive">
+                                <table id="alarm-table" class="table table-striped table-bordered table-hover dataTables-example">
+                                    <thead>
+                                    <tr>
+
+                                        <th>分区 </th>
+                                        <th>灌区 </th>
+                                        <th>泵站 </th>
+                                        <th>设备组 </th>
+                                        <th>数据值 </th>
+                                        <th>时间</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="line-chart-container" class="row">
+
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>点线图 </h5>
+                        </div>
+                        <div class="ibox-content" style="position: relative">
+                            <div id="line-chart" style="height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="bar-chart-container" class="row">
+
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>柱状图 </h5>
+                        </div>
+                        <div class="ibox-content" style="position: relative">
+                            <div id="bar-chart" style="height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="stack-bar-chart-container" class="row">
+
+                <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>堆叠柱状图 </h5>
+                        </div>
+                        <div class="ibox-content" style="position: relative">
+                            <div id="stack-bar-chart" style="height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+<!-- Mainly scripts -->
+<script src="js/jquery-2.1.1.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>
+<script src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom and plugin javascript -->
+<script src="js/inspinia.js"></script>
+<script src="js/plugins/pace/pace.min.js"></script>
+
+<!-- jQuery UI -->
+<script src="js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- Morris -->
+<script src="js/plugins/morris/raphael-2.1.0.min.js"></script>
+<script src="js/plugins/morris/morris.js"></script>
+
+<!-- Data picker -->
+<script src="js/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="js/plugins/datapicker/locales/bootstrap-datepicker.zh-CN.min.js"></script>
+
+<!-- Datatables -->
+<script src="js/plugins/dataTables/datatables.min.js"></script>
+
+<!-- Toastr script -->
+<script src="js/plugins/toastr/toastr.min.js"></script>
+
+<script>
+    var alarm_table;
+    var lineChart;
+    var barChart;
+    var stackBarChart;
+    var resultData;
+    $(document).ready(function() {
+        loadArea();
+
+        init();
+
+        $('#begin_time').datepicker({
+            format: "yyyy/mm/dd",
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            language: "zh-CN"
+        });
+
+        $('#end_time').datepicker({
+            format: "yyyy/mm/dd",
+            todayBtn: "linked",
+            keyboardNavigation: false,
+            forceParse: false,
+            calendarWeeks: true,
+            autoclose: true,
+            language: "zh-CN"
+        });
+
+        $("#line-chart-container").hide();
+        $("#bar-chart-container").hide();
+        $("#stack-bar-chart-container").hide();
+
+        $("#btn_table").click(function(){
+            $("#table-container").show();
+            $("#line-chart-container").hide();
+            $("#bar-chart-container").hide();
+            $("#stack-bar-chart-container").hide();
+
+            $("#btn_table").removeClass("btn-white").addClass("btn-primary");
+            $("#btn_line").removeClass("btn-primary").addClass("btn-white");
+            $("#btn_bar").removeClass("btn-primary").addClass("btn-white");
+            $("#btn_stack_bar").removeClass("btn-primary").addClass("btn-white");
+
+
+        });
+
+        $("#btn_line").click(function(){
+            $("#table-container").hide();
+            $("#line-chart-container").show();
+            $("#bar-chart-container").hide();
+            $("#stack-bar-chart-container").hide();
+
+            $("#btn_table").removeClass("btn-primary").addClass("btn-white");
+            $("#btn_line").removeClass("btn-white").addClass("btn-primary");
+            $("#btn_bar").removeClass("btn-primary").addClass("btn-white");
+            $("#btn_stack_bar").removeClass("btn-primary").addClass("btn-white");
+
+
+            if (lineChart) {
+                lineChart.resizeHandler();
+            }
+        });
+
+        $("#btn_bar").click(function(){
+            $("#table-container").hide();
+            $("#line-chart-container").hide();
+            $("#bar-chart-container").show();
+            $("#stack-bar-chart-container").hide();
+
+            $("#btn_table").removeClass("btn-primary").addClass("btn-white");
+            $("#btn_line").removeClass("btn-primary").addClass("btn-white");
+            $("#btn_bar").removeClass("btn-white").addClass("btn-primary");
+            $("#btn_stack_bar").removeClass("btn-primary").addClass("btn-white");
+
+            drawBarChart(resultData);
+        });
+
+        $("#btn_stack_bar").click(function(){
+            $("#table-container").hide();
+            $("#line-chart-container").hide();
+            $("#bar-chart-container").hide();
+            $("#stack-bar-chart-container").show();
+
+            $("#btn_table").removeClass("btn-primary").addClass("btn-white");
+            $("#btn_line").removeClass("btn-primary").addClass("btn-white");
+            $("#btn_bar").removeClass("btn-primary").addClass("btn-white");
+            $("#btn_stack_bar").removeClass("btn-white").addClass("btn-primary");
+
+            drawStackBarChart(resultData);
+        });
+
+        $("#btn_search").on("click", function () {
+            if ($("#device").val() == -1) {
+                toastr.error("请选择设备组", "查询条件");
+            } else if ($("#time_type").val() == -1) {
+                toastr.error("请选择数据粒度", "查询条件");
+            } else if ($("#data_type").val() == -1) {
+                toastr.error("请选择数据值", "查询条件");
+            } else if ($("#begin_time").val() == "") {
+                toastr.error("请选择开始时间", "查询条件");
+            } else if ($("#end_time").val() == "") {
+                toastr.error("请选择结束时间", "查询条件");
+            } else {
+                alarm_table.ajax.reload();
+            }
+        });
+        
+        $("#btn_export").on("click", function () {
+
+            if ($("#device").val() == -1) {
+                toastr.error("请选择设备组", "查询条件");
+            } else if ($("#time_type").val() == -1) {
+                toastr.error("请选择数据粒度", "查询条件");
+            } else if ($("#data_type").val() == -1) {
+                toastr.error("请选择数据值", "查询条件");
+            } else if ($("#begin_time").val() == "") {
+                toastr.error("请选择开始时间", "查询条件");
+            } else if ($("#end_time").val() == "") {
+                toastr.error("请选择结束时间", "查询条件");
+            } else {
+
+                var beginTime = new Date($("#begin_time").val()).getTime() || 0;
+                var endTime = new Date($("#end_time").val()).getTime() + 24 * 60 * 60 * 1000 || 0;
+                var areaId = $("#area").val();
+                var districtId = $("#district").val();
+                var siteId = $("#site").val();
+                var deviceId = $("#device").val();
+                var timeType = $("#time_type").val();
+                var dataType = $("#data_type").val();
+
+                var url = "ass/export_device_data_list?area_id=" + areaId + "&district_id=" + districtId + "&site_id=" + siteId + "&device_id=" + deviceId + "&time_type=" + timeType + "&data_type=" + dataType + "&begin_time=" + beginTime + "&end_time=" + endTime;
+                window.location.href = url;
+            }
+
+
+
+        });
+
+        $("#btn_reset").on("click", function () {
+            $("#begin_time").val("");
+            $("#end_time").val("");
+            $("#area").val(-1);
+            $("#district").val(-1);
+            $("#site").val(-1);
+            $("#device").val(-1);
+            $("#time_type").val(-1);
+            $("#data_type").val(-1);
+
+            alarm_table.ajax.reload();
+        });
+        
+        $("#area").on("change", function () {
+            loadDistrict();
+            
+        });
+        $("#district").on("change", function () {
+            loadSite();
+
+        });
+        $("#site").on("change", function () {
+            loadDevice();
+
+        });
+
+    });
+
+    function loadArea() {
+        var url = "ass/node_list";
+        var param = {
+            type: 1
+        };
+
+        $.post(url, param, function(res) {
+//            console.log(res);
+
+            var data = res.data;
+            var list = data.list;
+
+            var areaHtml = "<option value='-1' selected>选择分区</option>";
+            for (var i = 0; i < list.length; i++) {
+                var area = list[i];
+                areaHtml += "<option value='" + area.id + "'>" + area.name + "</option>";
+            }
+            $("#area").html(areaHtml);
+
+            if (list.length > 0) {
+                $("#area").val(list[0].id);
+                $("#area").change();
+            }
+
+        }, "json");
+    }
+
+    function loadDistrict() {
+        var url = "ass/node_list";
+        var param = {
+            type: 2,
+            parent_id: $("#area").val()
+        };
+
+        $.post(url, param, function(res) {
+//            console.log(res);
+
+            var data = res.data;
+            var list = data.list;
+
+            var areaHtml = "<option value='-1' selected>选择灌区</option>";
+            for (var i = 0; i < list.length; i++) {
+                var area = list[i];
+                areaHtml += "<option value='" + area.id + "'>" + area.name + "</option>";
+            }
+            $("#district").html(areaHtml);
+
+        }, "json");
+    }
+
+    function loadSite() {
+        var url = "ass/node_list";
+        var param = {
+            type: 3,
+            parent_id: $("#district").val()
+        };
+
+        $.post(url, param, function(res) {
+//            console.log(res);
+
+            var data = res.data;
+            var list = data.list;
+
+            var areaHtml = "<option value='-1' selected>选择泵站</option>";
+            for (var i = 0; i < list.length; i++) {
+                var area = list[i];
+                areaHtml += "<option value='" + area.id + "'>" + area.name + "</option>";
+            }
+            $("#site").html(areaHtml);
+
+        }, "json");
+    }
+
+    function loadDevice() {
+        var url = "ass/node_list";
+        var param = {
+            type: 4,
+            parent_id: $("#site").val()
+        };
+
+        $.post(url, param, function(res) {
+//            console.log(res);
+
+            var data = res.data;
+            var list = data.list;
+
+            var areaHtml = "<option value='-1' selected>选择设备组</option>";
+            for (var i = 0; i < list.length; i++) {
+                var area = list[i];
+                areaHtml += "<option value='" + area.id + "'>" + area.name + "</option>";
+            }
+            $("#device").html(areaHtml);
+
+        }, "json");
+    }
+
+    function drawLineChart(data) {
+        if (data && data.length > 0) {
+            if (lineChart) {
+                lineChart.setData(data);
+            } else {
+                lineChart = Morris.Line({
+                    element: 'line-chart',
+                    data: data,
+                    xkey: 'dataTime',
+                    ykeys: ['data'],
+                    resize: true,
+                    lineWidth: 4,
+                    labels: ['Value'],
+                    lineColors: ['#1ab394'],
+                    pointSize: 5,
+                    dateFormat: function (x) {
+                        var t = new Date(x);
+                        var dataTime = t.getFullYear() + "-" + (t.getMonth() + 1) + "-" + t.getDate();
+                        var timeType = $("#time_type").val();
+                        if (timeType == 0) {
+                            dataTime += " " + t.getHours() + ":00:00";
+                        }
+                        return dataTime;
+                    },
+                    hoverCallback: function (index, options, content, row) {
+                        var t1 = new Date(row.dataTime);
+                        var dataTime = t1.getFullYear() + "-" + (t1.getMonth() + 1) + "-" + t1.getDate();
+                        var timeType = $("#time_type").val();
+                        if (timeType == 0) {
+                            dataTime += " " + t1.getHours() + ":00:00";
+                        }
+
+                        var dataType = $("#data_type").find("option:selected").text();
+
+                        var html = "<div class='morris-hover-row-label'>" + dataType+ "</div><div class='morris-hover-point' style='color: " + options.lineColors[0] + "'>";
+                        html += dataTime + ":";
+                        html += row.data;
+                        html += "</div>";
+                        return html;
+                    }
+                });
+            }
+        } else {
+            $("#line-chart").html("");
+            lineChart = null;
+        }
+    }
+
+    function drawBarChart(data) {
+        if (!$("#bar-chart").is(":hidden")) {
+            if (data && data.length > 0) {
+                var barData = new Array();
+                for (var i = 0; i < data.length; i++) {
+                    var d = data[data.length - i - 1];
+                    var x = d.dataTime;
+                    var y = d.data;
+                    var t = new Date(x);
+                    var dataTime = t.getFullYear() + "-" + (t.getMonth() + 1) + "-" + t.getDate();
+                    var timeType = $("#time_type").val();
+                    if (timeType == 0) {
+                        dataTime += " " + t.getHours() + ":00:00";
+                    }
+                    barData.push({dataTime: dataTime, data: y})
+                }
+
+                if (barChart) {
+                    barChart.setData(barData);
+                } else {
+                    barChart = Morris.Bar({
+                        element: 'bar-chart',
+                        data: barData,
+                        xkey: 'dataTime',
+                        ykeys: ['data'],
+                        resize: true,
+                        hideHover: 'auto',
+                        labels: ['Value'],
+                        barColors: ['#1ab394'],
+                        hoverCallback: function (index, options, content, row) {
+                            var t1 = new Date(row.dataTime);
+                            var dataTime = t1.getFullYear() + "-" + (t1.getMonth() + 1) + "-" + t1.getDate();
+                            var timeType = $("#time_type").val();
+                            if (timeType == 0) {
+                                dataTime += " " + t1.getHours() + ":00:00";
+                            }
+
+                            var dataType = $("#data_type").find("option:selected").text();
+
+                            var html = "<div class='morris-hover-row-label'>" + dataType + "</div><div class='morris-hover-point' style='color: " + options.barColors[0] + "'>";
+                            html += dataTime + ":";
+                            html += row.data;
+                            html += "</div>";
+                            return html;
+                        }
+                    });
+                }
+            } else {
+                $("#bar-chart").html("");
+                barChart = null;
+            }
+        }
+    }
+
+    function drawStackBarChart(data) {
+        if (!$("#stack-bar-chart").is(":hidden")) {
+            if (data && data.length > 0) {
+                var barData = new Array();
+                var total = 0;
+                for (var i = 0; i < data.length; i++) {
+                    var d = data[data.length - i - 1];
+                    var x = d.dataTime;
+                    var y = d.data;
+                    total += y * 1;
+                    var t = new Date(x);
+                    var dataTime = t.getFullYear() + "-" + (t.getMonth() + 1) + "-" + t.getDate();
+                    var timeType = $("#time_type").val();
+                    if (timeType == 0) {
+                        dataTime += " " + t.getHours() + ":00:00";
+                    }
+
+                    barData.push({dataTime: dataTime, data: total})
+                }
+
+                if (stackBarChart) {
+                    stackBarChart.setData(barData);
+                } else {
+                    stackBarChart = Morris.Bar({
+                        element: 'stack-bar-chart',
+                        data: barData,
+                        stacked: true,
+                        xkey: 'dataTime',
+                        ykeys: ['data'],
+                        resize: true,
+                        hideHover: 'auto',
+                        labels: ['Value'],
+                        barColors: ['#1ab394'],
+                        hoverCallback: function (index, options, content, row) {
+                            var t1 = new Date(row.dataTime);
+                            var dataTime = t1.getFullYear() + "-" + (t1.getMonth() + 1) + "-" + t1.getDate();
+                            var timeType = $("#time_type").val();
+                            if (timeType == 0) {
+                                dataTime += " " + t1.getHours() + ":00:00";
+                            }
+
+                            var dataType = $("#data_type").find("option:selected").text();
+
+                            var html = "<div class='morris-hover-row-label'>" + dataType + "</div><div class='morris-hover-point' style='color: " + options.barColors[0] + "'>";
+                            html += dataTime + ":";
+                            html += row.data;
+                            html += "</div>";
+                            return html;
+                        }
+                    });
+                }
+            } else {
+                $("#stack-bar-chart").html("");
+                stackBarChart = null;
+            }
+        }
+    }
+
+    function init() {
+        alarm_table = $("#alarm-table").DataTable({
+            "ordering": false,
+            "searching": false,
+            "lengthChange": false,
+//            "serverSide": true,
+            "processing": true,
+            "pageLength": 10,
+            "stateSave": false,
+            "language": {
+                "info": "当前第 _PAGE_ 页 共_PAGES_页",
+                "infoEmpty": "未查到数据",
+                "infoFiltered": "",
+                "processing": "<img src='img/loading.gif'>",
+                "zeroRecords": "没有匹配的数据",
+                "paginate": {
+                    "first": "首页",
+                    "last": "尾页",
+                    "next": "下页",
+                    "previous": "上页"
+                },
+            },
+            dom: '<"html5buttons"B>lfrtip',
+            "buttons": [
+                {extend: 'print',
+                    customize: function (win){
+                        $(win.document.body).addClass('white-bg');
+                        $(win.document.body).css('font-size', '10px');
+
+                        $(win.document.body).find('table')
+                            .addClass('compact')
+                            .css('font-size', 'inherit');
+                    }
+                }
+            ],
+            "ajax": function(data, callback, settings) {
+                var param = {};
+
+                param.begin_time = new Date($("#begin_time").val()).getTime() || 0;
+                param.end_time = new Date($("#end_time").val()).getTime() + 24 * 60 * 60 * 1000 || 0;
+                param.area_id = $("#area").val();
+                param.district_id = $("#district").val();
+                param.site_id = $("#site").val();
+                param.device_id = $("#device").val();
+                param.time_type = $("#time_type").val();
+                param.data_type = $("#data_type").val();
+//                console.log(param);
+                if (param.device_id == -1 || param.data_type == -1) {
+                    var returnData = {};
+                    returnData.draw = data.draw;
+                    returnData.data = [];
+//                    drawLineChart(returnData.data);
+//                    drawBarChart(returnData.data);
+                    callback(returnData);
+                } else {
+                    //ajax请求数据
+                    $.ajax({
+                        type: "post",
+                        url: "ass/device_data_list",
+                        cache: false,  //禁用缓存
+                        data: param,  //传入组装的参数
+                        dataType: "json",
+                        success: function (result) {
+                            //console.log(result);
+                            //setTimeout仅为测试延迟效果
+                            //setTimeout(function () {
+                            //封装返回数据
+                            var returnData = {};
+                            returnData.draw = data.draw;//这里直接自行返回了draw计数器,应该由后台返回
+                            returnData.recordsTotal = result.data.total;//返回数据全部记录
+                            returnData.recordsFiltered = result.data.total;//后台不实现过滤功能，每次查询均视作全部结果
+                            returnData.data = result.data.data;//返回的数据列表
+                            //console.log(returnData);
+                            //调用DataTables提供的callback方法，代表数据已封装完成并传回DataTables进行渲染
+                            //此时的数据需确保正确无误，异常判断应在执行此回调前自行处理完毕
+                            drawLineChart(returnData.data);
+                            
+                            drawBarChart(returnData.data);
+
+                            drawStackBarChart(returnData.data);
+
+                            var timeType = $("#time_type").val();
+                            var dataType = $("#data_type").val();
+
+                            var html = "";
+                            if (timeType == 0) {
+                                switch (dataType) {
+                                    case "0":
+                                        if (result.data.summary) {
+                                            html = "用水量:" + result.data.summary.waterDosage;
+                                        } else {
+                                            html = "用水量:0";
+                                        }
+
+                                        break;
+                                    case "1":
+                                        if (result.data.summary) {
+                                            html = "最小压力:" + result.data.summary.minPressure + " 最大压力:" + result.data.summary.maxPressure;
+                                        } else {
+                                            html = "最小压力:0 最大压力:0";
+                                        }
+                                        break;
+                                    case "2":
+                                        if (result.data.summary) {
+                                            html = "总电能:" + result.data.summary.totalPower;
+                                        } else {
+                                            html = "总电能:0";
+                                        }
+
+                                        break;
+                                    case "3":
+                                        if (result.data.summary) {
+                                            html = "最小A相电流:" + result.data.summary.minAPhaseCurrent + " 最大A相电流:" + result.data.summary.maxAPhaseCurrent;
+                                        } else {
+                                            html = "最小A相电流:0 最大A相电流:0";
+                                        }
+
+                                        break;
+                                    case '4':
+                                        if (result.data.summary) {
+                                            html = "最小B相电流:" + result.data.summary.minBPhaseCurrent + " 最大B相电流:" + result.data.summary.maxBPhaseCurrent;
+                                        } else {
+                                            html = "最小B相电流:0 最大B相电流:0";
+                                        }
+
+                                        break;
+                                    case '5':
+                                        if (result.data.summary) {
+                                            html = "最小C相电流:" + result.data.summary.minCPhaseCurrent + " 最大C相电流:" + result.data.summary.maxCPhaseCurrent;
+                                        } else {
+                                            html = "最小C相电流:0 最大C相电流:0";
+                                        }
+                                        break;
+                                }
+                            } else {
+                                switch (dataType) {
+                                    case "0":
+                                        if (result.data.summary) {
+                                            html = "用水量:" + result.data.summary.waterDosage;
+                                        } else {
+                                            html = "用水量:0";
+                                        }
+                                        break;
+                                    case "1":
+                                        if (result.data.summary) {
+                                            html = "最小压力:" + result.data.summary.minPressure + " 最大压力:" + result.data.summary.maxPressure;
+                                        } else {
+                                            html = "最小压力:0 最大压力:0";
+                                        }
+
+                                        break;
+                                    case "2":
+                                        if (result.data.summary) {
+                                            html = "最小压力:" + result.data.summary.minPressure + " 最大压力:" + result.data.summary.maxPressure;
+                                        } else {
+                                            html = "最小压力:0 最大压力:0";
+                                        }
+
+                                        break;
+                                    case "3":
+                                        if (result.data.summary) {
+                                            html = "总电能:" + result.data.summary.totalPower;
+                                        } else {
+                                            html = "总电能:0";
+                                        }
+
+                                        break;
+                                    case "4":
+                                        if (result.data.summary) {
+                                            html = "最小A相电流:" + result.data.summary.minAPhaseCurrent + " 最大A相电流:" + result.data.summary.maxAPhaseCurrent;
+                                        } else {
+                                            html = "最小A相电流:0 最大A相电流:0";
+                                        }
+
+                                        break;
+                                    case "5":
+                                        if (result.data.summary) {
+                                            html = "最小A相电流:" + result.data.summary.minAPhaseCurrent + " 最大A相电流:" + result.data.summary.maxAPhaseCurrent;
+                                        } else {
+                                            html = "最小A相电流:0 最大A相电流:0";
+                                        }
+
+                                        break;
+                                    case "6":
+                                        if (result.data.summary) {
+                                            html = "最小B相电流:" + result.data.summary.minBPhaseCurrent + " 最大B相电流:" + result.data.summary.maxBPhaseCurrent;
+                                        } else {
+                                            html = "最小B相电流:0 最大B相电流:0";
+                                        }
+
+                                        break;
+                                    case "7":
+                                        if (result.data.summary) {
+                                            html = "最小B相电流:" + result.data.summary.minBPhaseCurrent + " 最大B相电流:" + result.data.summary.maxBPhaseCurrent;
+                                        } else {
+                                            html = "最小B相电流:0 最大B相电流:0";
+                                        }
+
+                                        break;
+                                    case "8":
+                                        if (result.data.summary) {
+                                            html = "最小C相电流:" + result.data.summary.minCPhaseCurrent + " 最大C相电流:" + result.data.summary.maxCPhaseCurrent;
+                                        } else {
+                                            html = "最小C相电流:0 最大C相电流:0";
+                                        }
+                                        break;
+                                    case "9":
+                                        if (result.data.summary) {
+                                            html = "最小C相电流:" + result.data.summary.minCPhaseCurrent + " 最大C相电流:" + result.data.summary.maxCPhaseCurrent;
+                                        } else {
+                                            html = "最小C相电流:0 最大C相电流:0";
+                                        }
+                                        break;
+                                }
+                            }
+
+                            $("#summary").html(html);
+
+                            resultData = returnData.data;
+                            
+                            callback(returnData);
+                            //}, 200);
+                        }
+                    });
+                }
+
+            },
+            "columns": [
+                { "data": "areaName" },
+                { "data": "districtName" },
+                { "data": "siteName" },
+                { "data": "deviceName" },
+                { "data": "data" },
+                { "data": "dataTime" }
+            ],
+            "columnDefs": [
+                {
+                    "targets": 5,
+                    "data": "dataTime",
+                    "render": function (data, type, full, meta) {
+                        if (data == 0) {
+                            return "";
+                        } else {
+                            var t = new Date(data);
+                            var createTime = t.getFullYear() + "-" + (t.getMonth() + 1) + "-" + t.getDate();
+                            var timeType = $("#time_type").val();
+                            if (timeType == 0) {
+                                createTime += " " + t.getHours() + ":00:00";
+                            }
+                            return '<span>' + createTime + '</span>';
+                        }
+
+                    }
+                }
+            ]
+        });
+    }
+
+    function changeTimeType() {
+        var html = "";
+        if ($("#time_type").val() == 0) {
+            html += '<option value="-1" selected>请选择</option>';
+            html += '<option value="0">用水量</option>';
+            html += '<option value="1">压力</option>';
+            html += '<option value="2">总电能</option>';
+            html += '<option value="3">A相电流</option>';
+            html += '<option value="4">B相电流</option>';
+            html += '<option value="5">C相电流</option>';
+
+        } else {
+            html += '<option value="-1" selected>请选择</option>';
+            html += '<option value="0">用水量</option>';
+            html += '<option value="1">最小压力</option>';
+            html += '<option value="2">最大压力</option>';
+            html += '<option value="3">总电能</option>';
+            html += '<option value="4">最小A相电流</option>';
+            html += '<option value="5">最大A相电流</option>';
+            html += '<option value="6">最小B相电流</option>';
+            html += '<option value="7">最大B相电流</option>';
+            html += '<option value="8">最小C相电流</option>';
+            html += '<option value="9">最大C相电流</option>';
+
+        }
+
+        $("#data_type").html(html);
+    }
+
+
+</script>
+
+
+</body>
+
+</html>

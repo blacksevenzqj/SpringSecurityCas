@@ -33,9 +33,9 @@ spring:
       # 合并多个DruidDataSource的监控数据
       #spring.datasource.useGlobalDataSourceStat=true
     business:
-      url: jdbc:mysql://127.0.0.1:3306/school_pa?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true
-      username: root
-      password: root
+      url: jdbc:mysql://rm-bp143n0e843pxo27jo.mysql.rds.aliyuncs.com:3306/ass?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true
+      username: ass
+      password: Dyzhsw123
       driver-class-name: com.mysql.jdbc.Driver
       max-active: 20
       initial-size: 1
@@ -78,9 +78,22 @@ spring:
       max-idle: 10      # 连接池中的最大空闲连接
       min-idle: 5       # 连接池中的最小空闲连接
 
-  freemarker:
-    suffix: .html
-    request-context-attribute: request
+#  freemarker:
+#    suffix: .html
+#    request-context-attribute: request
+
+#  thymeleaf:
+#    cache: false # Enable template caching.
+#    check-template-location: true # Check that the templates location exists.
+#    content-type: text/html # Content-Type value.
+#    enabled: true # Enable MVC Thymeleaf view resolution.
+#    encoding: UTF-8 # Template encoding.
+#    excluded-view-names: # Comma-separated list of view names that should be excluded from resolution.
+#    mode: HTML5 # Template mode to be applied to templates. See also StandardTemplateModeHandlers.
+#    prefix: classpath:/templates/ # Prefix that gets prepended to view names when building a URL.
+#    suffix: .html # Suffix that gets appended to view names when building a URL.
+#    template-resolver-order: # Order of the template resolver in the chain.
+#    view-names: # Comma-separated list of view names that can be resolved.
 
   aop:
     proxy-target-class: true
@@ -107,14 +120,14 @@ ass:
 cas:
   server:
     host:
-      url: http://localhost:8081/eziliao-cas-web
+      url: http://localhost:8081/cas
       login_url: ${cas.server.host.url}/login
       logout_url: ${cas.server.host.url}/logout?service=${app.server.host.url}
 
 app:
   server:
     host:
-      url: http://localhost:8080
+      url: http://localhost:8080/ass-security-cas
   login:
     url: /login
   logout:
