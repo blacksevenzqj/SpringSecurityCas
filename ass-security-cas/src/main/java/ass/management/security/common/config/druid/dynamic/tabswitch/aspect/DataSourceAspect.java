@@ -61,7 +61,8 @@ public class DataSourceAspect implements Ordered {
     @Pointcut(
         "execution(* ass.management.security.modules.business.ass.service.*.*(..)) || " +
         "execution(* ass.management.security.modules.business.controlsystem.service.*.*(..)) || " +
-        "execution(* ass.management.security.modules.business.modelsystem.service.*.*(..)) "
+        "execution(* ass.management.security.modules.business.modelsystem.service.*.*(..)) || " +
+        "execution(* ass.management.db.service.*.*(..))"
     		)
     public void patternDataSourcePointCut() {
 

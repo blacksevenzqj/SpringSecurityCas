@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.security.modules.business.ass.dao.AssNodeDao">
+
+	<select id="findList" resultType="ass.management.security.modules.business.ass.entity.Node">
+		select node_id id, name, type, parent_id parentId, sort from node_topo a
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="parentId != null"> AND a. parent_id = #{parentId} </if>
+			<if test="type != null"> AND a. type = #{type} </if>
+		</trim>
+		ORDER BY sort
+	</select>
+
+</mapper>

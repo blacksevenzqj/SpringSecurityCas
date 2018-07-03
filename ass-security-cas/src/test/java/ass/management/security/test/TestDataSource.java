@@ -1,5 +1,7 @@
 package ass.management.security.test;
 
+import ass.management.security.modules.business.ass.entity.Node;
+import ass.management.security.modules.business.ass.service.AssNodeServiceImpl;
 import ass.management.security.modules.sys.entity.UserInfo;
 import ass.management.security.modules.sys.service.UserInfoServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,10 @@ public class TestDataSource {
     @Autowired
     UserInfoServiceImpl userInfoServiceImpl;
 
+    @Autowired
+    AssNodeServiceImpl assNodeServiceImpl;
+
+
     @Test
     public void queryAllMenuId() {
 //        UserInfo userInfo = userInfoServiceImpl.get(1L);
@@ -28,5 +34,15 @@ public class TestDataSource {
         UserInfo userInfo2 = userInfoServiceImpl.queryAllPerms("thinkgem");
         System.out.println(userInfo2);
     }
+
+    @Test
+    public void queryNode() {
+        Node node = new Node();
+//        node.setParentId(parentId);
+        node.setType(1);
+        List<Node> list = assNodeServiceImpl.findList(node);
+        System.out.println(list);
+    }
+
 
 }

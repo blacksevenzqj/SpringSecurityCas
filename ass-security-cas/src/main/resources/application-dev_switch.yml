@@ -33,9 +33,9 @@ spring:
       # 合并多个DruidDataSource的监控数据
       #spring.datasource.useGlobalDataSourceStat=true
     business:
-      url: jdbc:mysql://rm-bp143n0e843pxo27jo.mysql.rds.aliyuncs.com:3306/ass?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true
-      username: ass
-      password: Dyzhsw123
+      url: jdbc:mysql://111.10.48.2:3316/ass?useUnicode=true&characterEncoding=UTF-8&useSSL=false&autoReconnect=true
+      username: dyass
+      password: dyass@008381#
       driver-class-name: com.mysql.jdbc.Driver
       max-active: 20
       initial-size: 1
