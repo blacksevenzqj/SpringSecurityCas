@@ -1,13 +1,12 @@
 package ass.management.security.modules.business.test.controller;
 
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/advisory")
-public class AdvisoryController {
+@RequestMapping("/myAdvisory")
+public class MyAdvisoryController {
 
     @RequestMapping("/hello")
     public String hello() {
