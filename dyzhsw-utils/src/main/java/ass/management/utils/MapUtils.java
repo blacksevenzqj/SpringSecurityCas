@@ -1,4 +1,4 @@
-package ass.management.common.utils;
+package ass.management.utils;
 
 import java.util.HashMap;
 
