@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ass.management.utils;
+package ass.management.common.utils;
 
 import com.sun.management.HotSpotDiagnosticMXBean;
 
