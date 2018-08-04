@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ass.management.utils;
+package ass.management.common.utils;
 
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
