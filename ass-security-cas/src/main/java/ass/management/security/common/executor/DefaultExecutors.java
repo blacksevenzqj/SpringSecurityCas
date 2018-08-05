@@ -20,9 +20,10 @@ public class DefaultExecutors {
     }
 
     private void factoryMethod(){
-        String factoryName = SystemPropertyUtil.get("executor.factory.default.factory_name", "threadPool");
+        String factoryName = SystemPropertyUtil.get("executor.factory.default.factory_name", "disruptor");
         ExecutorFactory factory;
         try {
+            JServiceLoader serviceLoader = JServiceLoader.load(DefaultExecutorFactory.class);
             factory = (ExecutorFactory) JServiceLoader.load(DefaultExecutorFactory.class)
                     .find(factoryName);
         } catch (Throwable t) {

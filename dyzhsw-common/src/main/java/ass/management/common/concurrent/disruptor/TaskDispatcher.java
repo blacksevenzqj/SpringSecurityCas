@@ -18,11 +18,13 @@ package ass.management.common.concurrent.disruptor;
 
 import ass.management.common.concurrent.CustomThreadFactory;
 import ass.management.common.concurrent.RejectedTaskPolicyWithReport;
+import ass.management.common.utils.JConstants;
 import ass.management.utils.Pow2;
 import ass.management.utils.Preconditions;
 import com.lmax.disruptor.*;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.*;
 
@@ -67,6 +69,8 @@ import java.util.concurrent.*;
  */
 public class TaskDispatcher implements Dispatcher<Runnable>, Executor {
 
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TaskDispatcher.class);
+
     private static final EventFactory<MessageEvent<Runnable>> eventFactory = new EventFactory<MessageEvent<Runnable>>() {
 
         @Override
@@ -82,7 +86,8 @@ public class TaskDispatcher implements Dispatcher<Runnable>, Executor {
         this(numWorkers, threadFactory, BUFFER_SIZE, 0, WaitStrategyType.BLOCKING_WAIT, null);
     }
 
-    public TaskDispatcher(int numWorkers,
+    public TaskDispatcher(
+                          int numWorkers,
                           ThreadFactory threadFactory,
                           int bufSize,
                           int numReserveWorkers,
@@ -152,6 +157,12 @@ public class TaskDispatcher implements Dispatcher<Runnable>, Executor {
         Disruptor<MessageEvent<Runnable>> dr =
                 new Disruptor<>(eventFactory, bufSize, threadFactory, ProducerType.MULTI, waitStrategy);
         dr.setDefaultExceptionHandler(new LoggingExceptionHandler());
+
+        logger.info(String.valueOf(numReserveWorkers)); // 32
+        logger.info(String.valueOf(numWorkers)); // 16
+        logger.info(String.valueOf(JConstants.AVAILABLE_PROCESSORS << 1)); //16
+        logger.info(String.valueOf(JConstants.AVAILABLE_PROCESSORS << 3)); //64
+
         numWorkers = Math.min(Math.abs(numWorkers), MAX_NUM_WORKERS);
         if (numWorkers == 1) {
             dr.handleEventsWith(new TaskHandler());
