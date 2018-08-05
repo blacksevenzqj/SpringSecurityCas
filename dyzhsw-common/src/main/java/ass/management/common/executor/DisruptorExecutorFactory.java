@@ -18,6 +18,7 @@ package ass.management.common.executor;
 
 import ass.management.common.concurrent.disruptor.TaskDispatcher;
 import ass.management.common.concurrent.disruptor.WaitStrategyType;
+import ass.management.common.config.ConfigParameter;
 import ass.management.common.utils.SpiMetadata;
 import ass.management.common.utils.SystemPropertyUtil;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author jiachun.fjc
  */
-@SpiMetadata(name = "disruptor")
+@SpiMetadata(name = ConfigParameter.Executor.DISRUPTOR)
 public class DisruptorExecutorFactory extends AbstractExecutorFactory {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DisruptorExecutorFactory.class);

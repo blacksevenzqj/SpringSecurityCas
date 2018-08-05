@@ -18,6 +18,7 @@ package ass.management.common.executor;
 
 
 import ass.management.common.concurrent.RejectedTaskPolicyWithReport;
+import ass.management.common.config.ConfigParameter;
 import ass.management.common.utils.SpiMetadata;
 import ass.management.common.utils.SystemPropertyUtil;
 import ass.management.utils.StringHelper;
@@ -36,7 +37,7 @@ import static ass.management.utils.StackTraceUtil.stackTrace;
  *
  * @author jiachun.fjc
  */
-@SpiMetadata(name = "threadPool", priority = 1)
+@SpiMetadata(name = ConfigParameter.Executor.THREADPOOL, priority = 1)
 public class ThreadPoolExecutorFactory extends AbstractExecutorFactory {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ThreadPoolExecutorFactory.class);

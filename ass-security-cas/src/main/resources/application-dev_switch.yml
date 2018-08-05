@@ -140,3 +140,8 @@ elasticsearch:
     cluster-nodes: localhost
     port: 9200
 
+executors:
+  factoryName:
+    defaultName: disruptor
+
+

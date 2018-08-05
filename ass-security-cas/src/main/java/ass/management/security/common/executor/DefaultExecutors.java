@@ -6,6 +6,7 @@ import ass.management.common.executor.ExecutorFactory;
 import ass.management.common.executor.ThreadPoolExecutorFactory;
 import ass.management.common.utils.JServiceLoader;
 import ass.management.common.utils.SystemPropertyUtil;
+import ass.management.common.config.ConfigParameter;
 import org.slf4j.LoggerFactory;
 import static ass.management.utils.StackTraceUtil.stackTrace;
 
@@ -22,7 +23,7 @@ public class DefaultExecutors {
 
     private void factoryMethod(){
 //        String factoryName = SystemPropertyUtil.get("executor.factory.default.factory_name", "disruptor");
-        String factoryName = SystemPropertyUtil.get("executor.factory.default.factory_name", "threadPool");
+        String factoryName = SystemPropertyUtil.get(ConfigParameter.Executor.DEFAULT_FACTORY_NAME, ConfigParameter.Executor.DISRUPTOR);
         ExecutorFactory factory;
         try {
             factory = (ExecutorFactory) JServiceLoader.load(DefaultExecutorFactory.class)
