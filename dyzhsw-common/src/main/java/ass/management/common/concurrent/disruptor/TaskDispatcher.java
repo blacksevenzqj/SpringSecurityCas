@@ -71,6 +71,7 @@ public class TaskDispatcher implements Dispatcher<Runnable>, Executor {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(TaskDispatcher.class);
 
+    // 事件生产工厂
     private static final EventFactory<MessageEvent<Runnable>> eventFactory = new EventFactory<MessageEvent<Runnable>>() {
 
         @Override
@@ -154,6 +155,7 @@ public class TaskDispatcher implements Dispatcher<Runnable>, Executor {
         if (threadFactory == null) {
             threadFactory = new CustomThreadFactory("disruptor.processor");
         }
+        // 多生产者
         Disruptor<MessageEvent<Runnable>> dr =
                 new Disruptor<>(eventFactory, bufSize, threadFactory, ProducerType.MULTI, waitStrategy);
         dr.setDefaultExceptionHandler(new LoggingExceptionHandler());

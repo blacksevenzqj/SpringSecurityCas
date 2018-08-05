@@ -2,9 +2,11 @@ package ass.management.security.test.thread;
 
 import ass.management.common.executor.CloseableExecutor;
 import ass.management.security.common.executor.DefaultExecutors;
+import ass.management.security.modules.sys.service.UserInfoServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -13,14 +15,16 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class DisruptorTest {
 
+    @Autowired
+    UserInfoServiceImpl userInfoServiceImpl;
 
     @Test
     public void test1() throws Exception{
-        Runnable Runnable = new RunableTest();
         CloseableExecutor closeableExecutor = DefaultExecutors.getDefaultExecutors();
-        closeableExecutor.execute(Runnable);
-
-        Thread.currentThread().sleep(3000);
+        for(int i = 0; i < 10; i++){
+            Runnable runnable = new RunableTest(userInfoServiceImpl, "thinkgem");
+            closeableExecutor.execute(runnable);
+        }
     }
 
 }
