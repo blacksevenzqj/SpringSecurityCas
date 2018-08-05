@@ -3,6 +3,7 @@ package ass.management.security.common.executor;
 import ass.management.common.executor.CloseableExecutor;
 import ass.management.common.executor.DefaultExecutorFactory;
 import ass.management.common.executor.ExecutorFactory;
+import ass.management.common.executor.ThreadPoolExecutorFactory;
 import ass.management.common.utils.JServiceLoader;
 import ass.management.common.utils.SystemPropertyUtil;
 import org.slf4j.LoggerFactory;
@@ -20,18 +21,17 @@ public class DefaultExecutors {
     }
 
     private void factoryMethod(){
-        String factoryName = SystemPropertyUtil.get("executor.factory.default.factory_name", "disruptor");
+//        String factoryName = SystemPropertyUtil.get("executor.factory.default.factory_name", "disruptor");
+        String factoryName = SystemPropertyUtil.get("executor.factory.default.factory_name", "threadPool");
         ExecutorFactory factory;
         try {
-            JServiceLoader serviceLoader = JServiceLoader.load(DefaultExecutorFactory.class);
             factory = (ExecutorFactory) JServiceLoader.load(DefaultExecutorFactory.class)
                     .find(factoryName);
         } catch (Throwable t) {
             logger.warn("Failed to load default's executor factory [{}], cause: {}, " +
                     "[ThreadPoolExecutorFactory] will be used as default.", factoryName, stackTrace(t));
 
-//            factory = new ThreadPoolExecutorFactory();
-            factory = null;
+            factory = new ThreadPoolExecutorFactory();
         }
 
         executor = factory.newExecutor(ExecutorFactory.Target.DEFAULT, "default-processor");
