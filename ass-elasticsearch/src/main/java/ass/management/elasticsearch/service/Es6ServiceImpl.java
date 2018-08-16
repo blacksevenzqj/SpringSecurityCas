@@ -7,6 +7,7 @@ import ass.management.elasticsearch.client.EsClient;
 import ass.management.elasticsearch.common.EsConfig;
 import ass.management.elasticsearch.common.RestResult;
 import ass.management.elasticsearch.entity.base.EsBaseEntity;
+import ass.management.elasticsearch.entity.base.EsPageInfo;
 import ass.management.elasticsearch.util.EsUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -149,18 +150,33 @@ public class Es6ServiceImpl {
         return RestResult.getSuccessResult(esClient.getById(getRequest, tClass));
     }
 
-//    // 传入：子类POJO的Class
-//    public <T> RestResult<List<T>> searchMatchByTitle(Class<T> tClass, String title, int pageNum, int pageSize, String orderField, String orderType) {
-//        SearchRequest searchRequest = new SearchRequest();
-//        searchRequest.indices(tClass.getSuperclass().getAnnotation(EsIndex.class).indexName());
-//        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-//        searchSourceBuilder.query(QueryBuilders.matchQuery(EsConfig.EsSearchConfig.SEARCH_TITLE, title));
-//        searchSourceBuilder.from(pageNum);
-//        searchSourceBuilder.size(pageSize == 0 || pageSize < 0 ? 10 : pageSize);
-//        searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
-//        searchRequest.source(searchSourceBuilder);
-//        return RestResult.getSuccessResult(esClient.search(searchRequest, tClass));
-//    }
+    // 传入：子类POJO的Class
+    public <T> RestResult<List<T>> searchTermByFiled(Class<T> tClass, String fieldName, String field, EsPageInfo esPageInfo, String orderField, String orderType) {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(tClass.getAnnotation(Es6Index.class).indexName());
+        searchRequest.types(tClass.getAnnotation(Es6Index.class).typeName());
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.termQuery(fieldName, field));
+        searchSourceBuilder.from(esPageInfo.getPageNum());
+        searchSourceBuilder.size(esPageInfo.getPageSize());
+        searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
+        searchRequest.source(searchSourceBuilder);
+        return RestResult.getSuccessResult(esClient.search(searchRequest, tClass));
+    }
+
+    // 传入：子类POJO的Class
+    public <T> RestResult<List<T>> searchMatchByField(Class<T> tClass, String fieldName, String field, EsPageInfo esPageInfo, String orderField, String orderType) {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(tClass.getAnnotation(Es6Index.class).indexName());
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+        searchSourceBuilder.query(QueryBuilders.matchQuery(fieldName, field));
+        searchSourceBuilder.from(esPageInfo.getPageNum());
+        searchSourceBuilder.size(esPageInfo.getPageSize());
+        searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
+        searchRequest.source(searchSourceBuilder);
+        return RestResult.getSuccessResult(esClient.search(searchRequest, tClass));
+    }
+
 //    // 传入：子类POJO的Class
 //    public <T> RestResult<List<T>> searchMatchScrollByTitle(Class<T> tClass, String title, int pageSize) {
 //        final Scroll scroll = new Scroll(TimeValue.timeValueMinutes(1L));

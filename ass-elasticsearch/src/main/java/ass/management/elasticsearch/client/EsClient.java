@@ -182,13 +182,14 @@ public class EsClient {
      * 传入：子类POJO的Class
      */
     public <T> T getById(GetRequest getRequest, Class<T> tClass) {
-        System.out.println(getRequest.index() + getRequest.type() + getRequest.id());
+        log.info(getRequest.index() + ":" + getRequest.type() + ":" + getRequest.id());
         try {
             GetResponse getResponse = client.get(getRequest);
 //            String index = getResponse.getIndex();
 //            String type = getResponse.getType();
 //            String id = getResponse.getId();
             if (getResponse.isExists()) {
+                log.info(getResponse.toString());
 //                long version = getResponse.getVersion();
 //                Map<String, Object> sourceAsMap = getResponse.getSourceAsMap();
 //                byte[] sourceAsBytes = getResponse.getSourceAsBytes();
