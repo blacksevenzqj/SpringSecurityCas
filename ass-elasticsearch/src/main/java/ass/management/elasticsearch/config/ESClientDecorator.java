@@ -1,5 +1,6 @@
 package ass.management.elasticsearch.config;
 
+import ass.management.elasticsearch.common.AnalyzerConfigEnum;
 import ass.management.elasticsearch.common.EsConfig;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
@@ -50,9 +51,9 @@ public class ESClientDecorator implements InitializingBean, DisposableBean {
         mapLong.put(EsConfig.EL_TYPE, EsConfig.El_LONG);
 
         Map mapAnalyzerIk= new HashMap();
-        mapAnalyzerIk.put(EsConfig.AnalyzerConfig.ANALYZER, EsConfig.AnalyzerConfig.IK);
+        mapAnalyzerIk.put(EsConfig.AnalyzerConfig.ANALYZER, AnalyzerConfigEnum.IK.getValue());
         Map mapAnalyzerIkSearch= new HashMap();
-        mapAnalyzerIkSearch.put(EsConfig.AnalyzerConfig.SEARCH_ANALYZER, EsConfig.AnalyzerConfig.IK_SEARCH);
+        mapAnalyzerIkSearch.put(EsConfig.AnalyzerConfig.SEARCH_ANALYZER, AnalyzerConfigEnum.IK_SEARCH.getValue());
 
         mapType.put(EsConfig.El_STRING, mapString);
         mapType.put(EsConfig.El_INTEGER, mapInteger);
@@ -62,8 +63,8 @@ public class ESClientDecorator implements InitializingBean, DisposableBean {
         mapType.put(EsConfig.El_KEYWORD, mapKeyWord);
         mapType.put(EsConfig.El_LONG, mapLong);
 
-        mapType.put(EsConfig.AnalyzerConfig.IK, mapAnalyzerIk);
-        mapType.put(EsConfig.AnalyzerConfig.IK_SEARCH, mapAnalyzerIkSearch);
+        mapType.put(AnalyzerConfigEnum.IK.getKey(), mapAnalyzerIk);
+        mapType.put(AnalyzerConfigEnum.IK_SEARCH.getKey(), mapAnalyzerIkSearch);
     }
 
     @Override

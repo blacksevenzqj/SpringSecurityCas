@@ -2,6 +2,7 @@ package ass.management.elasticsearch.client;
 
 import ass.management.elasticsearch.annotation.EsIndex;
 import ass.management.elasticsearch.annotation.EsType;
+import ass.management.elasticsearch.common.AnalyzerConfigEnum;
 import ass.management.elasticsearch.common.EsConfig;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -50,6 +51,7 @@ public class EsClient {
      * 传入：子类POJO的Class
      */
     public <T> void createIndexMapping(Class<T> tClass){
+        AnalyzerConfigEnum.IK.getKey();
         CreateIndexRequest request = new CreateIndexRequest(tClass.getSuperclass().getAnnotation(EsIndex.class).indexName());
         request.settings(Settings.builder()
                 .put(EsConfig.NUMBER_OF_SHARDS, tClass.getSuperclass().getAnnotation(EsIndex.class).numberOfShards())
@@ -61,11 +63,11 @@ public class EsClient {
             if (field.getAnnotation(EsFieldData.class) == null || StringUtils.isBlank(field.getAnnotation(EsFieldData.class).dataName())) {
                 mapField.put(field.getName(), ESClientDecorator.getMapType().get(EsConfig.El_STRING));
             } else {
-                if(StringUtils.isNotBlank(field.getAnnotation(EsFieldData.class).analyzerType()) &&
-                        StringUtils.isNotBlank(field.getAnnotation(EsFieldData.class).analyzerSearchType())){
+                if(StringUtils.isNotBlank(field.getAnnotation(EsFieldData.class).analyzerType().getKey()) &&
+                        StringUtils.isNotBlank(field.getAnnotation(EsFieldData.class).analyzerSearchType().getKey())){
                     Map dataMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).dataName());
-                    Map analyzerIkMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).analyzerType());
-                    Map analyzerIkSearchMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).analyzerSearchType());
+                    Map analyzerIkMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).analyzerType().getKey());
+                    Map analyzerIkSearchMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).analyzerSearchType().getKey());
                     dataMap.putAll(analyzerIkMap);
                     dataMap.putAll(analyzerIkSearchMap);
                     mapField.put(field.getName(), dataMap);

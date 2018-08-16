@@ -1,5 +1,7 @@
 package ass.management.elasticsearch.annotation;
 
+import ass.management.elasticsearch.common.AnalyzerConfigEnum;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,8 +13,8 @@ public @interface EsFieldData {
 
     String dataName() default "";
 
-    String analyzerType() default "";
+    AnalyzerConfigEnum analyzerType() default AnalyzerConfigEnum.IK;
 
-    String analyzerSearchType() default "";
+    AnalyzerConfigEnum analyzerSearchType() default AnalyzerConfigEnum.IK_SEARCH;
 
 }
