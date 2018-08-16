@@ -159,7 +159,7 @@ public class Es6ServiceImpl {
         searchSourceBuilder.query(QueryBuilders.termQuery(fieldName, field));
         searchSourceBuilder.from(esPageInfo.getPageNum());
         searchSourceBuilder.size(esPageInfo.getPageSize());
-        searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
+//        searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
         searchRequest.source(searchSourceBuilder);
         return RestResult.getSuccessResult(esClient.search(searchRequest, tClass));
     }
@@ -168,11 +168,12 @@ public class Es6ServiceImpl {
     public <T> RestResult<List<T>> searchMatchByField(Class<T> tClass, String fieldName, String field, EsPageInfo esPageInfo, String orderField, String orderType) {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(tClass.getAnnotation(Es6Index.class).indexName());
+        searchRequest.types(tClass.getAnnotation(Es6Index.class).typeName());
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(QueryBuilders.matchQuery(fieldName, field));
         searchSourceBuilder.from(esPageInfo.getPageNum());
         searchSourceBuilder.size(esPageInfo.getPageSize());
-        searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
+//        searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
         searchRequest.source(searchSourceBuilder);
         return RestResult.getSuccessResult(esClient.search(searchRequest, tClass));
     }

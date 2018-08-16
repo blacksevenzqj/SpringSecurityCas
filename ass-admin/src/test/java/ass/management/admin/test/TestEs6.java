@@ -45,15 +45,17 @@ public class TestEs6 {
     @Test
     public void getByField() throws Exception {
         RestResult<List<EquipmentData>> restResult = es6ServiceImpl.searchTermByFiled(EquipmentData.class,
-                "remarks", "123",
+                "remarks", "seven",
                 new EsPageInfo(), null, null);
+        System.out.println(restResult.getData());
     }
 
     @Test
     public void getMatchByField() throws Exception {
         RestResult<List<EquipmentData>> restResult = es6ServiceImpl.searchMatchByField(EquipmentData.class,
-                "remarks", "123",
+                "remarks", "go",
                 new EsPageInfo(), null, null);
+        System.out.println(restResult.getData());
     }
 
 }
