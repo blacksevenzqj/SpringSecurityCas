@@ -1,6 +1,7 @@
 package ass.management.admin.test;
 
 import ass.management.elasticsearch.common.RestResult;
+import ass.management.elasticsearch.entity.group.EquipmentData;
 import ass.management.elasticsearch.service.EsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -90,7 +91,10 @@ public class TestEs {
 
     @Test
     public void getById() throws Exception {
-        RestResult<EsHotNew> restResult = esServiceImpl.getById(EsHotNew.class, "111");
+//        RestResult<EsHotNew> restResult = esServiceImpl.getById(EsHotNew.class, "111");
+//        System.out.println(restResult.getData());
+
+        RestResult<EquipmentData> restResult = esServiceImpl.getById(EquipmentData.class, "61d533a353624e03bcff1aae1a748d5e");
         System.out.println(restResult.getData());
     }
     @Test

@@ -13,4 +13,7 @@ public class EsBaseEntity {
     @EsFieldData(dataName=EsConfig.EL_DATE)
     public String createDate;
 
+    @EsFieldData(dataName=EsConfig.EL_DATE)
+    public String updateDate;
+
 }

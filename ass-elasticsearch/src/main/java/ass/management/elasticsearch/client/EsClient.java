@@ -51,7 +51,6 @@ public class EsClient {
      * 传入：子类POJO的Class
      */
     public <T> void createIndexMapping(Class<T> tClass){
-        AnalyzerConfigEnum.IK.getKey();
         CreateIndexRequest request = new CreateIndexRequest(tClass.getSuperclass().getAnnotation(EsIndex.class).indexName());
         request.settings(Settings.builder()
                 .put(EsConfig.NUMBER_OF_SHARDS, tClass.getSuperclass().getAnnotation(EsIndex.class).numberOfShards())
