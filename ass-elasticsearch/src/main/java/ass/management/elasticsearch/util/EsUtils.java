@@ -32,9 +32,9 @@ public class EsUtils {
         }
         try {
             if (StringUtils.isBlank(orderField)) {
-                sortBuilder = new FieldSortBuilder(tClass.getField("createDate").getName()).order(sortOrder);
+                sortBuilder = new FieldSortBuilder("create_date").order(sortOrder);
             } else {
-                sortBuilder = new FieldSortBuilder(tClass.getField(orderField).getName()).order(sortOrder);
+                sortBuilder = new FieldSortBuilder(orderField).order(sortOrder);
             }
         }catch (Exception e){
             log.error(e.getMessage());
