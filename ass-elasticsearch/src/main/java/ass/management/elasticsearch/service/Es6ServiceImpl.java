@@ -43,25 +43,24 @@ public class Es6ServiceImpl {
 
 // ***************************************************************************************************
 
-//    /**
-//     * 新增、修改、删除 文档：
-//     */
-//    // 新增文档：
-//    // 传入：子类POJO的Class
-//    public <T> RestResult createIndexDoc(Class<T> tClass, EsBaseEntity obj){
-//        try {
-//            IndexRequest indexRequest = new IndexRequest(
-//                    tClass.getSuperclass().getAnnotation(EsIndex.class).indexName(),
-//                    tClass.getAnnotation(EsType.class).typeName(),
-//                    obj.getDbId()
-//            ).source(EsUtils.Class2Array(obj));
-//            esClient.createIndexDoc(indexRequest);
-//            return RestResult.getSuccessResult();
-//        }catch (Exception e){
-//            log.error(e.getMessage());
-//        }
-//        return RestResult.getFailResult(500,"新增文档失败");
-//    }
+    /**
+     * 新增、修改、删除 文档：
+     */
+    // 新增文档：
+    // 传入：子类POJO的Class
+    public <T> RestResult createIndexDoc(Class<T> tClass, EsBaseEntity obj){
+        try {
+            IndexRequest indexRequest = new IndexRequest(
+                    tClass.getAnnotation(Es6Index.class).indexName(),
+                    tClass.getAnnotation(Es6Index.class).typeName()
+            ).source(EsUtils.Class2Array(obj));
+            esClient.createIndexDoc(indexRequest);
+            return RestResult.getSuccessResult();
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return RestResult.getFailResult(500,"新增文档失败");
+    }
 //    // 更新文档：
 //    // 传入：子类POJO的Class
 //    public <T> RestResult upDateIndexDoc(Class<T> tClass, EsBaseEntity obj){

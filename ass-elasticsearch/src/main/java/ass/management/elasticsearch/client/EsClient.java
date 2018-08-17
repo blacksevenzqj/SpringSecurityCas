@@ -1,5 +1,6 @@
 package ass.management.elasticsearch.client;
 
+import ass.management.elasticsearch.annotation.Es6Index;
 import ass.management.elasticsearch.annotation.EsIndex;
 import ass.management.elasticsearch.annotation.EsType;
 import ass.management.elasticsearch.common.AnalyzerConfigEnum;
@@ -51,10 +52,10 @@ public class EsClient {
      * 传入：子类POJO的Class
      */
     public <T> void createIndexMapping(Class<T> tClass){
-        CreateIndexRequest request = new CreateIndexRequest(tClass.getSuperclass().getAnnotation(EsIndex.class).indexName());
+        CreateIndexRequest request = new CreateIndexRequest(tClass.getAnnotation(Es6Index.class).indexName());
         request.settings(Settings.builder()
-                .put(EsConfig.NUMBER_OF_SHARDS, tClass.getSuperclass().getAnnotation(EsIndex.class).numberOfShards())
-                .put(EsConfig.NUMBER_OF_REPLICAS, tClass.getSuperclass().getAnnotation(EsIndex.class).numberOfReplicas()));
+                .put(EsConfig.NUMBER_OF_SHARDS, tClass.getAnnotation(Es6Index.class).numberOfShards())
+                .put(EsConfig.NUMBER_OF_REPLICAS, tClass.getAnnotation(Es6Index.class).numberOfReplicas()));
 
         Map mapField = new HashMap();
         Field[] fields = tClass.getFields();
@@ -63,7 +64,10 @@ public class EsClient {
                 mapField.put(field.getName(), ESClientDecorator.getMapType().get(EsConfig.El_STRING));
             } else {
                 if(StringUtils.isNotBlank(field.getAnnotation(EsFieldData.class).analyzerType().getKey()) &&
-                        StringUtils.isNotBlank(field.getAnnotation(EsFieldData.class).analyzerSearchType().getKey())){
+                        field.getAnnotation(EsFieldData.class).analyzerType() != AnalyzerConfigEnum.NULL &&
+                        StringUtils.isNotBlank(field.getAnnotation(EsFieldData.class).analyzerSearchType().getKey()) &&
+                        field.getAnnotation(EsFieldData.class).analyzerSearchType() != AnalyzerConfigEnum.NULL &&
+                        EsConfig.El_STRING.equalsIgnoreCase(field.getAnnotation(EsFieldData.class).dataName())){
                     Map dataMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).dataName());
                     Map analyzerIkMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).analyzerType().getKey());
                     Map analyzerIkSearchMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).analyzerSearchType().getKey());
@@ -80,8 +84,8 @@ public class EsClient {
         mapProperties.put(EsConfig.PROPERTIES, mapField);
 
         Map mapType = new HashMap();
-        mapType.put(tClass.getAnnotation(EsType.class).typeName(), mapProperties);
-        request.mapping(tClass.getAnnotation(EsType.class).typeName(), mapType);
+        mapType.put(tClass.getAnnotation(Es6Index.class).typeName(), mapProperties);
+        request.mapping(tClass.getAnnotation(Es6Index.class).typeName(), mapType);
 
         ActionListener<CreateIndexResponse> listener = new ActionListener<CreateIndexResponse>() {
             @Override

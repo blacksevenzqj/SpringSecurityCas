@@ -7,13 +7,13 @@ import ass.management.elasticsearch.annotation.EsFieldData;
 @Data
 public class EsBaseEntity {
 
-    @EsFieldData(dataName= EsConfig.El_KEYWORD)
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "db_id")
     public String dbId;
 
-    @EsFieldData(dataName=EsConfig.EL_DATE)
+    @EsFieldData(dataName=EsConfig.EL_DATE, elName = "create_date")
     public String createDate;
 
-    @EsFieldData(dataName=EsConfig.EL_DATE)
+    @EsFieldData(dataName=EsConfig.EL_DATE, elName = "update_date")
     public String updateDate;
 
 }
