@@ -129,3 +129,8 @@ elasticsearch:
     connection-request-time-out: 500
     max-connect-num: 100
     max-connect-per-route: 100
+
+
+executors:
+  factoryName:
+    defaultName: disruptor
