@@ -73,7 +73,6 @@ public class TaskDispatcher implements Dispatcher<Runnable>, Executor {
 
     // 事件生产工厂
     private static final EventFactory<MessageEvent<Runnable>> eventFactory = new EventFactory<MessageEvent<Runnable>>() {
-
         @Override
         public MessageEvent<Runnable> newInstance() {
             return new MessageEvent<>();

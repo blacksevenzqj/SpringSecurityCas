@@ -1,4 +1,4 @@
-package ass.management.admin.test.thread;
+package ass.management.admin.test.thread.disruptor;
 
 import ass.management.admin.common.concurrent.executor.DefaultExecutors;
 import ass.management.admin.modules.sys.service.SysUserServiceImpl;

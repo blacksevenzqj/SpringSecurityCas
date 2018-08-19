@@ -151,5 +151,5 @@ delaymessage:
   visa:
     tickDurationSecond: 1
     ticksPerWheelSecond: 3600
-    timeOutSecond: 3600
-    timeOutHour: 24
+    timeOutSecond: 60
+    timeOutHour: 1

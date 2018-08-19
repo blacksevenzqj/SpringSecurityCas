@@ -1,6 +1,8 @@
-package ass.management.admin.common.concurrent.hashedwheeltimer.delaymessage;
+package ass.management.admin.common.concurrent.hashedwheeltimer.thread.delaymessage;
 
-import ass.management.admin.common.concurrent.hashedwheeltimer.DefaultBusinessService;
+import ass.management.admin.common.concurrent.hashedwheeltimer.bussiness.entry.DefaultPayOrder;
+import ass.management.admin.common.concurrent.hashedwheeltimer.bussiness.config.PaymentEnum;
+import ass.management.admin.common.concurrent.hashedwheeltimer.bussiness.service.DefaultBusinessService;
 import io.netty.util.Timeout;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,11 +28,11 @@ public class DefaultDelayMessageThread implements Runnable{
         // TODO ... 全局数据锁
         String orderNo = timeoutMap.get(timeout);
         if(StringUtils.isNotBlank(orderNo)) {
-//            DefaultPayOrder defaultPayOrder = defaultBusinessService.findPaidOrderByNo(orderNo);
-//            if (defaultPayOrder.getOrderStatus().equals(PaymentStatus.UNPAID.getCode())) {
-//                defaultPayOrder.setOrderStatus(PaymentStatus.EXPIRED.getCode());
-//                defaultBusinessService.savePaidOrderById(defaultPayOrder);
-//            }
+            DefaultPayOrder defaultPayOrder = defaultBusinessService.findPaidOrderByNo(orderNo);
+            if (defaultPayOrder.getOrderStatus().equals(PaymentEnum.UNPAID.getCode())) {
+                defaultPayOrder.setOrderStatus(PaymentEnum.EXPIRED.getCode());
+                defaultBusinessService.savePaidOrderById(defaultPayOrder);
+            }
             timeoutMap.remove(timeout);
             timeoutOrderMap.remove(orderNo);
         }
