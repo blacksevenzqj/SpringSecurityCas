@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ass.management.common.concurrent;
+package ass.management.common.concurrent.pool.threadfactory;
 
 import org.slf4j.LoggerFactory;
 

@@ -16,8 +16,8 @@
 
 package ass.management.common.concurrent.disruptor;
 
-import ass.management.common.concurrent.CustomThreadFactory;
-import ass.management.common.concurrent.RejectedTaskPolicyWithReport;
+import ass.management.common.concurrent.pool.threadfactory.CustomThreadFactory;
+import ass.management.common.concurrent.pool.rejected.RejectedTaskPolicyWithReport;
 import ass.management.common.utils.JConstants;
 import ass.management.utils.Pow2;
 import ass.management.utils.Preconditions;

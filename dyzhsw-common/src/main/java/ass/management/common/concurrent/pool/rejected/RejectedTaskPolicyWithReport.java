@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ass.management.common.concurrent;
+package ass.management.common.concurrent.pool.rejected;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;

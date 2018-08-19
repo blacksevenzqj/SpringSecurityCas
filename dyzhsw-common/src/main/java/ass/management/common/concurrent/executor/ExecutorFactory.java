@@ -1,4 +1,4 @@
-package ass.management.common.executor;
+package ass.management.common.concurrent.executor;
 
 public interface ExecutorFactory extends DefaultExecutorFactory{
 

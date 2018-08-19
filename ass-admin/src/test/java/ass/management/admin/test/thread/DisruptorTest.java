@@ -1,8 +1,8 @@
 package ass.management.admin.test.thread;
 
-import ass.management.admin.common.executor.DefaultExecutors;
+import ass.management.admin.common.concurrent.executor.DefaultExecutors;
 import ass.management.admin.modules.sys.service.SysUserServiceImpl;
-import ass.management.common.executor.CloseableExecutor;
+import ass.management.common.concurrent.executor.CloseableExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;

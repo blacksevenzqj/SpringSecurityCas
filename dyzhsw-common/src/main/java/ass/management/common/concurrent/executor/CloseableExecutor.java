@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package ass.management.common.concurrent;
+package ass.management.common.concurrent.executor;
 
 /**
  * jupiter
- * org.jupiter.common.concurrent
+ * org.jupiter.rpc.executor
  *
  * @author jiachun.fjc
  */
-public interface RejectedRunnable extends Runnable {
+public interface CloseableExecutor {
 
-    void rejected();
+    void execute(Runnable r);
+
+    void shutdown();
 }

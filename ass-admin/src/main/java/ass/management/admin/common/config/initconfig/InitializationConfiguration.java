@@ -1,7 +1,7 @@
 package ass.management.admin.common.config.initconfig;
 
-import ass.management.admin.common.config.ParameterConfiguration;
-import ass.management.admin.common.executor.DefaultExecutors;
+import ass.management.admin.common.config.initparam.ExecutorsConfiguration;
+import ass.management.admin.common.concurrent.executor.DefaultExecutors;
 import ass.management.common.config.ConfigParameter;
 import ass.management.common.utils.SystemPropertyUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import javax.annotation.PreDestroy;
 public class InitializationConfiguration {
 
     @Autowired
-    ParameterConfiguration parameterConfiguration;
+    ExecutorsConfiguration parameterConfiguration;
 
     @PostConstruct
     public void init(){

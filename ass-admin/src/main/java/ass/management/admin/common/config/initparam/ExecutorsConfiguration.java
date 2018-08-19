@@ -1,4 +1,4 @@
-package ass.management.admin.common.config;
+package ass.management.admin.common.config.initparam;
 
 import ass.management.common.config.ConfigParameter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = ConfigParameter.Executor.EXECUTOR_FACTORY_NAME)
-public class ParameterConfiguration {
+public class ExecutorsConfiguration {
 
     private String defaultName;
 

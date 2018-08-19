@@ -1,10 +1,10 @@
-package ass.management.admin.common.executor;
+package ass.management.admin.common.concurrent.executor;
 
 import ass.management.common.config.ConfigParameter;
-import ass.management.common.executor.CloseableExecutor;
-import ass.management.common.executor.DefaultExecutorFactory;
-import ass.management.common.executor.ExecutorFactory;
-import ass.management.common.executor.ThreadPoolExecutorFactory;
+import ass.management.common.concurrent.executor.CloseableExecutor;
+import ass.management.common.concurrent.executor.DefaultExecutorFactory;
+import ass.management.common.concurrent.executor.ExecutorFactory;
+import ass.management.common.concurrent.executor.ThreadPoolExecutorFactory;
 import ass.management.common.utils.JServiceLoader;
 import ass.management.common.utils.SystemPropertyUtil;
 import org.slf4j.LoggerFactory;

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package ass.management.common.executor;
+package ass.management.common.concurrent.executor;
 
 
-import ass.management.common.concurrent.RejectedTaskPolicyWithReport;
+import ass.management.common.concurrent.pool.rejected.RejectedTaskPolicyWithReport;
 import ass.management.common.config.ConfigParameter;
 import ass.management.common.utils.SpiMetadata;
 import ass.management.common.utils.SystemPropertyUtil;

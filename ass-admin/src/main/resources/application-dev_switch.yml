@@ -134,3 +134,22 @@ elasticsearch:
 executors:
   factoryName:
     defaultName: disruptor
+
+
+# 时间轮 延迟消息
+delaymessage:
+  advisory:
+    tickDurationSecond: 1
+    ticksPerWheelSecond: 3600
+    timeOutSecond: 3600
+    timeOutHour: 72
+  airticket:
+    tickDurationSecond: 1
+    ticksPerWheelSecond: 3600
+    timeOutSecond: 3600
+    timeOutHour: 0.25
+  visa:
+    tickDurationSecond: 1
+    ticksPerWheelSecond: 3600
+    timeOutSecond: 3600
+    timeOutHour: 24

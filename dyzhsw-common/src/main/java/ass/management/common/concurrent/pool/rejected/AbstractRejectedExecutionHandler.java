@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ass.management.common.concurrent;
+package ass.management.common.concurrent.pool.rejected;
 
 import ass.management.common.utils.JConstants;
 import ass.management.common.utils.JvmTools;

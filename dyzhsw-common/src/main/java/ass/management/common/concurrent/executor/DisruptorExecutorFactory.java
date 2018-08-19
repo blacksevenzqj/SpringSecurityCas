@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package ass.management.common.executor;
+package ass.management.common.concurrent.executor;
 
 import ass.management.common.concurrent.disruptor.TaskDispatcher;
 import ass.management.common.concurrent.disruptor.WaitStrategyType;

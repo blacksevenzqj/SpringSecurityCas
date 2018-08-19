@@ -1,6 +1,6 @@
 package ass.management.security.test.thread;
 
-import ass.management.common.executor.CloseableExecutor;
+import ass.management.common.concurrent.executor.CloseableExecutor;
 import ass.management.security.common.executor.DefaultExecutors;
 import ass.management.security.modules.sys.service.UserInfoServiceImpl;
 import lombok.extern.slf4j.Slf4j;

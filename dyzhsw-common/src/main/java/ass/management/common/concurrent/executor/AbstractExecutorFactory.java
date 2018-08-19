@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package ass.management.common.executor;
+package ass.management.common.concurrent.executor;
 
-import ass.management.common.concurrent.CustomThreadFactory;
+import ass.management.common.concurrent.pool.threadfactory.CustomThreadFactory;
 import ass.management.common.utils.JConstants;
 import ass.management.common.utils.SystemPropertyUtil;
 
