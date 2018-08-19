@@ -46,7 +46,7 @@ public class DynamicDataSourceConfig {
     }
 
     /**
-     * 用于：事务---“动静分离”。只是切换数据源的话，不用也可以。
+     * 用于：事务---“动静分离” mybatis、jdbctemplate、本地事务。只是切换数据源的话，不用也可以。
      * Dynamic transaction manager data source transaction manager.
      * @param dynamicSwitchDataSource the dynamic data source
      * @return the data source transaction manager

@@ -26,7 +26,7 @@ public class ElasticsConfig {
     @Bean
     @Scope("singleton")
     public ESClientDecorator getEsClientDecorator() {
-        return new ESClientDecorator(new HttpHost(elasticsProperties.getClusterNodes(), elasticsProperties.getPort()));
+        return new ESClientDecorator(elasticsProperties);
     }
 
 }

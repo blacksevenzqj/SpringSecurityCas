@@ -29,4 +29,18 @@ public class ElasticsProperties {
     private int port;
 
 
+    private boolean connectTimeConfig;
+
+    private boolean connectNumConfig;
+
+    private int connectTimeOut;
+
+    private int socketTimeOut;
+
+    private int connectionRequestTimeOut;
+
+    private int maxConnectNum;
+
+    private int maxConnectPerRoute;
+
 }

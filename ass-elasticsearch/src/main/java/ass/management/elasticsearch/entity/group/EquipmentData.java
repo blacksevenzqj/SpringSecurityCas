@@ -11,52 +11,52 @@ import lombok.Data;
 public class EquipmentData extends EsBaseEntity {
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "equipment_id")
-    private String equipmentId;
+    public String equipmentId;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "equipment_code")
-    private String equipmentCode;
+    public String equipmentCode;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "create_by")
-    private String createBy;
+    public String createBy;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "update_by")
-    private String updateBy;
+    public String updateBy;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String remarks;
+    public String remarks;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "del_flag")
-    private String delFlag;
+    public String delFlag;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String column1;
+    public String column1;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String column2;
+    public String column2;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String column3;
+    public String column3;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String column4;
+    public String column4;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String column5;
+    public String column5;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String column6;
+    public String column6;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String column7;
+    public String column7;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String column8;
+    public String column8;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String column9;
+    public String column9;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
-    private String column10;
+    public String column10;
 
 
     @Override

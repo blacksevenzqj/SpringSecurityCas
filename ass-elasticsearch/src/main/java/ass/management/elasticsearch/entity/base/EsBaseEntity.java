@@ -7,6 +7,8 @@ import ass.management.elasticsearch.annotation.EsFieldData;
 @Data
 public class EsBaseEntity {
 
+    private String esId;
+
     @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "db_id")
     public String dbId;
 
