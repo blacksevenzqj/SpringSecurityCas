@@ -20,7 +20,7 @@ public class HashedWheelTimerTest {
     public void test1() throws Exception{
         visaDelayMessageWatch.startDelayMessage("111");
 
-        Thread.currentThread().sleep(60 * 60 * 1000);
+        Thread.currentThread().sleep(6 * 60 * 1000);
     }
 
 }
