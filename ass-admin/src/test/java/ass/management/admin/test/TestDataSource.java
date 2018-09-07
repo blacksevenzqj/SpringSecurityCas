@@ -44,13 +44,13 @@ public class TestDataSource {
 
     @Test
     public void redis() {
-        String str = redisUtils.get("test");
+        String str = redisUtils.get("test1");
         if(str == null){
             System.out.println("result is null");
         }
         System.out.println("result is " + str);
 
-//        redisUtils.set("test", "123");
+//        redisUtils.set("test1", "123", 20);
     }
 
     @Test
