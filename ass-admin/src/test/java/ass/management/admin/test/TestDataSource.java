@@ -41,9 +41,6 @@ public class TestDataSource {
     @Qualifier(value = "redisUtils")
     RedisUtils redisUtils;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
-
 
     @Test
     public void redis() {
@@ -54,9 +51,6 @@ public class TestDataSource {
         System.out.println("result is " + str);
 
 //        redisUtils.set("test", "123");
-
-        redisTemplate.opsForValue().get("test");
-
     }
 
     @Test
