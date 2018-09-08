@@ -13,17 +13,28 @@ public class SpringContextUtils implements ApplicationContextAware {
 	public static ApplicationContext applicationContext; 
 
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext)
-			throws BeansException {
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		SpringContextUtils.applicationContext = applicationContext;
 	}
 
-	public static Object getBean(String name) {
-		return applicationContext.getBean(name);
+	/**
+	 * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
+	 */
+	public static <T> T getBean(String name) {
+		checkApplicationContext();
+		return (T) applicationContext.getBean(name);
+	}
+
+	/**
+	 * 从静态变量ApplicationContext中取得Bean, 自动转型为所赋值对象的类型.
+	 */
+	public static <T> T getBean(Class<T> clazz) {
+		checkApplicationContext();
+		return (T) applicationContext.getBean(clazz);
 	}
 
 	public static <T> T getBean(String name, Class<T> requiredType) {
-		return applicationContext.getBean(name, requiredType);
+		return (T) applicationContext.getBean(name, requiredType);
 	}
 
 	public static boolean containsBean(String name) {
@@ -36,6 +47,19 @@ public class SpringContextUtils implements ApplicationContextAware {
 
 	public static Class<? extends Object> getType(String name) {
 		return applicationContext.getType(name);
+	}
+
+	/**
+	 * 清除applicationContext静态变量.
+	 */
+	public static void cleanApplicationContext() {
+		applicationContext = null;
+	}
+
+	private static void checkApplicationContext() {
+		if (applicationContext == null) {
+			throw new IllegalStateException("applicaitonContext未注入,请在applicationContext.xml中定义SpringContextHolder");
+		}
 	}
 
 }
