@@ -1,10 +1,13 @@
 package ass.management.admin.test;
 
+import ass.management.common.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ass.management.admin.modules.business.visa.service.VisaAdminServiceImpl;
@@ -34,6 +37,21 @@ public class TestDataSource {
     @Autowired
     VisaAdminServiceImpl visaAdminServiceImpl;
 
+    @Autowired
+    @Qualifier(value = "redisUtils")
+    RedisUtils redisUtils;
+
+
+    @Test
+    public void redis() {
+        String str = redisUtils.get("test1");
+        if(str == null){
+            System.out.println("result is null");
+        }
+        System.out.println("result is " + str);
+
+//        redisUtils.set("test1", "123", 20);
+    }
 
     @Test
     public void visa() {
