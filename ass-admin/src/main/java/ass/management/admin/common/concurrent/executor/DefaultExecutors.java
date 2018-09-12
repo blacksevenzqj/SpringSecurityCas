@@ -23,8 +23,8 @@ public class DefaultExecutors {
     }
 
     private void factoryMethod(){
-//        String factoryName = SystemPropertyUtil.get("executor.factory.default.factory_name", "disruptor");
-        String factoryName = SystemPropertyUtil.get(ConfigParameter.Executor.DEFAULT_FACTORY_NAME, ConfigParameter.Executor.DISRUPTOR);
+//        String factoryName = SystemPropertyUtil.get("executorSystemFactoryName", "disruptor");
+        String factoryName = SystemPropertyUtil.get(ConfigParameter.Executor.SYSTEM_FACTORY_NAME, ConfigParameter.Executor.DISRUPTOR);
         ExecutorFactory factory;
         try {
             factory = (ExecutorFactory) JServiceLoader.load(DefaultExecutorFactory.class)

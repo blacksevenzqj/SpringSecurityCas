@@ -29,7 +29,7 @@ public class InitializationConfiguration {
 
 
     private void setSystemProperty(){
-        SystemPropertyUtil.setProperty(ConfigParameter.Executor.DEFAULT_FACTORY_NAME, parameterConfiguration.getDefaultName());
+        SystemPropertyUtil.setProperty(ConfigParameter.Executor.SYSTEM_FACTORY_NAME, parameterConfiguration.getDefaultName());
     }
 
 

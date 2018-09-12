@@ -1,2 +1,3 @@
 ass.management.common.concurrent.executor.DisruptorExecutorFactory
 ass.management.common.concurrent.executor.ThreadPoolExecutorFactory
+ass.management.common.concurrent.executor.ForkJoinPoolExecutorFactory
