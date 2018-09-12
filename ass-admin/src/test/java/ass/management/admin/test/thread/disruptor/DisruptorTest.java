@@ -1,6 +1,6 @@
 package ass.management.admin.test.thread.disruptor;
 
-import ass.management.admin.common.concurrent.executor.DefaultExecutors;
+import ass.management.common.concurrent.executor.DefaultExecutors;
 import ass.management.admin.modules.sys.service.SysUserServiceImpl;
 import ass.management.common.concurrent.executor.CloseableExecutor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +26,7 @@ public class DisruptorTest {
             closeableExecutor.execute(runnable);
         }
 
-//        Thread.currentThread().sleep(Integer.MAX_VALUE);
+        Thread.currentThread().sleep(1000);
     }
 
 }

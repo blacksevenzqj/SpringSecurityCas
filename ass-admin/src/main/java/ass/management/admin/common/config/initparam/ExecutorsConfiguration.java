@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 public class ExecutorsConfiguration {
 
     private String defaultName;
+    private String secondName;
 
 
     public String getDefaultName() {
@@ -16,5 +17,12 @@ public class ExecutorsConfiguration {
     }
     public void setDefaultName(String defaultName) {
         this.defaultName = defaultName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 }

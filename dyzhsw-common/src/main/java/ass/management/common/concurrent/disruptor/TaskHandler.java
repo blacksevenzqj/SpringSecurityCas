@@ -16,6 +16,7 @@
 
 package ass.management.common.concurrent.disruptor;
 
+import ass.management.common.concurrent.executor.DefaultExecutors;
 import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.LifecycleAware;
 import com.lmax.disruptor.TimeoutHandler;
@@ -37,12 +38,14 @@ public class TaskHandler implements
 
     @Override
     public void onEvent(MessageEvent<Runnable> event, long sequence, boolean endOfBatch) throws Exception {
-        event.getMessage().run();
+//        event.getMessage().run();
+        DefaultExecutors.getSecondExecutors().execute(event.getMessage());
     }
 
     @Override
     public void onEvent(MessageEvent<Runnable> event) throws Exception {
-        event.getMessage().run();
+//        event.getMessage().run();
+        DefaultExecutors.getSecondExecutors().execute(event.getMessage());
     }
 
     @Override

@@ -137,6 +137,7 @@ executors:
     defaultName: disruptor
 #    defaultName: threadPool
 #    defaultName: forkJoin
+    secondName: forkJoin
 
 
 # 时间轮 延迟消息

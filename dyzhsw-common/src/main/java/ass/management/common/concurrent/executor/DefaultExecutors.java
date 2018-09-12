@@ -1,10 +1,6 @@
-package ass.management.admin.common.concurrent.executor;
+package ass.management.common.concurrent.executor;
 
 import ass.management.common.config.ConfigParameter;
-import ass.management.common.concurrent.executor.CloseableExecutor;
-import ass.management.common.concurrent.executor.DefaultExecutorFactory;
-import ass.management.common.concurrent.executor.ExecutorFactory;
-import ass.management.common.concurrent.executor.ThreadPoolExecutorFactory;
 import ass.management.common.utils.JServiceLoader;
 import ass.management.common.utils.SystemPropertyUtil;
 import org.slf4j.LoggerFactory;
@@ -17,6 +13,7 @@ public class DefaultExecutors {
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DefaultExecutors.class);
 
     private CloseableExecutor executor;
+    private CloseableExecutor secondExecutor;
 
     private DefaultExecutors(){
         factoryMethod();
@@ -24,10 +21,15 @@ public class DefaultExecutors {
 
     private void factoryMethod(){
         String factoryName = SystemPropertyUtil.get(ConfigParameter.Executor.SYSTEM_FACTORY_NAME, ConfigParameter.Executor.DISRUPTOR);
+        String secondFactoryName = SystemPropertyUtil.get(ConfigParameter.Executor.SYSTEM_SECOND_FACTORY_NAME, ConfigParameter.Executor.FORKJOIN);
         ExecutorFactory factory;
+        ExecutorFactory secondFactory = null;
         try {
             factory = (ExecutorFactory) JServiceLoader.load(DefaultExecutorFactory.class)
                     .find(factoryName);
+            if(ConfigParameter.Executor.DISRUPTOR.equalsIgnoreCase(factoryName)){
+                secondFactory = (ExecutorFactory) JServiceLoader.load(DefaultExecutorFactory.class).find(secondFactoryName);
+            }
         } catch (Throwable t) {
             logger.warn("Failed to load default's executor factory [{}], cause: {}, " +
                     "[ThreadPoolExecutorFactory] will be used as default.", factoryName, stackTrace(t));
@@ -36,18 +38,29 @@ public class DefaultExecutors {
         }
 
         executor = factory.newExecutor(ExecutorFactory.Target.DEFAULT, "default-processor");
+        if(secondFactory != null){
+            secondExecutor = secondFactory.newExecutor(ExecutorFactory.Target.DEFAULT, "second-processor");
+        }
     }
+
 
     private static class DefaultExecutorsHandler{
         private static DefaultExecutors de = new DefaultExecutors();
     }
 
+
     public static CloseableExecutor getDefaultExecutors(){
         return DefaultExecutorsHandler.de.getCloseableExecutor();
     }
-
     private CloseableExecutor getCloseableExecutor(){
         return executor;
+    }
+
+    public static CloseableExecutor getSecondExecutors(){
+        return DefaultExecutorsHandler.de.getSecondCloseableExecutor();
+    }
+    private CloseableExecutor getSecondCloseableExecutor(){
+        return secondExecutor;
     }
 
 }

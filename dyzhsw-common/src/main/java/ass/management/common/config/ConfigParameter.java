@@ -6,6 +6,8 @@ public interface ConfigParameter {
         String EXECUTOR_FACTORY_NAME = "executors.factoryName";
 
         String SYSTEM_FACTORY_NAME = "executorSystemFactoryName";
+        String SYSTEM_SECOND_FACTORY_NAME = "executorSecondSystemFactoryName";
+
 
         String DISRUPTOR = "disruptor";
         String THREADPOOL = "threadPool";
