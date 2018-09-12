@@ -19,6 +19,6 @@ public class RunableTest implements Runnable{
     @Override
     public void run() {
         List<Long> list = sysUserServiceImpl.queryAllMenuId(userId);
-        System.out.println("RunableTest run !!!" + list);
+        System.out.println("RunableTest run !!!" + Thread.currentThread().getName() + "___" + list);
     }
 }

@@ -23,7 +23,6 @@ public class DefaultExecutors {
     }
 
     private void factoryMethod(){
-//        String factoryName = SystemPropertyUtil.get("executorSystemFactoryName", "disruptor");
         String factoryName = SystemPropertyUtil.get(ConfigParameter.Executor.SYSTEM_FACTORY_NAME, ConfigParameter.Executor.DISRUPTOR);
         ExecutorFactory factory;
         try {

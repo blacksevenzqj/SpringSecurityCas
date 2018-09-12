@@ -25,6 +25,8 @@ public class DisruptorTest {
             Runnable runnable = new RunableTest(sysUserServiceImpl, 8L);
             closeableExecutor.execute(runnable);
         }
+
+//        Thread.currentThread().sleep(Integer.MAX_VALUE);
     }
 
 }

@@ -131,9 +131,12 @@ elasticsearch:
     max-connect-per-route: 100
 
 
+# 线程框架
 executors:
   factoryName:
     defaultName: disruptor
+#    defaultName: threadPool
+#    defaultName: forkJoin
 
 
 # 时间轮 延迟消息
