@@ -27,7 +27,7 @@ public class DefaultExecutors {
         try {
             factory = (ExecutorFactory) JServiceLoader.load(DefaultExecutorFactory.class)
                     .find(factoryName);
-            if(ConfigParameter.Executor.DISRUPTOR.equalsIgnoreCase(factoryName)){
+            if(ConfigParameter.Executor.DISRUPTOR.equalsIgnoreCase(factoryName)){ // 如果主线程框架为disruptor时，第二线程框架使用forkJoin。
                 secondFactory = (ExecutorFactory) JServiceLoader.load(DefaultExecutorFactory.class).find(secondFactoryName);
             }
         } catch (Throwable t) {
