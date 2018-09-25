@@ -62,4 +62,12 @@ public class SpringContextUtils implements ApplicationContextAware {
 		}
 	}
 
+	/**
+	 *
+	 * 检查SpringUtil是否已完成初始化
+	 */
+	public static boolean isInited(){
+		return null != applicationContext;
+	}
+
 }
