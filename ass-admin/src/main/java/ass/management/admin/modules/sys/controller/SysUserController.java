@@ -1,5 +1,9 @@
 package ass.management.admin.modules.sys.controller;
 
+import ass.management.admin.common.excel.ExcelContext;
+import ass.management.admin.common.excel.model.BookModel;
+import ass.management.admin.common.excel.model.StudentModel;
+import ass.management.admin.common.excel.result.ExcelImportResult;
 import ass.management.admin.modules.sys.entity.SysUserEntity;
 import ass.management.admin.modules.sys.service.SysUserRoleServiceImpl;
 import ass.management.admin.modules.sys.service.SysUserServiceImpl;
@@ -14,7 +18,13 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ass.management.admin.common.annotation.SysLog;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.FileInputStream;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +40,9 @@ public class SysUserController extends AbstractController {
 
 	@Autowired
 	private SysUserRoleServiceImpl sysUserRoleService;
+
+	@Autowired
+	ExcelContext excelContext;
 	
 	/**
 	 * 所有用户列表
@@ -118,4 +131,41 @@ public class SysUserController extends AbstractController {
 		sysUserService.deleteBatch(userIds);
 		return R.ok();
 	}
+
+
+	@RequestMapping("/importExcel")
+	public R importExcel(HttpServletRequest request) throws Exception{
+		long  startTime=System.currentTimeMillis();
+		//将当前上下文初始化给  CommonsMutipartResolver （多部分解析器）
+		CommonsMultipartResolver multipartResolver=new CommonsMultipartResolver(request.getSession().getServletContext());
+		//检查form中是否有enctype="multipart/form-data"
+		if(multipartResolver.isMultipart(request)) {
+			//将request变成多部分request
+			MultipartHttpServletRequest multiRequest=(MultipartHttpServletRequest)request;
+			//获取multiRequest 中所有的文件名
+			Iterator iter = multiRequest.getFileNames();
+			while(iter.hasNext()) {
+				//一次遍历所有文件
+				MultipartFile file = multiRequest.getFile(iter.next().toString());
+				if (file != null) {
+					System.out.println(file);
+					ExcelImportResult result = excelContext.readExcel("student", 2, file.getInputStream());
+					System.out.println(result.getHeader());
+					List<StudentModel> stus = result.getListBean();
+					for (StudentModel stu : stus) {
+						System.out.println(stu);
+						BookModel book = stu.getBook();
+						System.out.println(book);
+						if (book != null) {
+							System.out.println(book.getAuthor());
+						}
+					}
+				}
+			}
+		}
+		long  endTime=System.currentTimeMillis();
+		System.out.println("方法三的运行时间："+String.valueOf(endTime-startTime)+"ms");
+		return R.ok();
+	}
+
 }

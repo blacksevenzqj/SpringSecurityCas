@@ -19,7 +19,7 @@ public class ImportTest {
 	// 测试时文件磁盘路径
 	private static String path = "E:\\excel_temp\\test-excel.xlsx";
 	// 配置文件路径
-	private static ExcelContext context = new ExcelContext("excel-config.xml");
+	private static ExcelContext context = new ExcelContext("/config/excel/excel-config.xml");
 	// Excel配置文件中配置的id
 	private static String excelId = "student";
 	

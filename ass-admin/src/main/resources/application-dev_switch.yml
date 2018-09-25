@@ -157,3 +157,9 @@ delaymessage:
     ticksPerWheelSecond: 3600
     timeOutSecond: 60
     timeOutHour: 1
+
+
+# Excel
+excel:
+  context:
+    path: /config/excel/excel-config.xml
