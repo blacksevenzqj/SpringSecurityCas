@@ -13,9 +13,15 @@ import ass.management.common.validator.ValidatorUtils;
 import ass.management.common.validator.group.AddGroup;
 import ass.management.common.validator.group.UpdateGroup;
 import ass.management.db.utils.PageUtils;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ass.management.admin.common.annotation.SysLog;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +29,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.FileInputStream;
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +39,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/sys/user")
+@Slf4j
 public class SysUserController extends AbstractController {
 
 	@Autowired
@@ -135,17 +142,6 @@ public class SysUserController extends AbstractController {
 
 	@RequestMapping("/importExcel")
 	public R importExcel(HttpServletRequest request) throws Exception{
-		String path = request.getContextPath();
-		System.out.println(path);
-		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-		System.out.println(basePath);
-		String path2 = request.getSession().getServletContext().getRealPath("/");
-		System.out.println(path2);
-		String path3 = request.getServletPath();
-		System.out.println(path3);
-		String path4 = request.getServletContext().getRealPath("");
-		System.out.println(path4);
-
 		long  startTime=System.currentTimeMillis();
 		//将当前上下文初始化给  CommonsMutipartResolver （多部分解析器）
 		CommonsMultipartResolver multipartResolver=new CommonsMultipartResolver(request.getSession().getServletContext());
@@ -177,6 +173,35 @@ public class SysUserController extends AbstractController {
 		long  endTime=System.currentTimeMillis();
 		System.out.println("方法三的运行时间："+String.valueOf(endTime-startTime)+"ms");
 		return R.ok();
+	}
+
+
+	@RequestMapping(value = "/cruiseDownload", method = { RequestMethod.GET, RequestMethod.POST })
+	public ResponseEntity<byte[]> cruiseDownload(HttpServletRequest request, @RequestParam("id") String id)throws Exception {
+		return cruiseDownloadUtils(request, id);
+	}
+
+	public ResponseEntity<byte[]> cruiseDownloadUtils(HttpServletRequest request, String id){
+		// 目录分隔符
+		String separator = File.separator;
+		//下载文件路径
+        String basePath = request.getServletContext().getRealPath("");
+        String filePath = "/WEB-INF/classes/statics/白马东区17幢1单元601.txt";
+		try {
+			log.info(basePath + filePath);
+			File file = new File(basePath + filePath);
+			HttpHeaders headers = new HttpHeaders();
+			//下载显示的文件名，解决中文名称乱码问题
+			String downloadFielName = new String("白马东区17幢1单元601.txt".getBytes("UTF-8"), "iso-8859-1");
+			//通知浏览器以attachment（下载方式）打开图片
+			headers.setContentDispositionFormData("attachment", downloadFielName);
+			//application/octet-stream ： 二进制流数据（最常见的文件下载）。
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.CREATED);
+		}catch (Exception e){
+			log.error("下载失败！" + e);
+			return null;
+		}
 	}
 
 }
