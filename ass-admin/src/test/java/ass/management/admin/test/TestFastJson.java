@@ -1,6 +1,7 @@
 package ass.management.admin.test;
 
 import ass.management.admin.common.excel.config.FieldValue;
+import ass.management.admin.common.utils.BsEntity2EsEntity;
 import ass.management.common.concurrent.executor.DefaultExecutorFactory;
 import ass.management.elasticsearch.entity.group.EquipmentData;
 import ass.management.elasticsearch.util.EsUtils;
@@ -47,14 +48,10 @@ public class TestFastJson {
         System.out.println(time);   // 默认按照系统时区(东八区) 转换Long   1533706245000
 
 
-        FieldValue defaul= (FieldValue)Class.forName(FieldValue.class.getName()).newInstance();
-        String baseName = DefaultExecutorFactory.class.getName();
-        String baseName1 = DefaultExecutorFactory.class.getSimpleName();
-        String baseName2 = DefaultExecutorFactory.class.getTypeName();
-        String baseName3 = DefaultExecutorFactory.class.getCanonicalName();
-        String configs1 = Thread.currentThread().getContextClassLoader().getResource("Test2.java").getPath();
+        String baseName4 = "ass/management/admin/common/excel/config/FieldValue.class";
+        String configs1 = Thread.currentThread().getContextClassLoader().getResource(baseName4).getPath();
         System.out.println(configs1);
-       String configs = Thread.currentThread().getContextClassLoader().getResource("test-excel.xlsx").getPath();
+       String configs = Thread.currentThread().getContextClassLoader().getResource("config/excel/excel-config.xml").getPath();
        System.out.println(configs);
     }
 
