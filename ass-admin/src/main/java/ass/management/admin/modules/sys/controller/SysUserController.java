@@ -135,6 +135,17 @@ public class SysUserController extends AbstractController {
 
 	@RequestMapping("/importExcel")
 	public R importExcel(HttpServletRequest request) throws Exception{
+		String path = request.getContextPath();
+		System.out.println(path);
+		String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+		System.out.println(basePath);
+		String path2 = request.getSession().getServletContext().getRealPath("/");
+		System.out.println(path2);
+		String path3 = request.getServletPath();
+		System.out.println(path3);
+		String path4 = request.getServletContext().getRealPath("");
+		System.out.println(path4);
+
 		long  startTime=System.currentTimeMillis();
 		//将当前上下文初始化给  CommonsMutipartResolver （多部分解析器）
 		CommonsMultipartResolver multipartResolver=new CommonsMultipartResolver(request.getSession().getServletContext());
