@@ -1,13 +1,17 @@
 package ass.management.admin.test;
 
+import ass.management.admin.common.excel.config.FieldValue;
+import ass.management.common.concurrent.executor.DefaultExecutorFactory;
 import ass.management.elasticsearch.entity.group.EquipmentData;
 import ass.management.elasticsearch.util.EsUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 
 public class TestFastJson {
 
@@ -43,14 +47,15 @@ public class TestFastJson {
         System.out.println(time);   // 默认按照系统时区(东八区) 转换Long   1533706245000
 
 
-
-
-
-
-
-
-
-
+        FieldValue defaul= (FieldValue)Class.forName(FieldValue.class.getName()).newInstance();
+        String baseName = DefaultExecutorFactory.class.getName();
+        String baseName1 = DefaultExecutorFactory.class.getSimpleName();
+        String baseName2 = DefaultExecutorFactory.class.getTypeName();
+        String baseName3 = DefaultExecutorFactory.class.getCanonicalName();
+        String configs1 = Thread.currentThread().getContextClassLoader().getResource("Test2.java").getPath();
+        System.out.println(configs1);
+       String configs = Thread.currentThread().getContextClassLoader().getResource("test-excel.xlsx").getPath();
+       System.out.println(configs);
     }
 
 }

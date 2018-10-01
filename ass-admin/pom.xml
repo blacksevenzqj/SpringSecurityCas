@@ -58,10 +58,10 @@
             <artifactId>gson</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.alibaba.media</groupId>
-            <artifactId>sdk</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.alibaba.media</groupId>-->
+            <!--<artifactId>sdk</artifactId>-->
+        <!--</dependency>-->
 
         <!-- POI -->
         <dependency>
