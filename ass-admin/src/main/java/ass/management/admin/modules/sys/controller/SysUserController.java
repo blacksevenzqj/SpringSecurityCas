@@ -192,7 +192,8 @@ public class SysUserController extends AbstractController {
 			File file = new File(basePath + filePath);
 			HttpHeaders headers = new HttpHeaders();
 			//下载显示的文件名，解决中文名称乱码问题
-			String downloadFielName = new String("白马东区17幢1单元601.txt".getBytes("UTF-8"), "iso-8859-1");
+//			String downloadFielName = new String("白马东区17幢1单元601.txt".getBytes("UTF-8"), "iso-8859-1");
+			String downloadFielName = java.net.URLEncoder.encode("白马东区17幢1单元601.txt", "UTF-8");
 			//通知浏览器以attachment（下载方式）打开图片
 			headers.setContentDispositionFormData("attachment", downloadFielName);
 			//application/octet-stream ： 二进制流数据（最常见的文件下载）。
