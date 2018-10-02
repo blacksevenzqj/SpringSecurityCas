@@ -117,11 +117,16 @@ mediaconf:
   urlprefix: http://luckyaircar.image.alimmdn.com
 
 
+# elasticsearch   用户名: elastic, 密码: dyzhsw@008381#
 elasticsearch:
   server:
     cluster-name: elasticsearch_xiamo
     cluster-nodes: localhost
+#    cluster-nodes: 116.62.80.163
     port: 9200
+    credentials-provider-config: true
+    provider-user-name: elastic
+    provider-user-password: dyzhsw@008381#
     connect-time-config: true
     connect-num-config: true
     connect-time-out: 1000
@@ -129,6 +134,11 @@ elasticsearch:
     connection-request-time-out: 500
     max-connect-num: 100
     max-connect-per-route: 100
+  client:
+    search-source-time-out-seconds: 60
+    scroll-time-window-minutes: 1
+    mini-mum-should-match: 1
+    agg-search-source-size: 0
 
 
 # 线程框架
