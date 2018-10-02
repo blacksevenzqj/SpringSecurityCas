@@ -2,7 +2,10 @@ package ass.management.elasticsearch.entity.group;
 
 import ass.management.elasticsearch.annotation.Es6Index;
 import ass.management.elasticsearch.annotation.EsFieldData;
+import ass.management.elasticsearch.common.AggDescEnum;
 import ass.management.elasticsearch.common.EsConfig;
+import ass.management.elasticsearch.common.QueryDescEnum;
+import ass.management.elasticsearch.common.SortDescEnum;
 import ass.management.elasticsearch.entity.base.EsBaseEntity;
 import lombok.Data;
 
@@ -10,10 +13,20 @@ import lombok.Data;
 @Es6Index(numberOfShards=5, numberOfReplicas=1, indexName="equipmentdata", routingName="equipment")
 public class EquipmentData extends EsBaseEntity {
 
-    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "equipment_id")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "db_id")
+    public String dbId;
+
+    @EsFieldData(dataName=EsConfig.EL_DATE, elName = "create_date", elSortType = SortDescEnum.QUERY_SORT_CREATE_DATE_DESC)
+    public String createDate;
+
+    @EsFieldData(dataName=EsConfig.EL_DATE, elName = "update_date")
+    public String updateDate;
+
+
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "equipment_id", elQueryType = QueryDescEnum.QUERY_EQUIPMENT_ID)
     public String equipmentId;
 
-    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "equipment_code")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "equipment_code", elQueryType = QueryDescEnum.QUERY_EQUIPMENT_CODE)
     public String equipmentCode;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "create_by")
@@ -58,11 +71,17 @@ public class EquipmentData extends EsBaseEntity {
     @EsFieldData(dataName= EsConfig.El_KEYWORD)
     public String column10;
 
+    @EsFieldData(dataName= EsConfig.El_LONG, elAggType = AggDescEnum.MAX_FIELD)
+    public Long count;
+
 
     @Override
     public String toString() {
         return "EquipmentData{" +
-                "equipmentId='" + equipmentId + '\'' +
+                "dbId='" + dbId + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", updateDate='" + updateDate + '\'' +
+                ", equipmentId='" + equipmentId + '\'' +
                 ", equipmentCode='" + equipmentCode + '\'' +
                 ", createBy='" + createBy + '\'' +
                 ", updateBy='" + updateBy + '\'' +
@@ -78,9 +97,7 @@ public class EquipmentData extends EsBaseEntity {
                 ", column8='" + column8 + '\'' +
                 ", column9='" + column9 + '\'' +
                 ", column10='" + column10 + '\'' +
-                ", dbId='" + dbId + '\'' +
-                ", createDate='" + createDate + '\'' +
-                ", updateDate='" + updateDate + '\'' +
+                ", count=" + count +
                 '}';
     }
 

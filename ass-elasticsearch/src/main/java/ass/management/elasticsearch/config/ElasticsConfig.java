@@ -1,6 +1,5 @@
 package ass.management.elasticsearch.config;
 
-import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -9,24 +8,25 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
 @Configuration
-@EnableConfigurationProperties(ElasticsProperties.class)
+@EnableConfigurationProperties(ElasticsServerProperties.class)
 public class ElasticsConfig {
 
     @Autowired
-    private ElasticsProperties elasticsProperties;
+    private ElasticsServerProperties elasticsServerProperties;
 
     /**
      * 初始化
+     * 默认情况下bean的名称和方法名称相同，你也可以使用name属性来指定
      */
     @Bean
-    public RestHighLevelClient getRestHighLevelClient() {
+    public RestHighLevelClient restHighLevelClient() {
         return getEsClientDecorator().getRestHighLevelClient();
     }
 
-    @Bean
+    @Bean(name = "esClientDecorator")
     @Scope("singleton")
-    public ESClientDecorator getEsClientDecorator() {
-        return new ESClientDecorator(elasticsProperties);
+    public EsClientDecorator getEsClientDecorator() {
+        return new EsClientDecorator(elasticsServerProperties);
     }
 
 }

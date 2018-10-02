@@ -1,11 +1,11 @@
 package ass.management.elasticsearch.entity.group;
 
-import ass.management.elasticsearch.common.AnalyzerConfigEnum;
-import lombok.Data;
 import ass.management.elasticsearch.annotation.EsFieldData;
 import ass.management.elasticsearch.annotation.EsIndex;
+import ass.management.elasticsearch.common.AnalyzerConfigEnum;
 import ass.management.elasticsearch.common.EsConfig;
 import ass.management.elasticsearch.entity.base.EsBaseEntity;
+import lombok.Data;
 
 @Data
 @EsIndex(indexName="school", numberOfShards=5, numberOfReplicas=1)

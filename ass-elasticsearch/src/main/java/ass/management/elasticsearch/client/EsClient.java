@@ -1,10 +1,14 @@
 package ass.management.elasticsearch.client;
 
+import ass.management.db.utils.PageUtils;
 import ass.management.elasticsearch.annotation.Es6Index;
-import ass.management.elasticsearch.annotation.EsIndex;
-import ass.management.elasticsearch.annotation.EsType;
+import ass.management.elasticsearch.annotation.EsFieldData;
 import ass.management.elasticsearch.common.AnalyzerConfigEnum;
 import ass.management.elasticsearch.common.EsConfig;
+import ass.management.elasticsearch.config.EsClientDecorator;
+import ass.management.elasticsearch.entity.search.AggResultAll;
+import ass.management.elasticsearch.entity.search.QueryEntry;
+import ass.management.utils.DateUtils;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -31,10 +35,14 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.Scroll;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.metrics.max.Max;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import ass.management.elasticsearch.annotation.EsFieldData;
-import ass.management.elasticsearch.config.ESClientDecorator;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +54,7 @@ import java.util.Map;
 public class EsClient {
 
     @Autowired
+    @Qualifier(value = "restHighLevelClient")
     private RestHighLevelClient client;
 
     /**
@@ -61,21 +70,21 @@ public class EsClient {
         Field[] fields = tClass.getFields();
         for(Field field : fields) {
             if (field.getAnnotation(EsFieldData.class) == null || StringUtils.isBlank(field.getAnnotation(EsFieldData.class).dataName())) {
-                mapField.put(field.getName(), ESClientDecorator.getMapType().get(EsConfig.El_STRING));
+                mapField.put(field.getName(), EsClientDecorator.getMapType().get(EsConfig.El_STRING));
             } else {
                 if(StringUtils.isNotBlank(field.getAnnotation(EsFieldData.class).analyzerType().getKey()) &&
                         field.getAnnotation(EsFieldData.class).analyzerType() != AnalyzerConfigEnum.NULL &&
                         StringUtils.isNotBlank(field.getAnnotation(EsFieldData.class).analyzerSearchType().getKey()) &&
                         field.getAnnotation(EsFieldData.class).analyzerSearchType() != AnalyzerConfigEnum.NULL &&
                         EsConfig.El_STRING.equalsIgnoreCase(field.getAnnotation(EsFieldData.class).dataName())){
-                    Map dataMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).dataName());
-                    Map analyzerIkMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).analyzerType().getKey());
-                    Map analyzerIkSearchMap = ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).analyzerSearchType().getKey());
+                    Map dataMap = EsClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).dataName());
+                    Map analyzerIkMap = EsClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).analyzerType().getKey());
+                    Map analyzerIkSearchMap = EsClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).analyzerSearchType().getKey());
                     dataMap.putAll(analyzerIkMap);
                     dataMap.putAll(analyzerIkSearchMap);
                     mapField.put(field.getName(), dataMap);
                 }else {
-                    mapField.put(field.getName(), ESClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).dataName()));
+                    mapField.put(field.getName(), EsClientDecorator.getMapType().get(field.getAnnotation(EsFieldData.class).dataName()));
                 }
             }
         }
@@ -223,6 +232,20 @@ public class EsClient {
         }
         return list;
     }
+    public <T> PageUtils<T> search(SearchRequest request, QueryEntry<T> queryEntry) {
+        List<T> list = new ArrayList<>();
+        PageUtils<T> pageUtils = null;
+        try {
+            SearchResponse response = client.search(request);
+            if (response.getHits() != null) {
+                response.getHits().forEach(item -> list.add(JSON.parseObject(item.getSourceAsString(), queryEntry.getTClass())));
+            }
+            pageUtils = new PageUtils<>(list, response.getHits().getTotalHits(), queryEntry.getEsPageInfo().getPageSize(), queryEntry.getEsPageInfo().getPageNum());
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return pageUtils;
+    }
     public <T> List<T> searchScroll(SearchRequest searchRequest, Class<T> tClass, Scroll scroll) {
         List<T> list = new ArrayList<>();
         try {
@@ -256,5 +279,84 @@ public class EsClient {
         }
         return list;
     }
+
+    public AggResultAll aggSearch(SearchRequest searchRequest) {
+        AggResultAll aggResult = new AggResultAll();
+        try {
+            SearchResponse searchResponse = client.search(searchRequest);
+            Aggregations aggs = searchResponse.getAggregations();
+            Map<String, Aggregation> map = aggs.getAsMap();
+            getAggregations(map, aggResult);
+            log.info(aggResult.toString());
+        }catch (Exception e){
+            log.error(e.getMessage());
+        }
+        return aggResult;
+    }
+
+    private void getAggregations(Map<String, Aggregation> map,  AggResultAll aggResult){
+        for (Map.Entry<String, Aggregation> entry : map.entrySet()) {
+            log.info("KeyOne = " + entry.getKey() + ", Value = " + entry.getValue());
+            aggResult.setGroupName(entry.getKey());
+            if(entry.getValue() instanceof Terms) {
+                Terms byStateAggs = (Terms) entry.getValue();
+                List<? extends Terms.Bucket> aggList = byStateAggs.getBuckets();//获取bucket数组里所有数据
+                aggResult.setGroupCount(aggList.size());
+                for (Terms.Bucket bucket : aggList) {
+                    log.info("keyTwo:" + bucket.getKeyAsString() + ",docCount:" + bucket.getDocCount());
+                    AggResultAll temp = new AggResultAll();
+                    temp.setKeyName(bucket.getKeyAsString());
+                    temp.setKeyCount(bucket.getDocCount());
+                    temp.setParent(aggResult); // 设置父节点
+                    aggResult.getAgg().add(temp);
+                    Aggregations aggregations = bucket.getAggregations();
+                    if (aggregations.getAsMap() != null && !aggregations.getAsMap().isEmpty()) {
+                        getSubAggregations(aggregations.getAsMap(), temp);
+                    }
+                }
+            }else if(entry.getValue() instanceof Max){
+                Max byStateAggs = (Max)entry.getValue();
+                aggResult.setKeyMaxValue(byStateAggs.getValue());
+            }
+        }
+    }
+
+    private void getSubAggregations(Map<String, Aggregation> map,  AggResultAll aggResult){
+        for (Map.Entry<String, Aggregation> entry : map.entrySet()) {
+            log.info("KeySubOne = " + entry.getKey() + ", Value = " + entry.getValue());
+            AggResultAll sub = new AggResultAll();
+            sub.setParent(aggResult); // 设置父节点
+            aggResult.getAgg().add(sub);
+            if(entry.getValue() instanceof Max && EsConfig.AggQuery.CustomizeGroupName.MAX_UPDATE.equalsIgnoreCase(entry.getKey())){
+                sub.setKeyName(entry.getKey());
+                sub.setKeyCount(Long.valueOf(map.size()));
+                Max byStateAggs = (Max)entry.getValue();
+                sub.setKeyMaxDate(DateUtils.getDateStrByUtcDouble(byStateAggs.getValue()));
+            }else if(entry.getValue() instanceof Max && EsConfig.AggQuery.CustomizeGroupName.MAX_FIELD.equalsIgnoreCase(entry.getKey())){
+                sub.setKeyName(entry.getKey());
+                sub.setKeyCount(Long.valueOf(map.size()));
+                Max byStateAggs = (Max)entry.getValue();
+                sub.setKeyMaxValue(byStateAggs.getValue());
+            } else if(entry.getValue() instanceof Terms){
+                Terms byStateAggs = (Terms)entry.getValue();
+                List<? extends Terms.Bucket> aggList = byStateAggs.getBuckets();//获取bucket数组里所有数据
+                sub.setGroupName(entry.getKey());
+                sub.setGroupCount(aggList.size());
+                for (Terms.Bucket bucket : aggList) {
+                    log.info("keySubTwo:" + bucket.getKeyAsString()+",docCount:" + bucket.getDocCount());
+                    AggResultAll temp = new AggResultAll();
+                    temp.setKeyName(bucket.getKeyAsString());
+                    temp.setKeyCount(bucket.getDocCount());
+                    temp.setParent(sub); // 设置父节点
+                    sub.getAgg().add(temp);
+                    Aggregations aggregations = bucket.getAggregations();
+                    if(aggregations.getAsMap() != null && !aggregations.getAsMap().isEmpty()){
+                        getSubAggregations(aggregations.getAsMap(), temp);
+                    }
+                }
+            }
+        }
+    }
+
 
 }

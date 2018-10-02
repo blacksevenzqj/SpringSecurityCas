@@ -19,14 +19,17 @@ public class QueryEntry<T> {
     private Map<String, Object> term;
 
     @EsBoolQuery(boolTypeName = EsConfig.BoolQuery.FILTER)
+    private Map<String, Object[]> terms;
+
+    @EsBoolQuery(boolTypeName = EsConfig.BoolQuery.FILTER)
     private Map<String, Object[]> range;
 
     @EsBoolQuery(boolTypeName = EsConfig.BoolQuery.SHOULD)
     private Map<String, Object[]> shouldTerm;
 
-    private String orderField;
+    private String sortField;
 
-    private String orderType;
+    private String sortType;
 
     private EsPageInfo esPageInfo;
 

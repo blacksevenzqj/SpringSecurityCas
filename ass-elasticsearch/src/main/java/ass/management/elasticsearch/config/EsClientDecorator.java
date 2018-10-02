@@ -3,6 +3,10 @@ package ass.management.elasticsearch.config;
 import ass.management.elasticsearch.common.AnalyzerConfigEnum;
 import ass.management.elasticsearch.common.EsConfig;
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
@@ -15,9 +19,9 @@ import java.util.Map;
 /**
  * <p>ES客户端工程类</p>
  */
-public class ESClientDecorator implements InitializingBean, DisposableBean {
+public class EsClientDecorator implements InitializingBean, DisposableBean {
 
-    private ElasticsProperties elasticsProperties;
+    private ElasticsServerProperties elasticsServerProperties;
 
     private RestClientBuilder builder;
 
@@ -29,8 +33,8 @@ public class ESClientDecorator implements InitializingBean, DisposableBean {
 
     private static Map<String, Map> mapType = new HashMap<>();
 
-    public ESClientDecorator(ElasticsProperties elasticsProperties) {
-        this.elasticsProperties = elasticsProperties;
+    public EsClientDecorator(ElasticsServerProperties elasticsServerProperties) {
+        this.elasticsServerProperties = elasticsServerProperties;
     }
 
     @Override
@@ -96,14 +100,16 @@ public class ESClientDecorator implements InitializingBean, DisposableBean {
 
     private void init(){
         if(httpHost == null){
-            httpHost = new HttpHost(elasticsProperties.getClusterNodes(), elasticsProperties.getPort());
+            httpHost = new HttpHost(elasticsServerProperties.getClusterNodes(), elasticsServerProperties.getPort());
         }
         builder = RestClient.builder(httpHost);
-        if(elasticsProperties.isConnectTimeConfig()){
+        if(elasticsServerProperties.isConnectTimeConfig()){
             setConnectTimeOutConfig();
         }
-        if(elasticsProperties.isConnectNumConfig()){
+        if(elasticsServerProperties.isConnectNumConfig()){
             setMutiConnectConfig();
+        }if(elasticsServerProperties.isCredentialsProviderConfig()){
+            setCredentialsProviderConfig();
         }
         restClient = builder.build();
         restHighLevelClient = new RestHighLevelClient(builder);
@@ -114,9 +120,9 @@ public class ESClientDecorator implements InitializingBean, DisposableBean {
      */
     private void setConnectTimeOutConfig(){
         builder.setRequestConfigCallback(requestConfigBuilder -> {
-            requestConfigBuilder.setConnectTimeout(elasticsProperties.getConnectTimeOut());
-            requestConfigBuilder.setSocketTimeout(elasticsProperties.getSocketTimeOut());
-            requestConfigBuilder.setConnectionRequestTimeout(elasticsProperties.getConnectionRequestTimeOut());
+            requestConfigBuilder.setConnectTimeout(elasticsServerProperties.getConnectTimeOut());
+            requestConfigBuilder.setSocketTimeout(elasticsServerProperties.getSocketTimeOut());
+            requestConfigBuilder.setConnectionRequestTimeout(elasticsServerProperties.getConnectionRequestTimeOut());
             return requestConfigBuilder;
         });
     }
@@ -125,11 +131,21 @@ public class ESClientDecorator implements InitializingBean, DisposableBean {
      */
     private void setMutiConnectConfig(){
         builder.setHttpClientConfigCallback(httpClientBuilder -> {
-            httpClientBuilder.setMaxConnTotal(elasticsProperties.getMaxConnectNum());
-            httpClientBuilder.setMaxConnPerRoute(elasticsProperties.getMaxConnectPerRoute());
+            httpClientBuilder.setMaxConnTotal(elasticsServerProperties.getMaxConnectNum());
+            httpClientBuilder.setMaxConnPerRoute(elasticsServerProperties.getMaxConnectPerRoute());
             return httpClientBuilder;
         });
     }
-
+    /**
+     * 设置登录认证
+     */
+    private void setCredentialsProviderConfig(){
+        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(elasticsServerProperties.getProviderUserName(), elasticsServerProperties.getProviderUserPassword()));
+        builder.setHttpClientConfigCallback(httpClientBuilder -> {
+            httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+            return httpClientBuilder;
+        });
+    }
 
 }

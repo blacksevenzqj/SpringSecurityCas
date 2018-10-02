@@ -3,7 +3,7 @@ package ass.management.admin.common.aspect;
 
 import ass.management.admin.common.annotation.EsBusiness;
 import ass.management.admin.common.utils.BsEntity2EsEntity;
-import ass.management.elasticsearch.service.EsServiceImpl;
+import ass.management.elasticsearch.service.Es6ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 public class EsBusinessAspect {
 
     @Autowired
-    EsServiceImpl esServiceImpl;
+    Es6ServiceImpl es6ServiceImpl;
 
     @Pointcut("@annotation(ass.management.admin.common.annotation.EsBusiness)")
     public void savePointCut() {
@@ -48,11 +48,11 @@ public class EsBusinessAspect {
         Object[] objs = joinPoint.getArgs();
         TodayNews todayNews = (TodayNews)objs[0];
         if(currentMethod.getAnnotation(EsBusiness.class).save()){
-            esServiceImpl.createIndexDoc(targetClass, BsEntity2EsEntity.TodayNews2EsHotNew(todayNews, serviceUrl));
+            es6ServiceImpl.createIndexDoc(targetClass, BsEntity2EsEntity.TodayNews2EsHotNew(todayNews, serviceUrl));
         }else if(currentMethod.getAnnotation(EsBusiness.class).update()){
-            esServiceImpl.upDateIndexDoc(targetClass, BsEntity2EsEntity.TodayNews2EsHotNew(todayNews, serviceUrl));
+            es6ServiceImpl.upDateIndexDoc(targetClass, BsEntity2EsEntity.TodayNews2EsHotNew(todayNews, serviceUrl));
         }else if(currentMethod.getAnnotation(EsBusiness.class).delete()){
-            esServiceImpl.deleteIndexDoc(targetClass, BsEntity2EsEntity.TodayNews2EsHotNew(todayNews, serviceUrl));
+//            es6ServiceImpl.deleteIndexDoc(targetClass, BsEntity2EsEntity.TodayNews2EsHotNew(todayNews, serviceUrl));
         }
     }
 

@@ -5,13 +5,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * <p>elastics配置</p>
- *
- * @author: XianGuo
- * @date: 2018年01月23日
  */
 @ConfigurationProperties(prefix = "elasticsearch.server")
 @Data
-public class ElasticsProperties {
+public class ElasticsServerProperties {
 
     /**
      * 名称
@@ -28,6 +25,12 @@ public class ElasticsProperties {
      */
     private int port;
 
+
+    private boolean credentialsProviderConfig;
+
+    private String providerUserName;
+
+    private String providerUserPassword;
 
     private boolean connectTimeConfig;
 
