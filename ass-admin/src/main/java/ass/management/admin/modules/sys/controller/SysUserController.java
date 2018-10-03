@@ -188,7 +188,7 @@ public class SysUserController extends AbstractController {
         String basePath = request.getServletContext().getRealPath("");
         String filePath = "/WEB-INF/classes/statics/白马东区17幢1单元601.txt";
 		try {
-			log.info(basePath + filePath);
+			logger.info(basePath + filePath);
 			File file = new File(basePath + filePath);
 			HttpHeaders headers = new HttpHeaders();
 			//下载显示的文件名，解决中文名称乱码问题
@@ -200,9 +200,18 @@ public class SysUserController extends AbstractController {
 			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
 			return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(file), headers, HttpStatus.CREATED);
 		}catch (Exception e){
-			log.error("下载失败！" + e);
+			logger.error("下载失败！" + e);
 			return null;
 		}
+	}
+
+	@RequestMapping(value = "/testDecode", method = { RequestMethod.GET, RequestMethod.POST })
+	public R testDecode(HttpServletRequest request, @RequestParam("testDecode") String testDecode)throws Exception {
+		logger.info(testDecode);
+		log.info(testDecode);
+		System.out.println(testDecode);
+		System.out.println(testDecode.equals("中"));
+		return R.ok();
 	}
 
 }

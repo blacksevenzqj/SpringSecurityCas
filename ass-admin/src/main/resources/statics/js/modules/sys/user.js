@@ -157,3 +157,12 @@ var vm = new Vue({
         }
     }
 });
+
+function testDcode() {
+    // var str = encodeURI(encodeURI("中", "UTF-8"), "UTF-8");
+    // var str = encodeURI("中", "UTF-8");
+    var str = "中";
+    $.get(baseURL + "sys/user/testDecode?testDecode=" + str, function(r){
+
+    });
+}

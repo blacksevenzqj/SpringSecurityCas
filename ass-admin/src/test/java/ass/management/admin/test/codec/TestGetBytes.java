@@ -17,6 +17,14 @@ public class TestGetBytes {
         System.out.println(str);
         String str2 = java.net.URLDecoder.decode(str, "UTF-8");
         System.out.println(str2);
+
+        String v = "%E4%B8%AD";
+        System.out.println(java.net.URLDecoder.decode(v, "UTF-8"));
+
+        String w = "ä¸&_";
+        String w1 = "中";
+        String str3 = new String(w1.getBytes("gb2312"), "iso-8859-1");
+        System.out.println(str3);
     }
 
 }
