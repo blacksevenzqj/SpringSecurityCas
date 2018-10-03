@@ -1,6 +1,9 @@
 package ass.management.admin.test.codec;
 
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
 public class TestGetBytes {
 
     public static void main(String[] args) throws Exception{
@@ -25,6 +28,45 @@ public class TestGetBytes {
         String w1 = "中";
         String str3 = new String(w1.getBytes("UTF-8"), "iso-8859-1");
         System.out.println(str3);
+
+        byte[] arr = w1.getBytes("UTF-8");
+        for(byte b : arr){
+            System.out.println(b);   // 输出  ASCII值
+        }
+        testInputStream();
+//        testBytesInputStream();
+    }
+
+
+    public static void testInputStream() throws Exception{
+        FileInputStream fis = new FileInputStream("C:\\Users\\dell\\Desktop\\222.txt");
+        FileOutputStream fos = new FileOutputStream("C:\\Users\\dell\\Desktop\\333.txt");
+        int b;
+        while((b = fis.read()) != -1) {
+            System.out.println(b);
+            //fos.write(arr);
+        }
+        fis.close();
+        fos.close();
+    }
+
+    public static void testBytesInputStream() throws Exception{
+        FileInputStream fis = new FileInputStream("C:\\Users\\dell\\Desktop\\222.txt");
+        FileOutputStream fos = new FileOutputStream("C:\\Users\\dell\\Desktop\\333.txt");
+        int len;
+//        byte[] arr = new byte[1024 * 8];//自定义字节数组
+        byte[] arr = new byte[1024];//自定义字节数组
+
+        while((len = fis.read(arr)) != -1) {  // len 在这里保存的是 字节数组的 长度，arr字节数组中
+            System.out.println(arr.length);
+            //fos.write(arr);
+            fos.write(arr, 0, len);//写出字节数组写出有效个字节个数
+        }
+        //IO流(定义小数组)
+        //write(byte[] b)
+        //write(byte[] b, int off, int len)写出有效的字节个数
+        fis.close();
+        fos.close();
     }
 
 }
