@@ -23,7 +23,7 @@ public class TestGetBytes {
 
         String w = "ä¸&_";
         String w1 = "中";
-        String str3 = new String(w1.getBytes("gb2312"), "iso-8859-1");
+        String str3 = new String(w1.getBytes("UTF-8"), "iso-8859-1");
         System.out.println(str3);
     }
 
