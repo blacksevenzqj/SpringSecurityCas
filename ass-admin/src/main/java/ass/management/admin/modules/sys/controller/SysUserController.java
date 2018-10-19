@@ -33,10 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 系统用户
@@ -218,6 +215,100 @@ public class SysUserController extends AbstractController {
 		return R.ok();
 	}
 
+	/**
+	 * 二级任务导入
+	 */
+//	@RequestMapping(value = "/importDbxItemList", method = RequestMethod.POST)
+//	public @ResponseBody
+//	Object importDbxItemList(HttpServletRequest request) throws Exception {
+//		String dcdbInfoId = request.getParameter("dcdbInfoId");
+//		JSONObject ret = new JSONObject();
+//		CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession()
+//				.getServletContext());
+//		if (multipartResolver.isMultipart(request)) {
+//			MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest) request;
+//			Iterator iter = multiRequest.getFileNames();
+//			Map<String, Integer> tempMap = new HashMap();
+//			while (iter.hasNext()) {
+//				MultipartFile file = multiRequest.getFile(iter.next().toString());
+//				if (file != null) {
+//					ExcelImportResult excelImportResult = null;
+//					try {
+//						Map map = new HashMap();
+//						map.put(ExcelConfig.Convert.DCDB_INFO_ID, dcdbInfoId);
+//						excelImportResult = excelContext.readExcel(ExcelConfig.Bean.DB_XITEM_AO, 0, file
+//								.getInputStream(), map);
+//					} catch (ExcelException e) {
+//						ret.put("status", false);
+//						ret.put("result", e.getMessage());
+//						return retString(ret);
+//					}
+//					List<DbxitemAO> dbxitemAOList = excelImportResult.getListBean();
+//					for (int i = 0; i < dbxitemAOList.size(); i++) {
+//						if (dbxitemAOList.get(i) != null) {
+//							Integer tempValue = tempMap.get(dbxitemAOList.get(i).getDbxsequence());
+//							if (tempValue == null) {
+//								// 设置序号
+//								int maxSort = 0;
+//								DbxitemCriteria exampleSort = new DbxitemCriteria();
+//								exampleSort.setOrderByClause("sort");
+//								exampleSort.createCriteria().andDcdbinfoidEqualTo(dbxitemAOList.get(i).getDcdbinfoid())
+//										.andDbxsequenceEqualTo(dbxitemAOList.get(i).getDbxsequence());
+//								ServiceResult<List<DbxitemAO>> dbxAO = dcdbDbxService.selectByCriteria(exampleSort);
+//								if (dbxAO.isSucceed() && dbxAO.getData() != null && dbxAO.getData().size() > 0) {
+//									List<DbxitemAO> listSort = dbxAO.getData();
+//									maxSort = listSort.get(listSort.size() - 1).getSort();
+//								}
+//								tempMap.put(dbxitemAOList.get(i).getDbxsequence(), maxSort);
+//							}
+//							tempMap.put(dbxitemAOList.get(i).getDbxsequence(), tempMap.get(dbxitemAOList.get(i)
+//									.getDbxsequence()) + 1);
+//							dbxitemAOList.get(i).setSort(
+//									tempMap.get(dbxitemAOList.get(i).getDbxsequence()).shortValue());
+//							dbxitemAOList.get(i).setStatus("未到办结期限");
+//							ServiceResult<DbxitemAO> serviceResult = dcdbDbxService.saveOrUpdateRetAO(dbxitemAOList
+//									.get(i));
+//							if (serviceResult.isSucceed() && serviceResult.getData() != null) {
+//								ret.put("status", true);
+//							} else {
+//								ret.put("result", serviceResult.getMsg());
+//							}
+//						}
+//					}
+//				}
+//				return retString(ret);
+//			}
+//			ret.put("status", false);
+//			ret.put("result", "请选择上传的Execl文件");
+//		}
+//		return retString(ret);
+//	}
+
+	/**
+	 * 二级任务下载
+	 */
+//	@RequestMapping("/exportExcel")
+//	public void exportExcel(String dcdbInfoId, HttpServletResponse response) throws Exception {
+//		response.setContentType("application/x-download");
+//		String fileName = dcdbInfoId + "二级任务下载.xlsx";
+//		response.addHeader("content-disposition", "attachment;filename="
+//				+ java.net.URLEncoder.encode(fileName, "UTF-8"));
+//		OutputStream outs = response.getOutputStream();
+//
+//		DbxitemCriteria example = new DbxitemCriteria();
+//		example.setOrderByClause("sort");
+//		example.createCriteria().andDcdbinfoidEqualTo(dcdbInfoId);
+//		ServiceResult<List<DbxitemAO>> searchServiceResult = dcdbDbxService.selectByCriteria(example);
+//
+//		if (searchServiceResult != null && searchServiceResult.isSucceed() && searchServiceResult.getData() != null
+//				&& searchServiceResult.getData().size() > 0) {
+//			List<DbxitemAO> list = searchServiceResult.getData();
+//			ExcelExportResult exportResult = excelContext.createExcelForPart(ExcelConfig.Bean.DB_XITEM_AO, list);
+//			Workbook workbook = exportResult.build();
+//			workbook.write(outs);
+//			workbook.close();
+//		}
+//	}
 
 	/**
 	 * 任务反馈下载
