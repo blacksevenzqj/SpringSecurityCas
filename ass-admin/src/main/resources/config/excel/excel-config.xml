@@ -34,6 +34,7 @@
 		<field name="book.bookName" title="图书名称" />
 		<field name="book.author.authorName" title="作者名称" isNull="false"/>
 	</excel>
+
 	<!-- ExcelXmlBuilder 生成的配置文件 -->
 	<excel id="student3" class="ass.management.admin.common.excel.model.StudentModel" sheetname="学生信息列表" defaultColumnWidth="5000" enableStyle="true">
 		<field name="id" title="id" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="id不合法"/>
@@ -48,6 +49,37 @@
 		<field name="book.author.authorName" title="book.author.authorName" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="book.author.authorName不合法"/>
 	</excel>
 
+
+	<!-- 一级任务 -->
+	<excel id = "dcdbgzmbfjAO" class="ass.management.admin.common.excel.model.DcdbgzmbfjAO" sheetname="一级任务列表" enableStyle="true" defaultAlign="center" defaultVertical="center" sheetIndex="0" defaultColumnWidth="6000" defaultRowHeightInPoints="40" eachRowHeightInPoints="40">
+		<field name="mbfjdseq" title="编号" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
+		<field name="worktarget" title="工作内容" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="zrunitname" title="主办部门"  align="center" vertical="top" uniformStyle="true" columnWidth="7000" titleFountColor="blue" isNull="false" cellValueConverter="ass.management.admin.common.excel.converter.CreateDcdbgzmbfjAOCellValueConverter" otherConfig="动态设置主办部门编码" />
+		<field name="xbunitname" title="协办部门"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="true" cellValueConverter="ass.management.admin.common.excel.converter.CreateDcdbgzmbfjAOCellValueConverter" otherConfig="动态设置协办部门编码" />
+		<field name="bfqxStr" title="办结期限"  align="center" uniformStyle="true" columnWidth="6000" isNull="false"/>
+		<field name="bz" title="备注" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+	</excel>
+
+	<!-- 二级任务 -->
+	<excel id = "dbxitemAO" class="ass.management.admin.common.excel.model.DbxitemAO" sheetname="二级任务列表" enableStyle="true" defaultAlign="center" sheetIndex="0">
+		<field name="dbxsequence" title="一级任务序号" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
+		<field name="workitem" title="工作内容" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="schedul" title="主要进度安排"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="false" />
+		<field name="dbxbfqxStr" title="办结期限"  align="center" uniformStyle="true" columnWidth="6000" isNull="false" cellValueConverter="ass.management.admin.common.excel.converter.CreateDbxitemAOCellValueConverter" otherConfig="动态判断办结期限是否合法" />
+		<field name="dbxbz" title="备注" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+	</excel>
+
+	<!-- 反馈下载 -->
+	<excel id = "dcdbFkInfoItemAO" class="ass.management.admin.common.excel.model.DcdbFkInfoItemAOExport" sheetname="反馈列表" enableStyle="true" defaultAlign="center" sheetIndex="0">
+		<field name="index" title="序号" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
+		<field name="mbfjdseq" title="编号" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="zrunitname" title="主办部门"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="false" />
+		<field name="worktarget" title="工作目标及内容"  align="center" uniformStyle="true" columnWidth="20000" isNull="false" cellValueConverter="ass.management.admin.common.excel.converter.CreateDbxitemAOCellValueConverter" otherConfig="动态判断办结期限是否合法" />
+		<field name="workCont" title="主要进度安排" align="center" uniformStyle="true" columnWidth="20000" isNull="true"/>
+		<field name="bjqxStr" title="办结期限"  align="center" uniformStyle="true" columnWidth="6000" isNull="false"/>
+		<field name="mainSchedule" title="进展情况（包括主要措施及成效、存在问题及原因分析、下一步安排等）"  align="center" uniformStyle="true" columnWidth="30000" isNull="false"/>
+		<field name="curProgress" title="当前进度"  align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+	</excel>
 
 	
 </excels>

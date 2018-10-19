@@ -1,6 +1,6 @@
 package ass.management.admin.test.elasticsearch;
 
-import ass.management.utils.DateUtils;
+import ass.management.utils.date.DateUtils;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;

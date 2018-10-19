@@ -8,7 +8,7 @@ import ass.management.elasticsearch.common.EsConfig;
 import ass.management.elasticsearch.config.EsClientDecorator;
 import ass.management.elasticsearch.entity.search.AggResultAll;
 import ass.management.elasticsearch.entity.search.QueryEntry;
-import ass.management.utils.DateUtils;
+import ass.management.utils.date.DateUtils;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

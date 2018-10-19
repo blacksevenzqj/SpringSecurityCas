@@ -35,7 +35,7 @@ public class ImportTest {
 
 		//第二个参数需要注意,它是指标题索引的位置,可能你的前几行并不是标题,而是其他信息,
 		//比如数据批次号之类的,关于如何转换成javaBean,具体参考配置信息描述
-		ExcelImportResult result = context.readExcel(excelId, 2, in);
+		ExcelImportResult result = context.readExcel(excelId, in, 2);
 		System.out.println(result.getHeader());
 		List<StudentModel> stus = result.getListBean();
 		for(StudentModel stu:stus){

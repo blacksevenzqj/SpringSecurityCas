@@ -1,6 +1,6 @@
 package ass.management.admin.test.excel;
 
-import ass.management.admin.common.excel.util.ReflectUtil;
+import ass.management.admin.common.utils.ReflectUtil;
 import ass.management.admin.test.excel.model.AuthorModel;
 import ass.management.admin.test.excel.model.BookModel;
 import ass.management.admin.test.excel.model.StudentModel;

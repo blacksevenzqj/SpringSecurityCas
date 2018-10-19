@@ -16,6 +16,7 @@ import ass.management.db.utils.PageUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +30,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -156,7 +160,7 @@ public class SysUserController extends AbstractController {
 				MultipartFile file = multiRequest.getFile(iter.next().toString());
 				if (file != null) {
 					System.out.println(file);
-					ExcelImportResult result = excelContext.readExcel("student", 2, file.getInputStream());
+					ExcelImportResult result = excelContext.readExcel("student", file.getInputStream(), 2);
 					System.out.println(result.getHeader());
 					List<StudentModel> stus = result.getListBean();
 					for (StudentModel stu : stus) {
@@ -213,5 +217,88 @@ public class SysUserController extends AbstractController {
 		System.out.println(testDecode.equals("中"));
 		return R.ok();
 	}
+
+
+	/**
+	 * 任务反馈下载
+	 */
+//	@RequestMapping("/exportExcel")
+//	public void exportExcel(String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
+//		User user = userUtils.getUserFromRequest(request);
+//		List<Group> gList = groupService.getGroupsOfUser(user.getCode()).getData();
+//		boolean gxdcdbms = false;
+//		if (gList != null && gList.size() > 0) {
+//			for (Group g : gList) {
+//				if (g.getCode().contains("gxdcdbdbms") || g.getCode().contains("gxdcdbshr")) {
+//					gxdcdbms = true;
+//				}
+//			}
+//		}
+//		String orgUnitCode = user.getOrgunitcode();
+//		DcdbFkInfoAllAO dcdbFk = dcdbFkInfoService.getDbFkInfoById(id).getData();
+//
+//		response.setContentType("application/x-download");
+//		String fileName = dcdbFk.getTitle() + ".xlsx";
+//		response.addHeader("content-disposition", "attachment;filename="
+//				+ java.net.URLEncoder.encode(fileName, "UTF-8"));
+//		OutputStream outs = response.getOutputStream();
+//
+//		List<DcdbgzmbfjAO> mbfjList = new ArrayList<DcdbgzmbfjAO>();
+//		DcdbInfoAO dcdbInfo = new DcdbInfoAO();
+//		String dcdbLxInfoId = dcdbFk.getDcdbLxInfoId();
+//
+//		List<DcdbFkInfoItemAOExport> excelList = new ArrayList<DcdbFkInfoItemAOExport>();
+//		int index = 0;
+//		if (dcdbFk != null) {
+//			//新加判断空
+//			if (dcdbLxInfoId != null && dcdbLxInfoId != "") {
+//				mbfjList = dcdbgzmbfjService.getDcdbgzmbfjInfoByDcdbId(dcdbLxInfoId);
+//			}
+//			if (mbfjList != null && mbfjList.size() > 0) {
+//				for (int i = 0; i < mbfjList.size(); i++) {
+//					DcdbgzmbfjAO ao = mbfjList.get(i);
+//					if (!Strings.isEmptyOrNull(ao.getZrunitcode())) {
+//						if (orgUnitCode.contains(ao.getZrunitcode()) || gxdcdbms) {
+//							ao.setQxFlag("1");//有权限
+//						} else {
+//							ao.setQxFlag("0");//无权限
+//						}
+//					} else {
+//						ao.setQxFlag("0");//无权限
+//					}
+//					List<DcdbFkInfoItemAO> fkItemList = dcdbFkInfoItemService.getFkItemInfoByMbfjId(ao.getId(), id);
+//					if (fkItemList != null && fkItemList.size() > 0) {
+//						for (DcdbFkInfoItemAO fk : fkItemList) {
+//							DcdbFkInfoItemAOExport dcdbFkInfoItemAOExport = new DcdbFkInfoItemAOExport();
+//							dcdbFkInfoItemAOExport.setIndex(++index);
+//							dcdbFkInfoItemAOExport.setMbfjdseq(ao.getMbfjdseq());
+//							dcdbFkInfoItemAOExport.setZrunitname(ao.getZrunitname());
+//							dcdbFkInfoItemAOExport.setWorktarget(ao.getWorktarget());
+//							if (Strings.isEmptyOrNull(fk.getDbxItemId())) {
+//								dcdbFkInfoItemAOExport.setBjqxStr(ao.getBfqxStr());
+//							} else {
+//								DbxitemAO item = dbxitemService.getById(fk.getDbxItemId()).getData();
+//								if (item != null) {
+//									dcdbFkInfoItemAOExport.setBjqxStr(item.getDbxbfqxStr());
+//								}
+//							}
+//							dcdbFkInfoItemAOExport.setWorkCont(fk.getWorkCont());
+//							dcdbFkInfoItemAOExport.setCurProgress(fk.getCurProgress());
+//							dcdbFkInfoItemAOExport.setSituateDescript(fk.getSituateDescript());
+//							dcdbFkInfoItemAOExport.setTroubleAndSolv(fk.getTroubleAndSolv());
+//							dcdbFkInfoItemAOExport.setNextWork(fk.getNextWork());
+//							excelList.add(dcdbFkInfoItemAOExport);
+//						}
+//					}
+//				}
+//				ExcelExportResult exportResult = excelContext.createExcelForPart(ExcelConfig.Bean.DCDB_KF_ITEM_AO,
+//						excelList);
+//				Workbook workbook = exportResult.build();
+//				workbook.write(outs);
+//				workbook.close();
+//			}
+//		}
+//	}
+
 
 }
