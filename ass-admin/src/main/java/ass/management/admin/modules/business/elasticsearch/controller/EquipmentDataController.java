@@ -12,6 +12,7 @@ import ass.management.elasticsearch.entity.search.QueryEntry;
 import ass.management.elasticsearch.util.CustomParamUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class EquipmentDataController {
 
     @Autowired
+    @Qualifier("equipmentDataServiceImpl")
     EquipmentDataService equipmentDataService;
 
     @RequestMapping(value="/getListByValue", method= RequestMethod.GET)

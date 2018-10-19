@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service(value = "equipmentDataService")
+@Service(value = "equipmentDataServiceImpl")
 public class EquipmentDataServiceImpl implements EquipmentDataService {
 
     @Autowired

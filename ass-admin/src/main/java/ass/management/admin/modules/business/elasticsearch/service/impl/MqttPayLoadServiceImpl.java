@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service(value = "mqttPayLoadService")
+@Service(value = "mqttPayLoadServiceImpl")
 public class MqttPayLoadServiceImpl implements MqttPayLoadService {
 
     @Autowired
