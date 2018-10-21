@@ -27,14 +27,14 @@ public class TestBenchmarkUser4A {
         BenchmarkUser4A targetDataOne = new BenchmarkUser4A();
         targetDataOne.setUserId("666");
         targetDataOne.setHumanOrgId("666");
-        benchmarkUser4AServiceImpl.saveOrUpDateTargetDataOne(targetDataOne);
+        benchmarkUser4AServiceImpl.saveOrUpDateBenchmarkUser4A(targetDataOne);
     }
 
 
     @Test
     public void queryBenchmarkUser4A() {
         Map map = new HashMap<>();
-        PageUtils<BenchmarkUser4A> page = benchmarkUser4AServiceImpl.targetDataOneQueryPageMap(map);
+        PageUtils<BenchmarkUser4A> page = benchmarkUser4AServiceImpl.benchmarkUser4AQueryPageMap(map);
     }
 
 }

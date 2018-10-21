@@ -16,11 +16,11 @@ import java.util.Map;
 public class BenchmarkUser4AServiceImpl extends CrudService<BenchmarkUser4ADao, BenchmarkUser4A, Integer> {
 
     @Transactional(readOnly=false, propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
-    public BenchmarkUser4A saveOrUpDateTargetDataOne(BenchmarkUser4A targetDataOne){
+    public BenchmarkUser4A saveOrUpDateBenchmarkUser4A(BenchmarkUser4A targetDataOne){
         return super.save(targetDataOne);
     }
 
-    public PageUtils<BenchmarkUser4A> targetDataOneQueryPageMap(Map<String, Object> params){
+    public PageUtils<BenchmarkUser4A> benchmarkUser4AQueryPageMap(Map<String, Object> params){
         return super.queryPageMap(params);
     }
 
