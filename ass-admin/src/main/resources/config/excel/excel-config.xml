@@ -86,9 +86,9 @@
 		<field name="id" title="ID" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="true"/>
 		<field name="idUser" title="ID_USER" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
 		<field name="name" title="NAME" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
-		<field name="fullName" title="FULLNAME"  align="center" vertical="top" uniformStyle="true" columnWidth="7000" titleFountColor="blue" isNull="false" />
-		<field name="orgName" title="ORGNAME"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="false" />
-		<field name="parentUnitName" title="PARENTUNITNAME"  align="center" uniformStyle="true" columnWidth="6000" isNull="false"/>
+		<field name="fullName" title="FULLNAME"  align="center" vertical="top" uniformStyle="true" columnWidth="7000" titleFountColor="blue" isNull="true" />
+		<field name="orgName" title="ORGNAME"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="true" />
+		<field name="parentUnitName" title="PARENTUNITNAME"  align="center" uniformStyle="true" columnWidth="6000" isNull="true"/>
 		<field name="associationId" title="ASSOCIATIONID" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
 		<field name="associationReason" title="ASSOCIATIONREASON" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
 	</excel>

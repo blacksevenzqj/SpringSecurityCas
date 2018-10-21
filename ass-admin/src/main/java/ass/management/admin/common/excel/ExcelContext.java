@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Excel上下文支持,只需指定location配置文件路径,即可使用
  * @author zhaoqingjie
- *
+ * titleIndex 标题索引,从0开始。Header对象 是指 Title对象 上面的Excel的附属信息。
  */
 public class ExcelContext {
 

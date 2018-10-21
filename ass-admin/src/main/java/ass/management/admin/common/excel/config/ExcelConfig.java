@@ -28,6 +28,10 @@ public interface ExcelConfig {
         public static final String DB_XITEM_AO = "dbxitemAO";
 
         public static final String DCDB_KF_ITEM_AO = "dcdbFkInfoItemAO";
+
+        public static final String OA_MATCH_PERSON = "oaMatchPerson";
+
+        public static final String BENCH_MARK_USER_4A = "benchmarkUser4A";
     }
 
 }

@@ -19,7 +19,6 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ass.management.admin.common.excel.model.datacomparison.OaMatchPerson">
         insert into oa_match_person
         (
-        `id`,
         `id_user`,
         `name`,
         `full_name`,
@@ -29,7 +28,6 @@
         `association_reason`
         )
         VALUES (
-            #{id},
             #{idUser},
             #{name},
             #{fullName},

@@ -20,7 +20,7 @@ public class ImportMultiValidateTest {
 	
 	// 测试时文件磁盘路径
 	private static String path =  "test-excel-error.xlsx";
-	// 配置文件路径
+	// 配置文件路径,找的是 test路径下的resources的excel-config.xml，已经被我删除了。
 	private static ExcelContext context = new ExcelContext("excel-config.xml");
 	// Excel配置文件中配置的id
 	private static String excelId = "student2";
