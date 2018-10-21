@@ -242,6 +242,7 @@ public class Es6ServiceImpl{
         return RestResult.getSuccessResult(esClient.search(searchRequest, tClass));
     }
 
+    // 综合条件查询：
     public  <T> RestResult<PageUtils<T>> pageQueryRequest(QueryEntry<T> queryEntry){
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(queryEntry.getTClass().getAnnotation(Es6Index.class).indexName());

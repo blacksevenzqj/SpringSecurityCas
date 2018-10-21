@@ -6,7 +6,7 @@ public class BenchmarkUser4A extends IncrementDataEntity {
 
     @Override
     public boolean isNewRecord() {
-        return id == null;
+        return isNewData();
     }
 
     private Integer id;
@@ -32,6 +32,9 @@ public class BenchmarkUser4A extends IncrementDataEntity {
     private String orgPath;
 
     private String pki;
+
+    // 专门设置的new or update开关，不进存储。
+    private boolean newData;
 
 
     public Integer getId() {
@@ -122,4 +125,10 @@ public class BenchmarkUser4A extends IncrementDataEntity {
         this.pki = pki;
     }
 
+    public boolean isNewData() {
+        return newData;
+    }
+    public void setNewData(boolean newData) {
+        this.newData = newData;
+    }
 }
