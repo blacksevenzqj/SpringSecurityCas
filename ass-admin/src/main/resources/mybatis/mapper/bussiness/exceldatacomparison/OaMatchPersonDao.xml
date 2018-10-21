@@ -4,66 +4,57 @@
 <mapper namespace="ass.management.admin.modules.business.exceldatacomparison.dao.OaMatchPersonDao">
 
     <select id="queryList" resultType="ass.management.admin.common.excel.model.datacomparison.OaMatchPerson">
-        select a.* from excel_target_dataone a
+        select a.* from oa_match_person a
         <trim prefix="WHERE" prefixOverrides="AND | OR">
-            <if test="userName != null"> AND a. user_name = #{userName} </if>
+            <if test="name != null"> AND a. name = #{name} </if>
         </trim>
-        ORDER BY a.user_name ASC
+        ORDER BY a.id ASC
     </select>
 
     <select id="getById" resultType="ass.management.admin.common.excel.model.datacomparison.OaMatchPerson">
-        select a.* from excel_target_dataone a where a.id = #{id}
+        select a.* from oa_match_person a where a.id = #{id}
     </select>
 
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ass.management.admin.common.excel.model.datacomparison.OaMatchPerson">
-        insert into excel_target_dataone
+        insert into oa_match_person
         (
         `id`,
-        `user_id`,
-        `user_name`,
-        `user_org_id`,
-        `name_code`,
-        `id_saphr_user_id`,
-        `id_base_org_id`,
-        `name_base_org_name`,
-        `human_org_id`,
-        `org_path`,
-        `pki`
+        `id_user`,
+        `name`,
+        `full_name`,
+        `org_name`,
+        `parent_unit_name`,
+        `association_id`,
+        `association_reason`
         )
         VALUES (
             #{id},
-            #{userId},
-            #{userName},
-            #{userOrgId},
-            #{nameCode},
-            #{idSaphrUserId},
-            #{idBaseOrgId},
-            #{nameBaseOrgName},
-            #{humanOrgId},
-            #{orgPath},
-            #{pki}
+            #{idUser},
+            #{name},
+            #{fullName},
+            #{orgName},
+            #{parentUnitName},
+            #{associationId},
+            #{associationReason}
         )
     </insert>
 
     <update id="update" parameterType="ass.management.admin.common.excel.model.datacomparison.OaMatchPerson">
-        UPDATE excel_target_dataone
+        UPDATE oa_match_person
         <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
-            <if test="userId != null"> user_id = #{userId} , </if>
-            <if test="userName != null"> user_name = #{userName} , </if>
-            <if test="userOrgId != null"> user_org_id = #{userOrgId} , </if>
-            <if test="nameCode != null"> name_code = #{nameCode} , </if>
-            <if test="idSaphrUserId != null"> id_saphr_user_id = #{idSaphrUserId} , </if>
-            <if test="idBaseOrgId != null"> id_base_org_id = #{idBaseOrgId} , </if>
-            <if test="nameBaseOrgName != null"> name_base_org_name = #{nameBaseOrgName} , </if>
-            <if test="humanOrgId != null"> human_org_id = #{humanOrgId} , </if>
-            <if test="orgPath != null"> org_path = #{orgPath} , </if>
-            <if test="pki != null"> pki = #{pki} , </if>
+            <if test="idUser != null"> id_user = #{idUser} , </if>
+            <if test="name != null"> name = #{name} , </if>
+            <if test="fullName != null"> full_name = #{fullName} , </if>
+            <if test="orgName != null"> org_name = #{orgName} , </if>
+            <if test="parentUnitName != null"> parent_unit_name = #{parentUnitName} , </if>
+            <if test="associationId != null"> association_id = #{associationId} , </if>
+            <if test="associationReason != null"> association_reason = #{associationReason} , </if>
         </trim>
     </update>
 
     <delete id="deleteBatchByIds">
-        delete from excel_target_dataone where id in
+        delete from oa_match_person where id in
         <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
             #{item}
         </foreach>
