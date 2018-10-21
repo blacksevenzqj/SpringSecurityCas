@@ -325,7 +325,13 @@ public class Es6ServiceImpl{
 
         // 排序
         searchSourceBuilder.sort(EsUtils.createSortBuilder(queryEntry.getTClass(), queryEntry.getSortField(), queryEntry.getSortType()));
-        searchSourceBuilder.query(boolBuilder);
+        // 最外层是否使用 constant_score filter，默认为true（全局查询不参与评分）
+        if(queryEntry.isConstantScore()){
+            ConstantScoreQueryBuilder constantScoreQueryBuilder = QueryBuilders.constantScoreQuery(boolBuilder);
+            searchSourceBuilder.query(constantScoreQueryBuilder);
+        }else{
+            searchSourceBuilder.query(boolBuilder);
+        }
         log.info(searchSourceBuilder.toString());
         return RestResult.getSuccessResult(esClient.search(searchRequest.source(searchSourceBuilder), queryEntry));
     }

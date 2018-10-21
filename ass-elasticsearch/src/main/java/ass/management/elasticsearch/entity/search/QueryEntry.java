@@ -33,4 +33,8 @@ public class QueryEntry<T> {
 
     private EsPageInfo esPageInfo;
 
+
+    // 最外层是否使用 constant_score filter
+    private boolean constantScore = true;
+
 }
