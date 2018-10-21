@@ -43,34 +43,34 @@ public class BenchmarkUser4AData extends EsBaseEntity {
 
 
     // 根据/号切分为多个字段做term精确查询
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path1")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path1")
     public String orgPath1;
 
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path2")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path2")
     public String orgPath2;
 
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path3")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path3")
     public String orgPath3;
 
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path4")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path4")
     public String orgPath4;
 
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path5")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path5")
     public String orgPath5;
 
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path6")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path6")
     public String orgPath6;
 
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path7")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path7")
     public String orgPath7;
 
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path8")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path8")
     public String orgPath8;
 
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path9")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path9")
     public String orgPath9;
 
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path10")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path10")
     public String orgPath10;
 
 
