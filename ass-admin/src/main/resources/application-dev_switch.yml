@@ -124,7 +124,7 @@ elasticsearch:
     cluster-nodes: localhost
 #    cluster-nodes: 116.62.80.163
     port: 9200
-    credentials-provider-config: true
+    credentials-provider-config: false
     provider-user-name: elastic
     provider-user-password: dyzhsw@008381#
     connect-time-config: true

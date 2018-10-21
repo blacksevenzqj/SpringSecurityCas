@@ -5,6 +5,7 @@ import ass.management.elasticsearch.client.EsClient;
 import ass.management.elasticsearch.common.EsConfig;
 import ass.management.elasticsearch.common.RestResult;
 import ass.management.elasticsearch.entity.base.EsPageInfo;
+import ass.management.elasticsearch.entity.datacomparison.BenchmarkUser4AData;
 import ass.management.elasticsearch.entity.group.EquipmentData;
 import ass.management.elasticsearch.entity.search.AggQueryEntry;
 import ass.management.elasticsearch.entity.search.AggResultEntry;
@@ -34,6 +35,19 @@ public class BenchmarkUser4AEs6 {
 
 
     @Test
+    public void save() throws Exception {
+        BenchmarkUser4AData benchmarkUser4AData = new BenchmarkUser4AData();
+        benchmarkUser4AData.setId("123123");
+        benchmarkUser4AData.setUserId("7d3d961eb37d498082755689e9d6cc0a");
+        benchmarkUser4AData.setUserName("杨娟");
+        es6ServiceImpl.createIndexDoc(BenchmarkUser4AData.class, benchmarkUser4AData);
+        Thread.currentThread().sleep(1000);
+    }
+
+
+
+
+    @Test
     public void getById() throws Exception {
         RestResult<EquipmentData> restResult = es6ServiceImpl.getById(EquipmentData.class, "61d533a353624e03bcff1aae1a748d5e");
         EquipmentData equipmentData = restResult.getData();
@@ -59,23 +73,6 @@ public class BenchmarkUser4AEs6 {
         System.out.println(restResult.getData());
     }
 
-    @Test
-    public void save() throws Exception {
-        String dateTimeStr = "2018-08-09 13:30:45";
-        EquipmentData equipmentData = new EquipmentData();
-//        equipmentData.setDbId("555");
-        equipmentData.setCreateBy("5");
-        equipmentData.setUpdateBy("5");
-        equipmentData.setCreateDate(dateTimeStr);
-        equipmentData.setUpdateDate(dateTimeStr);
-        equipmentData.setEquipmentId("8588ceaf5d70499e93fb1f824bc85ba1");
-        equipmentData.setEquipmentCode("8588ceaf5d70499e93fb1f824bc85ba1");
-        equipmentData.setColumn1("kkk5");
-        equipmentData.setColumn1("mmm5");
-        equipmentData.setCount(100L);
-        es6ServiceImpl.createIndexDoc(EquipmentData.class, equipmentData);
-        Thread.currentThread().sleep(1000);
-    }
 //    @Test
 //    public void update() throws Exception {
 //        EquipmentData equipmentData = new EquipmentData();
