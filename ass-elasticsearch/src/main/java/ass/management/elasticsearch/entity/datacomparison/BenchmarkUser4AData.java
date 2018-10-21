@@ -42,6 +42,7 @@ public class BenchmarkUser4AData extends EsBaseEntity {
     public String pki;
 
 
+    // 根据/号切分为多个字段做term精确查询
     @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path1")
     public String orgPath1;
 
