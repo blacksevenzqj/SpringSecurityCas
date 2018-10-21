@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ass.management.admin.modules.business.exceldatacomparison.dao.TargetDataOneDao">
+
+    <select id="queryList" resultType="ass.management.admin.common.excel.model.datacomparison.TargetDataOne">
+        select a.* from excel_target_dataone a
+        <trim prefix="WHERE" prefixOverrides="AND | OR">
+            <if test="userName != null"> AND a. user_name = #{userName} </if>
+        </trim>
+        ORDER BY a.user_name ASC
+    </select>
+
+    <select id="getById" resultType="ass.management.admin.common.excel.model.datacomparison.TargetDataOne">
+        select a.* from excel_target_dataone a where a.id = #{id}
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ass.management.admin.common.excel.model.datacomparison.TargetDataOne">
+        insert into excel_target_dataone
+        (
+        `user_id`,
+        `user_name`,
+        `user_org_id`,
+        `name_code`,
+        `id_saphr_user_id`,
+        `id_base_org_id`,
+        `name_base_org_name`,
+        `human_org_id`,
+        `org_path`,
+        `pki`
+        )
+        VALUES (
+            #{userId},
+            #{userName},
+            #{userOrgId},
+            #{nameCode},
+            #{idSaphrUserId},
+            #{idBaseOrgId},
+            #{nameBaseOrgName},
+            #{humanOrgId},
+            #{orgPath},
+            #{pki}
+        )
+    </insert>
+
+    <update id="update" parameterType="ass.management.admin.common.excel.model.datacomparison.TargetDataOne">
+        UPDATE excel_target_dataone
+        <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
+            <if test="userId != null"> user_id = #{userId} , </if>
+            <if test="userName != null"> user_name = #{userName} , </if>
+            <if test="userOrgId != null"> user_org_id = #{userOrgId} , </if>
+            <if test="nameCode != null"> name_code = #{nameCode} , </if>
+            <if test="idSaphrUserId != null"> id_saphr_user_id = #{idSaphrUserId} , </if>
+            <if test="idBaseOrgId != null"> id_base_org_id = #{idBaseOrgId} , </if>
+            <if test="nameBaseOrgName != null"> name_base_org_name = #{nameBaseOrgName} , </if>
+            <if test="humanOrgId != null"> human_org_id = #{humanOrgId} , </if>
+            <if test="orgPath != null"> org_path = #{orgPath} , </if>
+            <if test="pki != null"> pki = #{pki} , </if>
+            <if test="associationId != null"> association_id = #{associationId} , </if>
+            <if test="associationReason != null"> association_reason = #{associationReason} , </if>
+        </trim>
+    </update>
+
+    <delete id="deleteBatchByIds">
+        delete from excel_target_dataone where id in
+        <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -57,14 +57,21 @@ public class DataSourceAspect implements Ordered {
 
     /**
      * 2、表达式方式：
+     * 一、扫描：父类、子类
+     * 1、如果 匹配 子类方法、并且匹配父类方法将会调用2次（子类方法中调用父类方法）。
+     * 2、如果 匹配 子类继承于父类中的方法，则只会调用1次。（子类没有重写父类方法）。
+     * 二、扫描：子类
+     * 子类 没有复写 父类中的方法，那么 子类继承于父类中的方法不会被 匹配到，也就不会发生切面事件。
      */
     @Pointcut(
+//        "execution(* ass.management.db.service.*.*(..)) || " +  // 不能匹配父类，否则 同样继承CrudService的MANAGEMENT系统库也会受影响
         "execution(* ass.management.admin.modules.business.airticket.service.*.*(..)) || " +
         "execution(* ass.management.admin.modules.business.visa.service.*.*(..)) || " +
         "execution(* ass.management.admin.modules.business.businesshelp.service.*.*(..)) || " +
         "execution(* ass.management.admin.modules.business.hot.service.*.*(..)) || " +
         "execution(* ass.management.admin.modules.business.advisory.service.*.*(..)) || " +
-        "execution(* ass.management.admin.modules.business.school.service.*.*(..)) "
+        "execution(* ass.management.admin.modules.business.school.service.*.*(..)) ||" +
+        "execution(* ass.management.admin.modules.business.exceldatacomparison.service.*.*(..))"
     		)
     public void patternDataSourcePointCut() {
 

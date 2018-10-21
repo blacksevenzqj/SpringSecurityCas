@@ -55,12 +55,15 @@ public class TestYou {
 
     @Test
     public void businessHelp() {
-        Map map = new HashMap();
-        PageUtils<BusinessHeadlines> pageUtils = businessHelpAdminServiceImpl.headlinesQueryPageMap(map);
-        System.out.println(pageUtils);
-        for(BusinessHeadlines bl : pageUtils.getList()){
-            System.out.println(bl);
-        }
+//        Map map = new HashMap();
+//        PageUtils<BusinessHeadlines> pageUtils = businessHelpAdminServiceImpl.headlinesQueryPageMap(map);
+//        System.out.println(pageUtils);
+//        for(BusinessHeadlines bl : pageUtils.getList()){
+//            System.out.println(bl);
+//        }
+        BusinessHeadlines businessHeadlines = new BusinessHeadlines();
+        businessHeadlines.setHeadLineLevel(123);
+        businessHelpAdminServiceImpl.saveOrUpDateHeadlines(businessHeadlines);
     }
 
     // 注意 测试时需要再 CrudService 上注解 @DataSource注解，切换数据源
