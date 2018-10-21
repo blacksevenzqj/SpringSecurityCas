@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="ass.management.admin.modules.business.exceldatacomparison.dao.TargetDataOneDao">
+<mapper namespace="ass.management.admin.modules.business.exceldatacomparison.dao.OaMatchPersonDao">
 
-    <select id="queryList" resultType="ass.management.admin.common.excel.model.datacomparison.TargetDataOne">
+    <select id="queryList" resultType="ass.management.admin.common.excel.model.datacomparison.OaMatchPerson">
         select a.* from excel_target_dataone a
         <trim prefix="WHERE" prefixOverrides="AND | OR">
             <if test="userName != null"> AND a. user_name = #{userName} </if>
@@ -11,14 +11,15 @@
         ORDER BY a.user_name ASC
     </select>
 
-    <select id="getById" resultType="ass.management.admin.common.excel.model.datacomparison.TargetDataOne">
+    <select id="getById" resultType="ass.management.admin.common.excel.model.datacomparison.OaMatchPerson">
         select a.* from excel_target_dataone a where a.id = #{id}
     </select>
 
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ass.management.admin.common.excel.model.datacomparison.TargetDataOne">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ass.management.admin.common.excel.model.datacomparison.OaMatchPerson">
         insert into excel_target_dataone
         (
+        `id`,
         `user_id`,
         `user_name`,
         `user_org_id`,
@@ -31,6 +32,7 @@
         `pki`
         )
         VALUES (
+            #{id},
             #{userId},
             #{userName},
             #{userOrgId},
@@ -44,7 +46,7 @@
         )
     </insert>
 
-    <update id="update" parameterType="ass.management.admin.common.excel.model.datacomparison.TargetDataOne">
+    <update id="update" parameterType="ass.management.admin.common.excel.model.datacomparison.OaMatchPerson">
         UPDATE excel_target_dataone
         <trim prefix="set" suffixOverrides="," suffix=" where id = #{id} ">
             <if test="userId != null"> user_id = #{userId} , </if>
@@ -57,8 +59,6 @@
             <if test="humanOrgId != null"> human_org_id = #{humanOrgId} , </if>
             <if test="orgPath != null"> org_path = #{orgPath} , </if>
             <if test="pki != null"> pki = #{pki} , </if>
-            <if test="associationId != null"> association_id = #{associationId} , </if>
-            <if test="associationReason != null"> association_reason = #{associationReason} , </if>
         </trim>
     </update>
 

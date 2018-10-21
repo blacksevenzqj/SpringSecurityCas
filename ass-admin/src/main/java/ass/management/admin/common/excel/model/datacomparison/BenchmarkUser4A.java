@@ -2,7 +2,7 @@ package ass.management.admin.common.excel.model.datacomparison;
 
 import ass.management.db.pojo.IncrementDataEntity;
 
-public class TargetDataOne extends IncrementDataEntity {
+public class BenchmarkUser4A extends IncrementDataEntity {
 
     @Override
     public boolean isNewRecord() {
@@ -33,9 +33,6 @@ public class TargetDataOne extends IncrementDataEntity {
 
     private String pki;
 
-    private String associationId;
-
-    private String associationReason;
 
     public Integer getId() {
         return id;
@@ -125,18 +122,4 @@ public class TargetDataOne extends IncrementDataEntity {
         this.pki = pki;
     }
 
-    public String getAssociationId() {
-        return associationId;
-    }
-    public void setAssociationId(String associationId) {
-        this.associationId = associationId;
-    }
-
-    public String getAssociationReason() {
-        return associationReason;
-    }
-
-    public void setAssociationReason(String associationReason) {
-        this.associationReason = associationReason;
-    }
 }

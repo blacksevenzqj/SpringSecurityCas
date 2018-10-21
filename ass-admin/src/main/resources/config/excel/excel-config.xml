@@ -81,5 +81,20 @@
 		<field name="curProgress" title="当前进度"  align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
 	</excel>
 
-	
+
+	<excel id = "benchmarkUser4A" class="ass.management.admin.common.excel.model.datacomparison.BenchmarkUser4A" sheetname="4A基准用户列表" enableStyle="true" defaultAlign="center" defaultVertical="center" sheetIndex="0" defaultColumnWidth="6000" defaultRowHeightInPoints="40" eachRowHeightInPoints="40">
+		<field name="id" title="ID" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
+		<field name="userId" title="USERID" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
+		<field name="userName" title="USERNAME" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="userOrgId" title="用户基准组织ID"  align="center" vertical="top" uniformStyle="true" columnWidth="7000" titleFountColor="blue" isNull="false" />
+		<field name="nameCode" title="NAMECODE"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="true" />
+		<field name="idSaphrUserId" title="用户人资IDSAPHRUSERID"  align="center" uniformStyle="true" columnWidth="6000" isNull="false"/>
+		<field name="idBaseOrgId" title="基准组织IDBASEORGID" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+		<field name="nameBaseOrgName" title="基准组织NAMEBASEORGNAME" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+		<field name="humanOrgId" title="人资组织ID" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+		<field name="orgPath" title="ORGPATH" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+		<field name="pki" title="PKI" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+	</excel>
+
+
 </excels>
