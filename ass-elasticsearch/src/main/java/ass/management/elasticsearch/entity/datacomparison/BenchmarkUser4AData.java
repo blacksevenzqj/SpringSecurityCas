@@ -68,7 +68,7 @@ public class BenchmarkUser4AData extends EsBaseEntity {
 
     @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path9")
     public String orgPath9;
-    
+
     @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path10")
     public String orgPath10;
 
