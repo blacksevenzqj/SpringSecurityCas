@@ -138,21 +138,7 @@ public class BenchmarkUser4AExcelImport {
         es6ServiceImpl.deleteIndexDoc(BenchmarkUser4AData.class, "WwC_TGUBr_MjdtnuNyhG");
         Thread.currentThread().sleep(1000);
     }
-    @Test
-    public void processDocBulk() throws Exception {
-        List<BenchmarkUser4AData> createList = new ArrayList();
 
-
-        List<BenchmarkUser4AData> updateList = new ArrayList();
-//        BenchmarkUser4AData benchmarkUser4AData = new BenchmarkUser4AData();
-//        updateList.add(benchmarkUser4AData);
-
-        List<String> deleteList = new ArrayList();
-//        deleteList.add("XADWTGUBr_Mjdtnu1yjf");
-
-        es6ServiceImpl.processDocBulk(BenchmarkUser4AData.class, createList, updateList, deleteList);
-        Thread.currentThread().sleep(5000);
-    }
 
     @Test
     public void importBenchmarkUser4AToEl() throws Exception{
@@ -160,7 +146,7 @@ public class BenchmarkUser4AExcelImport {
         ExcelImportResult excelImportResult = excelContext.readExcel(ExcelConfig.Bean.BENCH_MARK_USER_4A, 0, in,true);
         log.info(String.valueOf(excelImportResult.getHeader()));
         List<BenchmarkUser4A> benchmarkUser4AList = excelImportResult.getListBean();
-        List<BenchmarkUser4AData> benchmarkUser4ADataList = new ArrayList<>();
+        List<BenchmarkUser4AData> benchmarkUser4ADataCreateList = new ArrayList<>();
         for(BenchmarkUser4A bnchmarkUser4A : benchmarkUser4AList){
             bnchmarkUser4A.setNewData(true);
             log.info(String.valueOf(bnchmarkUser4A));
@@ -173,8 +159,11 @@ public class BenchmarkUser4AExcelImport {
                     m.invoke(benchmarkUser4AData, strs[i]);
                 }
             }
-            benchmarkUser4ADataList.add(benchmarkUser4AData);
+            benchmarkUser4ADataCreateList.add(benchmarkUser4AData);
         }
+
+        processDocBulk(benchmarkUser4ADataCreateList, null, null);
+
         //通过导入结果集的hasErrors方法判断
         if(excelImportResult.hasErrors()){
             log.error("导入包含错误，下面是错误信息：");
@@ -183,6 +172,12 @@ public class BenchmarkUser4AExcelImport {
             }
         }
     }
+    private void processDocBulk(List<BenchmarkUser4AData> createList, List<BenchmarkUser4AData> updateList, List<String> deleteList) throws Exception {
+        es6ServiceImpl.processDocBulk(BenchmarkUser4AData.class, createList, updateList, deleteList);
+        Thread.currentThread().sleep(5000);
+    }
+
+
 
     @Test
     public void getById() throws Exception {
