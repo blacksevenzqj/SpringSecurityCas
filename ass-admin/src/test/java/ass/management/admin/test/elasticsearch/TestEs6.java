@@ -20,7 +20,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -48,7 +50,7 @@ public class TestEs6 {
     public void getByField() throws Exception {
         RestResult<List<EquipmentData>> restResult = es6ServiceImpl.searchTermByFiled(EquipmentData.class,
                 "equipment_id", "8588ceaf5d70499e93fb1f824bc85ba1",
-                new EsPageInfo(), null, null);
+                new EsPageInfo(), true, null, null);
         System.out.println(restResult.getData());
     }
 
@@ -56,7 +58,7 @@ public class TestEs6 {
     public void getMatchByField() throws Exception {
         RestResult<List<EquipmentData>> restResult = es6ServiceImpl.searchMatchByField(EquipmentData.class,
                 "remarks", "seven go",
-                new EsPageInfo(), null, null);
+                new EsPageInfo(), true, null, null);
         System.out.println(restResult.getData());
     }
 
@@ -134,8 +136,8 @@ public class TestEs6 {
      */
     @Test
     public void pageQueryRequest() throws Exception {
-//        Map<String, Object> termMap = new HashMap<>();
-//        termMap.put("equipment_id", "8588ceaf5d70499e93fb1f824bc85ba1");
+        Map<String, Object> termMap = new HashMap<>();
+        termMap.put("equipment_id", "8588ceaf5d70499e93fb1f824bc85ba1");
 
 //        Map<String, Object[]> rangeMap = new HashMap<>();
 //        Object[] obj = new Object[2];
@@ -152,12 +154,15 @@ public class TestEs6 {
 
         QueryEntry queryEntry = new QueryEntry();
         queryEntry.setTClass(EquipmentData.class);
-        queryEntry.getEsPageInfo().setPageSize(4);
-        queryEntry.getEsPageInfo().setPageNum(2);
+        EsPageInfo esPageInfo = new EsPageInfo();
+        esPageInfo.setPageSize(2);
+        esPageInfo.setPageNum(1);
+        queryEntry.setEsPageInfo(esPageInfo);
 
-//        queryEntry.setTerm(termMap);
+        queryEntry.setTerm(termMap);
 //        queryEntry.setRange(rangeMap);
 //        queryEntry.setShouldTerm(shouldMap);
+//        queryEntry.setConstantScore(false);
 
         String str = JSON.toJSONString(queryEntry);
         System.out.println(str);

@@ -36,5 +36,7 @@ public class QueryEntry<T> {
 
     // 最外层是否使用 constant_score filter
     private boolean constantScore = true;
+    // 排序
+    private boolean sortState = true;
 
 }

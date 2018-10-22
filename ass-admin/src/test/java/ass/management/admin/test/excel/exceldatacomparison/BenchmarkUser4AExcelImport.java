@@ -181,7 +181,7 @@ public class BenchmarkUser4AExcelImport {
 
     @Test
     public void getById() throws Exception {
-        RestResult<BenchmarkUser4AData> restResult = es6ServiceImpl.getById(BenchmarkUser4AData.class, "PZm8mWYBPREgz_ppUZJS");
+        RestResult<BenchmarkUser4AData> restResult = es6ServiceImpl.getById(BenchmarkUser4AData.class, "1");
         BenchmarkUser4AData benchmarkUser4AData = restResult.getData();
         log.info(benchmarkUser4AData.toString());
     }
@@ -189,8 +189,8 @@ public class BenchmarkUser4AExcelImport {
     @Test
     public void getByField() throws Exception {
         RestResult<List<BenchmarkUser4AData>> restResult = es6ServiceImpl.searchTermByFiled(BenchmarkUser4AData.class,
-                "equipment_id", "8588ceaf5d70499e93fb1f824bc85ba1",
-                new EsPageInfo(), null, null);
+                "user_name", "杨娟",
+                new EsPageInfo(), false, null, null);
         log.info(String.valueOf(restResult.getData()));
     }
 
@@ -198,7 +198,7 @@ public class BenchmarkUser4AExcelImport {
     public void getMatchByField() throws Exception {
         RestResult<List<BenchmarkUser4AData>> restResult = es6ServiceImpl.searchMatchByField(BenchmarkUser4AData.class,
                 "remarks", "seven go",
-                new EsPageInfo(), null, null);
+                new EsPageInfo(), false, null, null);
         log.info(String.valueOf(restResult.getData()));
     }
     /**
@@ -222,12 +222,12 @@ public class BenchmarkUser4AExcelImport {
 //        obj[1] = "2018-08-08 13:30:45";
 //        rangeMap.put("update_date", obj);
 
-//        Map<String, Object[]> shouldMap = new HashMap<>();
-//        Object[] objShould = new Object[10];
-//        for(int i = 0,j=1; i < objShould.length && j <= 10; i++,j++){
-//            objShould[i] = "办公室（党委办公室、董事会办公室）";
-//            shouldMap.put("org_path" + j, objShould);
-//        }
+        Map<String, Object[]> shouldMap = new HashMap<>();
+        Object[] objShould = new Object[10];
+        for(int i = 0,j=1; i < objShould.length && j <= 10; i++,j++){
+            objShould[i] = "办公室（党委办公室、董事会办公室）";
+            shouldMap.put("org_path" + j, objShould);
+        }
 
         QueryEntry queryEntry = new QueryEntry();
         queryEntry.setTClass(BenchmarkUser4AData.class);
@@ -240,6 +240,7 @@ public class BenchmarkUser4AExcelImport {
 //        queryEntry.setRange(rangeMap);
 //        queryEntry.setShouldTerm(shouldMap);
         queryEntry.setConstantScore(false);
+        queryEntry.setSortState(false);
 
         String str = JSON.toJSONString(queryEntry);
         System.out.println(str);

@@ -215,7 +215,7 @@ public class Es6ServiceImpl{
     }
 
     // 传入：子类POJO的Class
-    public <T> RestResult<List<T>> searchTermByFiled(Class<T> tClass, String fieldName, String field, EsPageInfo esPageInfo, String orderField, String orderType) {
+    public <T> RestResult<List<T>> searchTermByFiled(Class<T> tClass, String fieldName, String field, EsPageInfo esPageInfo, boolean sortState, String orderField, String orderType) {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(tClass.getAnnotation(Es6Index.class).indexName());
         searchRequest.types(tClass.getAnnotation(Es6Index.class).typeName());
@@ -223,13 +223,15 @@ public class Es6ServiceImpl{
         searchSourceBuilder.query(QueryBuilders.termQuery(fieldName, field));
         searchSourceBuilder.from(esPageInfo.getPageStart());
         searchSourceBuilder.size(esPageInfo.getPageSize());
-        searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
+        if(sortState) {
+            searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
+        }
         searchRequest.source(searchSourceBuilder);
         return RestResult.getSuccessResult(esClient.search(searchRequest, tClass));
     }
 
     // 传入：子类POJO的Class
-    public <T> RestResult<List<T>> searchMatchByField(Class<T> tClass, String fieldName, String field, EsPageInfo esPageInfo, String orderField, String orderType) {
+    public <T> RestResult<List<T>> searchMatchByField(Class<T> tClass, String fieldName, String field, EsPageInfo esPageInfo,  boolean sortState, String orderField, String orderType) {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(tClass.getAnnotation(Es6Index.class).indexName());
         searchRequest.types(tClass.getAnnotation(Es6Index.class).typeName());
@@ -237,7 +239,9 @@ public class Es6ServiceImpl{
         searchSourceBuilder.query(QueryBuilders.matchQuery(fieldName, field));
         searchSourceBuilder.from(esPageInfo.getPageStart());
         searchSourceBuilder.size(esPageInfo.getPageSize());
-        searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
+        if(sortState) {
+            searchSourceBuilder.sort(EsUtils.createSortBuilder(tClass, orderField, orderType));
+        }
         searchRequest.source(searchSourceBuilder);
         return RestResult.getSuccessResult(esClient.search(searchRequest, tClass));
     }
@@ -324,7 +328,9 @@ public class Es6ServiceImpl{
         }
 
         // 排序
-        searchSourceBuilder.sort(EsUtils.createSortBuilder(queryEntry.getTClass(), queryEntry.getSortField(), queryEntry.getSortType()));
+        if(queryEntry.isSortState()) {
+            searchSourceBuilder.sort(EsUtils.createSortBuilder(queryEntry.getTClass(), queryEntry.getSortField(), queryEntry.getSortType()));
+        }
         // 最外层是否使用 constant_score filter，默认为true（全局查询不参与评分）
         if(queryEntry.isConstantScore()){
             ConstantScoreQueryBuilder constantScoreQueryBuilder = QueryBuilders.constantScoreQuery(boolBuilder);
