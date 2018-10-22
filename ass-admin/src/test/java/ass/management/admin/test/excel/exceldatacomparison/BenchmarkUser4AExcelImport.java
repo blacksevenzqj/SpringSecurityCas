@@ -166,10 +166,12 @@ public class BenchmarkUser4AExcelImport {
             log.info(String.valueOf(bnchmarkUser4A));
             BenchmarkUser4AData benchmarkUser4AData = new BenchmarkUser4AData();
             CachedBeanCopier.defaultCopy(bnchmarkUser4A, benchmarkUser4AData);
-            String[] strs = CharacterSegmentUtil.SlashSegmentation(benchmarkUser4AData.getOrgPath(), "\\\\");
-            for(int i = 0; i < strs.length; i++){
-                Method m = benchmarkUser4AData.getClass().getMethod("setOrgPath" + ++i);
-                m.invoke(benchmarkUser4AData, strs[i]);
+            String[] strs = CharacterSegmentUtil.SlashSegmentation(benchmarkUser4AData.getOrgPath(), CharacterSegmentUtil.REVERSE_SLANT);
+            if(strs != null && strs.length > 0){
+                for(int i=0,j=1; i < strs.length && j <= 10; i++,j++){
+                    Method m = benchmarkUser4AData.getClass().getMethod("setOrgPath" + j, String.class);
+                    m.invoke(benchmarkUser4AData, strs[i]);
+                }
             }
             benchmarkUser4ADataList.add(benchmarkUser4AData);
         }

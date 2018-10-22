@@ -7,7 +7,6 @@ import ass.management.elasticsearch.common.QueryDescEnum;
 import ass.management.elasticsearch.entity.base.EsBaseEntity;
 import lombok.Data;
 
-@Data
 @Es6Index(numberOfShards=5, numberOfReplicas=1, indexName="benchmarkuser4adata", routingName="benchmarkuser4a")
 public class BenchmarkUser4AData extends EsBaseEntity {
 
@@ -77,4 +76,172 @@ public class BenchmarkUser4AData extends EsBaseEntity {
     public String orgPath10;
 
 
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserOrgId() {
+        return userOrgId;
+    }
+
+    public void setUserOrgId(String userOrgId) {
+        this.userOrgId = userOrgId;
+    }
+
+    public String getNameCode() {
+        return nameCode;
+    }
+
+    public void setNameCode(String nameCode) {
+        this.nameCode = nameCode;
+    }
+
+    public String getIdSaphrUserId() {
+        return idSaphrUserId;
+    }
+
+    public void setIdSaphrUserId(String idSaphrUserId) {
+        this.idSaphrUserId = idSaphrUserId;
+    }
+
+    public String getIdBaseOrgId() {
+        return idBaseOrgId;
+    }
+
+    public void setIdBaseOrgId(String idBaseOrgId) {
+        this.idBaseOrgId = idBaseOrgId;
+    }
+
+    public String getNameBaseOrgName() {
+        return nameBaseOrgName;
+    }
+
+    public void setNameBaseOrgName(String nameBaseOrgName) {
+        this.nameBaseOrgName = nameBaseOrgName;
+    }
+
+    public String getHumanOrgId() {
+        return humanOrgId;
+    }
+
+    public void setHumanOrgId(String humanOrgId) {
+        this.humanOrgId = humanOrgId;
+    }
+
+    public String getPki() {
+        return pki;
+    }
+
+    public void setPki(String pki) {
+        this.pki = pki;
+    }
+
+    public String getOrgPath() {
+        return orgPath;
+    }
+
+    public void setOrgPath(String orgPath) {
+        this.orgPath = orgPath;
+    }
+
+    public String getOrgPath1() {
+        return orgPath1;
+    }
+
+    public void setOrgPath1(String orgPath1) {
+        this.orgPath1 = orgPath1;
+    }
+
+    public String getOrgPath2() {
+        return orgPath2;
+    }
+
+    public void setOrgPath2(String orgPath2) {
+        this.orgPath2 = orgPath2;
+    }
+
+    public String getOrgPath3() {
+        return orgPath3;
+    }
+
+    public void setOrgPath3(String orgPath3) {
+        this.orgPath3 = orgPath3;
+    }
+
+    public String getOrgPath4() {
+        return orgPath4;
+    }
+
+    public void setOrgPath4(String orgPath4) {
+        this.orgPath4 = orgPath4;
+    }
+
+    public String getOrgPath5() {
+        return orgPath5;
+    }
+
+    public void setOrgPath5(String orgPath5) {
+        this.orgPath5 = orgPath5;
+    }
+
+    public String getOrgPath6() {
+        return orgPath6;
+    }
+
+    public void setOrgPath6(String orgPath6) {
+        this.orgPath6 = orgPath6;
+    }
+
+    public String getOrgPath7() {
+        return orgPath7;
+    }
+
+    public void setOrgPath7(String orgPath7) {
+        this.orgPath7 = orgPath7;
+    }
+
+    public String getOrgPath8() {
+        return orgPath8;
+    }
+
+    public void setOrgPath8(String orgPath8) {
+        this.orgPath8 = orgPath8;
+    }
+
+    public String getOrgPath9() {
+        return orgPath9;
+    }
+
+    public void setOrgPath9(String orgPath9) {
+        this.orgPath9 = orgPath9;
+    }
+
+    public String getOrgPath10() {
+        return orgPath10;
+    }
+
+    public void setOrgPath10(String orgPath10) {
+        this.orgPath10 = orgPath10;
+    }
 }

@@ -22,12 +22,12 @@ public class TestPojo {
 //        DefaultExecutorFactory.class.cast(DisruptorExecutorFactory.class.newInstance());
 
         String strs = "\\中国南方电网责任有限公司\\云南电网有限责任公司\\云南电网有限责任公司曲靖供电局\\云南电网有限责任公司曲靖马龙供电局\\其他\\";
-        String[] aaa = CharacterSegmentUtil.SlashSegmentation(strs, "\\\\");
+        String[] aaa = CharacterSegmentUtil.SlashSegmentation(strs, CharacterSegmentUtil.REVERSE_SLANT);
         for(String a : aaa){
             System.out.println(a);
         }
         String strs2 = "/中国南方电网责任有限公司/云南电网有限责任公司/云南电网有限责任公司曲靖供电局/云南电网有限责任公司曲靖马龙供电局/其他/";
-        String[] bbb = CharacterSegmentUtil.SlashSegmentation(strs2, "/");
+        String[] bbb = CharacterSegmentUtil.SlashSegmentation(strs2, CharacterSegmentUtil.POSITIVE_SLANT);
         for(String b : bbb){
             System.out.println(b);
         }

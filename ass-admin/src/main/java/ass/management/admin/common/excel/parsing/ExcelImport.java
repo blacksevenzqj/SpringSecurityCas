@@ -183,7 +183,7 @@ public class ExcelImport extends AbstractExcelResolver {
             if (value == null) {
                 throw new ExcelException("id 为:[" + excelDefinition.getId() + "]的标题不能为[ null ]");
             }
-            titles.add(value.toString());
+            titles.add(String.valueOf(value).trim());
         }
         return titles;
     }
