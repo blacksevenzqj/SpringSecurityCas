@@ -7,7 +7,7 @@ public class EsPageInfo {
 
     private int pageStart = 0;
 
-    private int pageSize = 2;
+    private int pageSize = 10;
 
 
     public int getPageNum() {

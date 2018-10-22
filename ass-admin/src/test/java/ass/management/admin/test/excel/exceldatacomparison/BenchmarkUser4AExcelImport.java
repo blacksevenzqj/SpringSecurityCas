@@ -181,7 +181,7 @@ public class BenchmarkUser4AExcelImport {
 
     @Test
     public void getById() throws Exception {
-        RestResult<BenchmarkUser4AData> restResult = es6ServiceImpl.getById(BenchmarkUser4AData.class, "61d533a353624e03bcff1aae1a748d5e");
+        RestResult<BenchmarkUser4AData> restResult = es6ServiceImpl.getById(BenchmarkUser4AData.class, "PZm8mWYBPREgz_ppUZJS");
         BenchmarkUser4AData benchmarkUser4AData = restResult.getData();
         log.info(benchmarkUser4AData.toString());
     }
@@ -212,8 +212,8 @@ public class BenchmarkUser4AExcelImport {
      */
     @Test
     public void pageQueryRequest() throws Exception {
-//        Map<String, Object> termMap = new HashMap<>();
-//        termMap.put("equipment_id", "8588ceaf5d70499e93fb1f824bc85ba1");
+        Map<String, Object> termMap = new HashMap<>();
+        termMap.put("user_name", "杨娟");
 
 //        Map<String, Object[]> rangeMap = new HashMap<>();
 //        Object[] obj = new Object[2];
@@ -223,19 +223,23 @@ public class BenchmarkUser4AExcelImport {
 //        rangeMap.put("update_date", obj);
 
 //        Map<String, Object[]> shouldMap = new HashMap<>();
-//        Object[] objShould = new Object[2];
-//        objShould[0] = "2018-08-06";
-//        objShould[1] = "2018-08-09";
-//        shouldMap.put("update_date", objShould);
+//        Object[] objShould = new Object[10];
+//        for(int i = 0,j=1; i < objShould.length && j <= 10; i++,j++){
+//            objShould[i] = "办公室（党委办公室、董事会办公室）";
+//            shouldMap.put("org_path" + j, objShould);
+//        }
 
         QueryEntry queryEntry = new QueryEntry();
-        queryEntry.setTClass(EquipmentData.class);
-        queryEntry.getEsPageInfo().setPageSize(4);
-        queryEntry.getEsPageInfo().setPageNum(2);
+        queryEntry.setTClass(BenchmarkUser4AData.class);
+        EsPageInfo esPageInfo = new EsPageInfo();
+        esPageInfo.setPageSize(2);
+        esPageInfo.setPageNum(1);
+        queryEntry.setEsPageInfo(esPageInfo);
 
-//        queryEntry.setTerm(termMap);
+        queryEntry.setTerm(termMap);
 //        queryEntry.setRange(rangeMap);
 //        queryEntry.setShouldTerm(shouldMap);
+        queryEntry.setConstantScore(false);
 
         String str = JSON.toJSONString(queryEntry);
         System.out.println(str);

@@ -16,7 +16,7 @@
     </select>
 
 
-    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="ass.management.admin.common.excel.model.datacomparison.BenchmarkUser4A">
+    <insert id="insert" parameterType="ass.management.admin.common.excel.model.datacomparison.BenchmarkUser4A">
         insert into benchmark_user_4a
         (
         `id`,

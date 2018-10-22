@@ -10,7 +10,7 @@ import lombok.Data;
 @Es6Index(numberOfShards=5, numberOfReplicas=1, indexName="benchmarkuser4adata", routingName="benchmarkuser4a")
 public class BenchmarkUser4AData extends EsBaseEntity {
 
-    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "db_id")
+    @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "id")
     public String id;
 
     @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "user_id")
@@ -42,8 +42,9 @@ public class BenchmarkUser4AData extends EsBaseEntity {
 
 
     // 从 BenchmarkUser4A 复制过来的属性，需要分解为：orgPath1 ... orgPath10
-    @EsFieldData(dataName= EsConfig.El_STRING, elName = "orgPath")
-    private String orgPath;
+    @EsFieldData(dataName= EsConfig.El_STRING, elName = "org_path")
+    public String orgPath;
+
     // 根据/号切分为多个字段做term精确查询
     @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path1")
     public String orgPath1;
