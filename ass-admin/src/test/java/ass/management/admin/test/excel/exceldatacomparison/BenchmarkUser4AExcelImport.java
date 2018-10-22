@@ -234,67 +234,69 @@ public class BenchmarkUser4AExcelImport {
     @Test
     public void pageQueryRequest2() throws Exception {
         Map map = new HashMap();
-        map.put("name", "刘芸");
+        map.put("pageNum", 1);
+        map.put("pageSize", 20);
+//        map.put("name", "刘芸");
         PageUtils<OaMatchPerson> pageUtils = oaMatchPersonServiceImpl.oaMatchPersonQueryPageMap(map);
-        if(pageUtils != null && pageUtils.getList() != null && pageUtils.getList().size() > 0){
-            List<OaMatchPerson> list = pageUtils.getList();
-            OaMatchPerson oa = list.get(0);
+        if(pageUtils != null && pageUtils.getList() != null && pageUtils.getList().size() > 0) {
+            for (OaMatchPerson oa : pageUtils.getList()) {
+                Map<String, Object> termMap = new HashMap<>();
+                termMap.put("user_name", oa.getName());
 
-            Map<String, Object> termMap = new HashMap<>();
-            termMap.put("user_name", oa.getName());
-
-            Map<String, Object> shouldMap = new HashMap<>();
-            shouldMap.put("name_base_org_name", oa.getParentUnitName());
+                Map<String, Object> shouldMap = new HashMap<>();
+                shouldMap.put("name_base_org_name", oa.getParentUnitName());
 
 
-            Map<String, Object> shouldsMap = new HashMap<>();
-            // 施金润/企业管理部（全面深化改革办公室）/云南电网公司   从人名开始 小到大的顺序
-            String fullName = oa.getFullName();
-            String[] strs = CharacterSegmentUtil.SlashSegmentation(fullName, CharacterSegmentUtil.POSITIVE_SLANT);
+                Map<String, Object> shouldsMap = new HashMap<>();
+                // 施金润/企业管理部（全面深化改革办公室）/云南电网公司   从人名开始 小到大的顺序
+                String fullName = oa.getFullName();
+                String[] strs = CharacterSegmentUtil.SlashSegmentation(fullName, CharacterSegmentUtil.POSITIVE_SLANT);
 
-            Object[] objShould = new Object[strs.length - 1];   // 0位置为人名 排除，从1位置开始。
-            for(int i=0,j=1; i<objShould.length; i++,j++){   // 将数组顺序反转
-                objShould[i] = strs[strs.length - j];
-            }
-            for (int i = 0, j = 1; i < 10 && j <= 10; i++, j++) {
-                shouldsMap.put("org_path" + j, objShould);
-            }
-
-            QueryEntry queryEntry = new QueryEntry();
-            queryEntry.setTClass(BenchmarkUser4AData.class);
-            EsPageInfo esPageInfo = new EsPageInfo();
-            esPageInfo.setPageSize(10);
-            esPageInfo.setPageNum(1);
-            queryEntry.setEsPageInfo(esPageInfo);
-
-            queryEntry.setTerm(termMap);
-            queryEntry.setShouldTerm(shouldMap);
-            queryEntry.setShouldTerms(shouldsMap);
-            queryEntry.setConstantScore(false);
-            queryEntry.setSortState(false);
-
-            String str = JSON.toJSONString(queryEntry);
-
-            RestResult<PageUtils<BenchmarkUser4AData>> restResult = es6ServiceImpl.pageQueryRequest(queryEntry);
-            List<BenchmarkUser4AData> listBenchmark = restResult.getData().getList();
-            if(listBenchmark.size() == 1){
-                oa.setAssociationId(listBenchmark.get(0).getUserId());
-                oa.setAssociationReason("1");
-            }else if(listBenchmark.size() > 1){
-                oa.setAssociationReason("3");
-            }else if(listBenchmark.size() == 0) {
-                RestResult<PageUtils<BenchmarkUser4AData>> newResult = pageQueryRequest3(oa);
-                List<BenchmarkUser4AData> newListBenchmark = restResult.getData().getList();
-                if (newListBenchmark.size() == 1) {
-                    oa.setAssociationId(listBenchmark.get(0).getUserId());
-                    oa.setAssociationReason("5");
-                }else if(newListBenchmark.size() > 1){
-                    oa.setAssociationReason("3");
-                }else if(newListBenchmark.size() == 0){
-                    oa.setAssociationReason("0");
+                Object[] objShould = new Object[strs.length - 1];   // 0位置为人名 排除，从1位置开始。
+                for (int i = 0, j = 1; i < objShould.length; i++, j++) {   // 将数组顺序反转
+                    objShould[i] = strs[strs.length - j];
                 }
+                for (int i = 0, j = 1; i < 10 && j <= 10; i++, j++) {
+                    shouldsMap.put("org_path" + j, objShould);
+                }
+
+                QueryEntry queryEntry = new QueryEntry();
+                queryEntry.setTClass(BenchmarkUser4AData.class);
+                EsPageInfo esPageInfo = new EsPageInfo();
+                esPageInfo.setPageSize(10);
+                esPageInfo.setPageNum(1);
+                queryEntry.setEsPageInfo(esPageInfo);
+
+                queryEntry.setTerm(termMap);
+                queryEntry.setShouldTerm(shouldMap);
+                queryEntry.setShouldTerms(shouldsMap);
+                queryEntry.setConstantScore(false);
+                queryEntry.setSortState(false);
+
+                String str = JSON.toJSONString(queryEntry);
+
+                RestResult<PageUtils<BenchmarkUser4AData>> restResult = es6ServiceImpl.pageQueryRequest(queryEntry);
+                List<BenchmarkUser4AData> listBenchmark = restResult.getData().getList();
+                if (listBenchmark.size() == 1) {
+                    oa.setAssociationId(listBenchmark.get(0).getUserId());
+                    oa.setAssociationReason("1");
+                } else if (listBenchmark.size() > 1) {
+                    oa.setAssociationReason("3");
+                } else if (listBenchmark.size() == 0) {
+                    RestResult<PageUtils<BenchmarkUser4AData>> newResult = pageQueryRequest3(oa);
+                    List<BenchmarkUser4AData> newListBenchmark = restResult.getData().getList();
+                    if (newListBenchmark.size() == 1) {
+                        oa.setAssociationId(listBenchmark.get(0).getUserId());
+                        oa.setAssociationReason("5");
+                    } else if (newListBenchmark.size() > 1) {
+                        oa.setAssociationReason("3");
+                    } else if (newListBenchmark.size() == 0) {
+                        oa.setAssociationReason("0");
+                    }
+                }
+                exportOaMatchPerson(pageUtils.getList());
+                upDateOaMatchPerson(pageUtils.getList());
             }
-            exportOaMatchPerson(list);
         }
     }
     private RestResult pageQueryRequest3(OaMatchPerson oa) throws Exception {
@@ -324,6 +326,11 @@ public class BenchmarkUser4AExcelImport {
         workbook.write(ops);
         ops.close();
         workbook.close();
+    }
+    private void upDateOaMatchPerson(List<OaMatchPerson> list){
+        for(OaMatchPerson oa : list){
+            oaMatchPersonServiceImpl.saveOrUpDateOaMatchPerson(oa);
+        }
     }
 
 
