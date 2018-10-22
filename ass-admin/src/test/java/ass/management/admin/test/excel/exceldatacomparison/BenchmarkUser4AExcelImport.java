@@ -14,7 +14,6 @@ import ass.management.db.utils.PageUtils;
 import ass.management.elasticsearch.client.EsClient;
 import ass.management.elasticsearch.common.EsConfig;
 import ass.management.elasticsearch.common.RestResult;
-import ass.management.elasticsearch.entity.base.EsBaseEntity;
 import ass.management.elasticsearch.entity.base.EsPageInfo;
 import ass.management.elasticsearch.entity.datacomparison.BenchmarkUser4AData;
 import ass.management.elasticsearch.entity.group.EquipmentData;
@@ -24,6 +23,7 @@ import ass.management.elasticsearch.entity.search.QueryEntry;
 import ass.management.elasticsearch.service.Es6ServiceImpl;
 import ass.management.elasticsearch.util.CharacterSegmentUtil;
 import ass.management.elasticsearch.util.CustomParamUtils;
+import ass.management.elasticsearch.util.collections.ArrayInterceptionUtils;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -131,8 +131,16 @@ public class BenchmarkUser4AExcelImport {
 
     @Test
     public void importBenchmarkUser4AToEl() throws Exception{
-        FileInputStream in = new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\excel新\\4A基准用户_少量数据.xlsx"));
+        FileInputStream in = new FileInputStream(new File("C:\\Users\\dell\\Desktop\\excel新\\4A基准用户_少量数据.xlsx"));
         ExcelImportResult excelImportResult = excelContext.readExcel(ExcelConfig.Bean.BENCH_MARK_USER_4A, 0, in,true);
+        //通过导入结果集的hasErrors方法判断
+        if(excelImportResult.hasErrors()){
+            log.error("导入包含错误，下面是错误信息：");
+            for (ExcelError err : excelImportResult.getErrors()) {
+                log.error(err.getErrorMsg());
+            }
+            return;
+        }
         log.info(String.valueOf(excelImportResult.getHeader()));
         List<BenchmarkUser4A> benchmarkUser4AList = excelImportResult.getListBean();
         List<BenchmarkUser4AData> benchmarkUser4ADataCreateList = new ArrayList<>();
@@ -151,19 +159,14 @@ public class BenchmarkUser4AExcelImport {
             benchmarkUser4ADataCreateList.add(benchmarkUser4AData);
         }
 
-        processDocBulk(benchmarkUser4ADataCreateList, null, null);
-
-        //通过导入结果集的hasErrors方法判断
-        if(excelImportResult.hasErrors()){
-            log.error("导入包含错误，下面是错误信息：");
-            for (ExcelError err : excelImportResult.getErrors()) {
-                log.error(err.getErrorMsg());
-            }
+        List<List<BenchmarkUser4AData>> intercepList =  ArrayInterceptionUtils.dealBySubList(benchmarkUser4ADataCreateList, 1000);
+        for(List<BenchmarkUser4AData> createList : intercepList) {
+            processDocBulk(createList, null, null);
         }
+        Thread.currentThread().sleep(3000);
     }
     private void processDocBulk(List<BenchmarkUser4AData> createList, List<BenchmarkUser4AData> updateList, List<String> deleteList) throws Exception {
         es6ServiceImpl.processDocBulk(BenchmarkUser4AData.class, createList, updateList, deleteList);
-        Thread.currentThread().sleep(5000);
     }
 
 
@@ -192,7 +195,7 @@ public class BenchmarkUser4AExcelImport {
     }
 
     @Test
-    public void pageQueryRequest() throws Exception {
+    public void testPageQueryRequest() throws Exception {
         Map<String, Object> termMap = new HashMap<>();
         termMap.put("user_name", "杨娟");
 
@@ -232,7 +235,7 @@ public class BenchmarkUser4AExcelImport {
 
 
     @Test
-    public void pageQueryRequest2() throws Exception {
+    public void realPageQueryRequest() throws Exception {
         Map map = new HashMap();
         map.put("pageNum", 1);
         map.put("pageSize", 20);

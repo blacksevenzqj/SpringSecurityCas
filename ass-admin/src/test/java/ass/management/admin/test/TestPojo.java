@@ -5,6 +5,9 @@ import ass.management.admin.modules.sys.shiro.ShiroUtils;
 import ass.management.common.concurrent.executor.*;
 import ass.management.elasticsearch.util.CharacterSegmentUtil;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestPojo {
 
     public static void main(String[] args) throws Exception{
@@ -21,27 +24,56 @@ public class TestPojo {
 
 //        DefaultExecutorFactory.class.cast(DisruptorExecutorFactory.class.newInstance());
 
-        String strs = "\\中国南方电网责任有限公司\\云南电网有限责任公司\\云南电网有限责任公司曲靖供电局\\云南电网有限责任公司曲靖马龙供电局\\其他\\";
-        String[] aaa = CharacterSegmentUtil.SlashSegmentation(strs, CharacterSegmentUtil.REVERSE_SLANT);
-        for(String a : aaa){
-            System.out.println(a);
-        }
-        String strs2 = "/中国南方电网责任有限公司/云南电网有限责任公司/云南电网有限责任公司曲靖供电局/云南电网有限责任公司曲靖马龙供电局/其他/";
-        String[] bbb = CharacterSegmentUtil.SlashSegmentation(strs2, CharacterSegmentUtil.POSITIVE_SLANT);
-        for(String b : bbb){
-            System.out.println(b);
-        }
+//        String strs = "\\中国南方电网责任有限公司\\云南电网有限责任公司\\云南电网有限责任公司曲靖供电局\\云南电网有限责任公司曲靖马龙供电局\\其他\\";
+//        String[] aaa = CharacterSegmentUtil.SlashSegmentation(strs, CharacterSegmentUtil.REVERSE_SLANT);
+//        for(String a : aaa){
+//            System.out.println(a);
+//        }
+//        String strs2 = "/中国南方电网责任有限公司/云南电网有限责任公司/云南电网有限责任公司曲靖供电局/云南电网有限责任公司曲靖马龙供电局/其他/";
+//        String[] bbb = CharacterSegmentUtil.SlashSegmentation(strs2, CharacterSegmentUtil.POSITIVE_SLANT);
+//        for(String b : bbb){
+//            System.out.println(b);
+//        }
+//
+//        String strs3 = "施金润/企业管理部（全面深化改革办公室）/云南电网公司";
+//        String[] ccc = CharacterSegmentUtil.SlashSegmentation(strs3, CharacterSegmentUtil.POSITIVE_SLANT);
+//        for(String c : ccc){
+//            System.out.println(c);
+//        }
+//
+//        Object[] objShould = new Object[3];
+//        for(Object o : objShould){
+//            System.out.println(o);
+//        }
 
-        String strs3 = "施金润/企业管理部（全面深化改革办公室）/云南电网公司";
-        String[] ccc = CharacterSegmentUtil.SlashSegmentation(strs3, CharacterSegmentUtil.POSITIVE_SLANT);
-        for(String c : ccc){
-            System.out.println(c);
-        }
+//        List list = new ArrayList();
+//        for(int i = 0; i < 53; i ++){
+//            list.add(i);
+//        }
+//        dealBySubList(list, 10);
+    }
 
-        Object[] objShould = new Object[3];
-        for(Object o : objShould){
-            System.out.println(o);
+    public static void dealBySubList(List<Integer> sourList, int batchCount){
+        int sourListSize = sourList.size();
+        int subCount = sourListSize%batchCount==0 ? sourListSize/batchCount : sourListSize/batchCount+1;
+        int startIndext = 0;
+        int stopIndext = 0;
+        for(int i=0;i<subCount;i++){
+            stopIndext = (i==subCount-1) ? stopIndext + sourListSize%batchCount : stopIndext + batchCount;
+            List<Integer> tempList = new ArrayList<>(sourList.subList(startIndext, stopIndext));
+            int b = tempList.get(0);
+            b = 33;  // tempList中的值不会改变
+            tempList.set(0, 66); // sourList中的值不会改变
+            printList(tempList);
+            startIndext = stopIndext;
         }
+    }
+
+    public static void printList(List<Integer> sourList){
+        for(int j=0;j<sourList.size();j++){
+            System.out.println(sourList.get(j));
+        }
+        System.out.println("------------------------");
     }
 
 }
