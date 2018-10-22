@@ -8,7 +8,22 @@ import ass.management.admin.common.excel.parsing.ExcelError;
 import ass.management.admin.common.excel.result.ExcelExportResult;
 import ass.management.admin.common.excel.result.ExcelImportResult;
 import ass.management.admin.modules.business.exceldatacomparison.service.BenchmarkUser4AServiceImpl;
+import ass.management.common.utils.beancopier.CachedBeanCopier;
 import ass.management.db.utils.PageUtils;
+import ass.management.elasticsearch.client.EsClient;
+import ass.management.elasticsearch.common.EsConfig;
+import ass.management.elasticsearch.common.RestResult;
+import ass.management.elasticsearch.entity.base.EsBaseEntity;
+import ass.management.elasticsearch.entity.base.EsPageInfo;
+import ass.management.elasticsearch.entity.datacomparison.BenchmarkUser4AData;
+import ass.management.elasticsearch.entity.group.EquipmentData;
+import ass.management.elasticsearch.entity.search.AggQueryEntry;
+import ass.management.elasticsearch.entity.search.AggResultEntry;
+import ass.management.elasticsearch.entity.search.QueryEntry;
+import ass.management.elasticsearch.service.Es6ServiceImpl;
+import ass.management.elasticsearch.util.CharacterSegmentUtil;
+import ass.management.elasticsearch.util.CustomParamUtils;
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
@@ -21,6 +36,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +53,13 @@ public class BenchmarkUser4AExcelImport {
 
     @Autowired
     BenchmarkUser4AServiceImpl benchmarkUser4AServiceImpl;
+
+    @Autowired
+    EsClient esClient;
+
+    @Autowired
+    Es6ServiceImpl es6ServiceImpl;
+
 
     @Test
     public void benchmarkUser4A() {
@@ -55,8 +79,8 @@ public class BenchmarkUser4AExcelImport {
 
     // 测试 将6万条数据进MYSQL库，实际中是进EL。
     @Test
-    public void importOaMatchPerson() throws Exception{
-        FileInputStream in = new FileInputStream(new File("C:\\Users\\dell\\Desktop\\excel新\\4A基准用户_少量数据.xlsx"));
+    public void importBenchmarkUser4AToMysql() throws Exception{
+        FileInputStream in = new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\excel新\\4A基准用户_少量数据.xlsx"));
         ExcelImportResult excelImportResult = excelContext.readExcel(ExcelConfig.Bean.BENCH_MARK_USER_4A, 0, in,true);
         log.info(String.valueOf(excelImportResult.getHeader()));
         List<BenchmarkUser4A> benchmarkUser4AList = excelImportResult.getListBean();
@@ -90,7 +114,187 @@ public class BenchmarkUser4AExcelImport {
 //    }
 
 
+    // EL部分
+    // ================================================================================================================
 
+    @Test
+    public void save() throws Exception {
+        BenchmarkUser4AData benchmarkUser4AData = new BenchmarkUser4AData();
+        benchmarkUser4AData.setId("123123");
+        benchmarkUser4AData.setUserId("7d3d961eb37d498082755689e9d6cc0a");
+        benchmarkUser4AData.setUserName("杨娟");
+        es6ServiceImpl.createIndexDoc(BenchmarkUser4AData.class, benchmarkUser4AData);
+        Thread.currentThread().sleep(1000);
+    }
+    @Test
+    public void update() throws Exception {
+        BenchmarkUser4AData benchmarkUser4AData = new BenchmarkUser4AData();
+
+        es6ServiceImpl.upDateIndexDoc(BenchmarkUser4AData.class, benchmarkUser4AData);
+        Thread.currentThread().sleep(1000);
+    }
+    @Test
+    public void delete() throws Exception {
+        es6ServiceImpl.deleteIndexDoc(BenchmarkUser4AData.class, "WwC_TGUBr_MjdtnuNyhG");
+        Thread.currentThread().sleep(1000);
+    }
+    @Test
+    public void processDocBulk() throws Exception {
+        List<BenchmarkUser4AData> createList = new ArrayList();
+
+
+        List<BenchmarkUser4AData> updateList = new ArrayList();
+//        BenchmarkUser4AData benchmarkUser4AData = new BenchmarkUser4AData();
+//        updateList.add(benchmarkUser4AData);
+
+        List<String> deleteList = new ArrayList();
+//        deleteList.add("XADWTGUBr_Mjdtnu1yjf");
+
+        es6ServiceImpl.processDocBulk(BenchmarkUser4AData.class, createList, updateList, deleteList);
+        Thread.currentThread().sleep(5000);
+    }
+
+    @Test
+    public void importBenchmarkUser4AToEl() throws Exception{
+        FileInputStream in = new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\excel新\\4A基准用户_少量数据.xlsx"));
+        ExcelImportResult excelImportResult = excelContext.readExcel(ExcelConfig.Bean.BENCH_MARK_USER_4A, 0, in,true);
+        log.info(String.valueOf(excelImportResult.getHeader()));
+        List<BenchmarkUser4A> benchmarkUser4AList = excelImportResult.getListBean();
+        List<BenchmarkUser4AData> benchmarkUser4ADataList = new ArrayList<>();
+        for(BenchmarkUser4A bnchmarkUser4A : benchmarkUser4AList){
+            bnchmarkUser4A.setNewData(true);
+            log.info(String.valueOf(bnchmarkUser4A));
+            BenchmarkUser4AData benchmarkUser4AData = new BenchmarkUser4AData();
+            CachedBeanCopier.defaultCopy(bnchmarkUser4A, benchmarkUser4AData);
+            String[] strs = CharacterSegmentUtil.SlashSegmentation(benchmarkUser4AData.getOrgPath(), "\\\\");
+            for(int i = 0; i < strs.length; i++){
+                Method m = benchmarkUser4AData.getClass().getMethod("setOrgPath" + ++i);
+                m.invoke(benchmarkUser4AData, strs[i]);
+            }
+            benchmarkUser4ADataList.add(benchmarkUser4AData);
+        }
+        //通过导入结果集的hasErrors方法判断
+        if(excelImportResult.hasErrors()){
+            log.error("导入包含错误，下面是错误信息：");
+            for (ExcelError err : excelImportResult.getErrors()) {
+                log.error(err.getErrorMsg());
+            }
+        }
+    }
+
+    @Test
+    public void getById() throws Exception {
+        RestResult<BenchmarkUser4AData> restResult = es6ServiceImpl.getById(BenchmarkUser4AData.class, "61d533a353624e03bcff1aae1a748d5e");
+        BenchmarkUser4AData benchmarkUser4AData = restResult.getData();
+        log.info(benchmarkUser4AData.toString());
+    }
+
+    @Test
+    public void getByField() throws Exception {
+        RestResult<List<BenchmarkUser4AData>> restResult = es6ServiceImpl.searchTermByFiled(BenchmarkUser4AData.class,
+                "equipment_id", "8588ceaf5d70499e93fb1f824bc85ba1",
+                new EsPageInfo(), null, null);
+        log.info(String.valueOf(restResult.getData()));
+    }
+
+    @Test
+    public void getMatchByField() throws Exception {
+        RestResult<List<BenchmarkUser4AData>> restResult = es6ServiceImpl.searchMatchByField(BenchmarkUser4AData.class,
+                "remarks", "seven go",
+                new EsPageInfo(), null, null);
+        log.info(String.valueOf(restResult.getData()));
+    }
+    /**
+     *
+     {
+     "esPageInfo":{"pageNum":1,"pageSize":10,"pageStart":0},
+     "shouldTerm":{"create_date":["2018-08-06","2018-08-09"]},
+     "range":{"create_date":["2018-08-06 14:40:07","2018-08-17"]},
+     "term":{"equipment_id":"8588ceaf5d70499e93fb1f824bc85ba1"}
+     }
+     */
+    @Test
+    public void pageQueryRequest() throws Exception {
+//        Map<String, Object> termMap = new HashMap<>();
+//        termMap.put("equipment_id", "8588ceaf5d70499e93fb1f824bc85ba1");
+
+//        Map<String, Object[]> rangeMap = new HashMap<>();
+//        Object[] obj = new Object[2];
+////        obj[0] = "2018-08-06";
+//        obj[0] = "2018-08-06 15:40:07";
+//        obj[1] = "2018-08-08 13:30:45";
+//        rangeMap.put("update_date", obj);
+
+//        Map<String, Object[]> shouldMap = new HashMap<>();
+//        Object[] objShould = new Object[2];
+//        objShould[0] = "2018-08-06";
+//        objShould[1] = "2018-08-09";
+//        shouldMap.put("update_date", objShould);
+
+        QueryEntry queryEntry = new QueryEntry();
+        queryEntry.setTClass(EquipmentData.class);
+        queryEntry.getEsPageInfo().setPageSize(4);
+        queryEntry.getEsPageInfo().setPageNum(2);
+
+//        queryEntry.setTerm(termMap);
+//        queryEntry.setRange(rangeMap);
+//        queryEntry.setShouldTerm(shouldMap);
+
+        String str = JSON.toJSONString(queryEntry);
+        System.out.println(str);
+
+        RestResult<PageUtils<EquipmentData>> restResult = es6ServiceImpl.pageQueryRequest(queryEntry);
+        System.out.println(restResult);
+    }
+
+    @Test
+    public void searchMatchScrollByField() throws Exception {
+        RestResult<List<EquipmentData>> restResult = es6ServiceImpl.searchMatchScrollByField(EquipmentData.class,
+                "remarks", "go", 1);
+
+        System.out.println(restResult.getData().size() + "___" + restResult.getData());
+    }
+
+
+    @Test
+    public void aggQueryRequest() throws Exception {
+
+        QueryEntry queryEntry = new QueryEntry();
+        queryEntry.setTClass(EquipmentData.class);
+        queryEntry.setSortField("update_date");
+
+        String str = JSON.toJSONString(queryEntry);
+        System.out.println(str);
+
+        AggQueryEntry aggQueryEntry = new AggQueryEntry();
+
+        AggQueryEntry.AggQueryEntryType maxByUpdateDate = aggQueryEntry.new AggQueryEntryType();
+        maxByUpdateDate.setGroupName("max_by_field");
+        maxByUpdateDate.setFieldName("count");
+        maxByUpdateDate.setAggType(EsConfig.AggQuery.MAX);
+
+        aggQueryEntry.getAggQueryList().add(maxByUpdateDate);
+
+        RestResult<List<AggResultEntry>> restResult = es6ServiceImpl.aggQueryRequest(queryEntry, aggQueryEntry);
+        System.out.println("!!!!!!!!!!!!!!!!!" + restResult.getData());
+        List<AggResultEntry> list = restResult.getData();
+        for(AggResultEntry aggResultEntry : list){
+            System.out.println(aggResultEntry);
+        }
+    }
+
+    @Test
+    public void aggQueryRequest2() throws Exception {
+        QueryEntry<EquipmentData> queryEntry = new QueryEntry();
+        queryEntry.setTClass(EquipmentData.class);
+        AggQueryEntry aggQueryEntry = CustomParamUtils.getAggQueryEntry(EquipmentData.class);
+        RestResult<List<AggResultEntry>> restResult = es6ServiceImpl.aggQueryRequest(queryEntry, aggQueryEntry);
+        System.out.println("!!!!!!!!!!!!!!!!!" + restResult.getData());
+        List<AggResultEntry> list = restResult.getData();
+        for(AggResultEntry aggResultEntry : list){
+            System.out.println(aggResultEntry);
+        }
+    }
 
 
 }

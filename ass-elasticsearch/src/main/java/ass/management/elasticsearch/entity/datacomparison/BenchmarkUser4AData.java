@@ -42,6 +42,9 @@ public class BenchmarkUser4AData extends EsBaseEntity {
     public String pki;
 
 
+    // 从 BenchmarkUser4A 复制过来的属性，需要分解为：orgPath1 ... orgPath10
+    @EsFieldData(dataName= EsConfig.El_STRING, elName = "orgPath")
+    private String orgPath;
     // 根据/号切分为多个字段做term精确查询
     @EsFieldData(dataName= EsConfig.El_KEYWORD, elName = "org_path1")
     public String orgPath1;

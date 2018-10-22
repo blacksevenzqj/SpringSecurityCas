@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.junit.Test;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -75,50 +77,50 @@ public class TestEs6 {
         es6ServiceImpl.createIndexDoc(EquipmentData.class, equipmentData);
         Thread.currentThread().sleep(1000);
     }
-//    @Test
-//    public void update() throws Exception {
-//        EquipmentData equipmentData = new EquipmentData();
-//        equipmentData.setDbId("000");
-//        equipmentData.setCreateBy("001");
-//        equipmentData.setUpdateBy("001");
-//        equipmentData.setCreateDate("2018-08-16 13:30:45");
-//        equipmentData.setUpdateDate("2018-08-16 15:40:50");
-//        equipmentData.setEquipmentId("8588ceaf5d70499e93fb1f824bc85ba1");
-//        equipmentData.setEquipmentCode("8588ceaf5d70499e93fb1f824bc85ba1");
-//        equipmentData.setColumn1("kkk");
-//        equipmentData.setColumn1("mmm");
-//
-//        equipmentData.setEsId("WgCOTGUBr_Mjdtnuyij5");
-//        es6ServiceImpl.upDateIndexDoc(EquipmentData.class, equipmentData);
-//        Thread.currentThread().sleep(1000);
-//    }
-//    @Test
-//    public void delete() throws Exception {
-//        es6ServiceImpl.deleteIndexDoc(EquipmentData.class, "WwC_TGUBr_MjdtnuNyhG");
-//        Thread.currentThread().sleep(1000);
-//    }
-//    @Test
-//    public void processDocBulk() throws Exception {
-//        List<EsBaseEntity> updateList = new ArrayList();
-//        EquipmentData equipmentData = new EquipmentData();
-//        equipmentData.setDbId("002");
-//        equipmentData.setCreateBy("002");
-//        equipmentData.setUpdateBy("002");
-//        equipmentData.setCreateDate("2018-08-16 13:30:45");
-//        equipmentData.setUpdateDate("2018-08-16 15:40:50");
-//        equipmentData.setEquipmentId("eeeeeeeeeeeeeeeeee");
-//        equipmentData.setEquipmentCode("eeeeeeeeeeeeeeeeee");
-//        equipmentData.setColumn1("kkk");
-//        equipmentData.setColumn1("mmm");
-//        equipmentData.setEsId("WgCOTGUBr_Mjdtnuyij5");
-//        updateList.add(equipmentData);
-//
-//        List<String> deleteList = new ArrayList();
-//        deleteList.add("XADWTGUBr_Mjdtnu1yjf");
-//
-//        es6ServiceImpl.processDocBulk(EquipmentData.class, null, updateList, deleteList);
-//        Thread.currentThread().sleep(1000);
-//    }
+    @Test
+    public void update() throws Exception {
+        EquipmentData equipmentData = new EquipmentData();
+        equipmentData.setDbId("000");
+        equipmentData.setCreateBy("001");
+        equipmentData.setUpdateBy("001");
+        equipmentData.setCreateDate("2018-08-16 13:30:45");
+        equipmentData.setUpdateDate("2018-08-16 15:40:50");
+        equipmentData.setEquipmentId("8588ceaf5d70499e93fb1f824bc85ba1");
+        equipmentData.setEquipmentCode("8588ceaf5d70499e93fb1f824bc85ba1");
+        equipmentData.setColumn1("kkk");
+        equipmentData.setColumn1("mmm");
+
+        equipmentData.setEsId("WgCOTGUBr_Mjdtnuyij5");
+        es6ServiceImpl.upDateIndexDoc(EquipmentData.class, equipmentData);
+        Thread.currentThread().sleep(1000);
+    }
+    @Test
+    public void delete() throws Exception {
+        es6ServiceImpl.deleteIndexDoc(EquipmentData.class, "WwC_TGUBr_MjdtnuNyhG");
+        Thread.currentThread().sleep(1000);
+    }
+    @Test
+    public void processDocBulk() throws Exception {
+        List<EquipmentData> updateList = new ArrayList();
+        EquipmentData equipmentData = new EquipmentData();
+        equipmentData.setDbId("002");
+        equipmentData.setCreateBy("002");
+        equipmentData.setUpdateBy("002");
+        equipmentData.setCreateDate("2018-08-16 13:30:45");
+        equipmentData.setUpdateDate("2018-08-16 15:40:50");
+        equipmentData.setEquipmentId("eeeeeeeeeeeeeeeeee");
+        equipmentData.setEquipmentCode("eeeeeeeeeeeeeeeeee");
+        equipmentData.setColumn1("kkk");
+        equipmentData.setColumn1("mmm");
+        equipmentData.setEsId("WgCOTGUBr_Mjdtnuyij5");
+        updateList.add(equipmentData);
+
+        List<String> deleteList = new ArrayList();
+        deleteList.add("XADWTGUBr_Mjdtnu1yjf");
+
+        es6ServiceImpl.processDocBulk(EquipmentData.class, null, updateList, deleteList);
+        Thread.currentThread().sleep(1000);
+    }
 
 
     /**
