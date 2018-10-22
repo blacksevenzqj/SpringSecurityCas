@@ -131,7 +131,7 @@ public class BenchmarkUser4AExcelImport {
 
     @Test
     public void importBenchmarkUser4AToEl() throws Exception{
-        FileInputStream in = new FileInputStream(new File("C:\\Users\\dell\\Desktop\\excel新\\4A基准用户_少量数据.xlsx"));
+        FileInputStream in = new FileInputStream(new File("C:\\Users\\dell\\Desktop\\excel新\\4A基准用户.xls"));
         ExcelImportResult excelImportResult = excelContext.readExcel(ExcelConfig.Bean.BENCH_MARK_USER_4A, 0, in,true);
         //通过导入结果集的hasErrors方法判断
         if(excelImportResult.hasErrors()){
@@ -162,8 +162,9 @@ public class BenchmarkUser4AExcelImport {
         List<List<BenchmarkUser4AData>> intercepList =  ArrayInterceptionUtils.dealBySubList(benchmarkUser4ADataCreateList, 1000);
         for(List<BenchmarkUser4AData> createList : intercepList) {
             processDocBulk(createList, null, null);
+            Thread.currentThread().sleep(1000);
         }
-        Thread.currentThread().sleep(3000);
+        Thread.currentThread().sleep(10000);
     }
     private void processDocBulk(List<BenchmarkUser4AData> createList, List<BenchmarkUser4AData> updateList, List<String> deleteList) throws Exception {
         es6ServiceImpl.processDocBulk(BenchmarkUser4AData.class, createList, updateList, deleteList);
