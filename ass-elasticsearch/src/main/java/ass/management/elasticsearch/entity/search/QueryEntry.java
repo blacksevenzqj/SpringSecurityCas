@@ -24,8 +24,13 @@ public class QueryEntry<T> {
     @EsBoolQuery(boolTypeName = EsConfig.BoolQuery.FILTER)
     private Map<String, Object[]> range;
 
+    // 一个字段一个查询值
     @EsBoolQuery(boolTypeName = EsConfig.BoolQuery.SHOULD)
-    private Map<String, Object[]> shouldTerm;
+    private Map<String, Object> shouldTerm;
+
+    // 一个字段多个查询值
+    @EsBoolQuery(boolTypeName = EsConfig.BoolQuery.SHOULD)
+    private Map<String, Object[]> shouldTerms;
 
     private String sortField;
 

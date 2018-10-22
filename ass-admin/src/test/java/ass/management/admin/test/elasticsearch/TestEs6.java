@@ -146,11 +146,11 @@ public class TestEs6 {
 //        obj[1] = "2018-08-08 13:30:45";
 //        rangeMap.put("update_date", obj);
 
-//        Map<String, Object[]> shouldMap = new HashMap<>();
-//        Object[] objShould = new Object[2];
-//        objShould[0] = "2018-08-06";
-//        objShould[1] = "2018-08-09";
-//        shouldMap.put("update_date", objShould);
+        Map<String, Object[]> shouldsMap = new HashMap<>();
+        Object[] objShould = new Object[2];
+        objShould[0] = "2018-08-06";
+        objShould[1] = "2018-08-09";
+        shouldsMap.put("update_date", objShould);
 
         QueryEntry queryEntry = new QueryEntry();
         queryEntry.setTClass(EquipmentData.class);
@@ -161,7 +161,7 @@ public class TestEs6 {
 
         queryEntry.setTerm(termMap);
 //        queryEntry.setRange(rangeMap);
-//        queryEntry.setShouldTerm(shouldMap);
+        queryEntry.setShouldTerms(shouldsMap);
 //        queryEntry.setConstantScore(false);
 
         String str = JSON.toJSONString(queryEntry);

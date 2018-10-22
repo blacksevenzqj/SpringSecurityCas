@@ -32,6 +32,16 @@ public class TestPojo {
             System.out.println(b);
         }
 
+        String strs3 = "施金润/企业管理部（全面深化改革办公室）/云南电网公司";
+        String[] ccc = CharacterSegmentUtil.SlashSegmentation(strs3, CharacterSegmentUtil.POSITIVE_SLANT);
+        for(String c : ccc){
+            System.out.println(c);
+        }
+
+        Object[] objShould = new Object[3];
+        for(Object o : objShould){
+            System.out.println(o);
+        }
     }
 
 }

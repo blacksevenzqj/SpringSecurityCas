@@ -8,6 +8,7 @@ import ass.management.admin.common.excel.parsing.ExcelError;
 import ass.management.admin.common.excel.result.ExcelExportResult;
 import ass.management.admin.common.excel.result.ExcelImportResult;
 import ass.management.admin.modules.business.exceldatacomparison.service.BenchmarkUser4AServiceImpl;
+import ass.management.admin.modules.business.exceldatacomparison.service.OaMatchPersonServiceImpl;
 import ass.management.common.utils.beancopier.CachedBeanCopier;
 import ass.management.db.utils.PageUtils;
 import ass.management.elasticsearch.client.EsClient;
@@ -55,6 +56,9 @@ public class BenchmarkUser4AExcelImport {
     BenchmarkUser4AServiceImpl benchmarkUser4AServiceImpl;
 
     @Autowired
+    OaMatchPersonServiceImpl oaMatchPersonServiceImpl;
+
+    @Autowired
     EsClient esClient;
 
     @Autowired
@@ -97,21 +101,6 @@ public class BenchmarkUser4AExcelImport {
             }
         }
     }
-
-
-//    @Test
-//    public void exportOaMatchPerson() throws Exception{
-//        Map map = new HashMap<>();
-//        map.put("pageNum", 1);
-//        map.put("pageSize", 2000);
-//        PageUtils<OaMatchPerson> page = oaMatchPersonServiceImpl.oaMatchPersonQueryPageMap(map);
-//        ExcelExportResult exportResult = excelContext.createExcelForPart(ExcelConfig.Bean.OA_MATCH_PERSON, page.getList());
-//        OutputStream ops = new FileOutputStream("C:\\Users\\dell\\Desktop\\excel新\\oa剩余未匹配的人员导出数据_新导出.xlsx");
-//        Workbook workbook = exportResult.build();
-//        workbook.write(ops);
-//        ops.close();
-//        workbook.close();
-//    }
 
 
     // EL部分
@@ -201,15 +190,7 @@ public class BenchmarkUser4AExcelImport {
                 new EsPageInfo(), false, null, null);
         log.info(String.valueOf(restResult.getData()));
     }
-    /**
-     *
-     {
-     "esPageInfo":{"pageNum":1,"pageSize":10,"pageStart":0},
-     "shouldTerm":{"create_date":["2018-08-06","2018-08-09"]},
-     "range":{"create_date":["2018-08-06 14:40:07","2018-08-17"]},
-     "term":{"equipment_id":"8588ceaf5d70499e93fb1f824bc85ba1"}
-     }
-     */
+
     @Test
     public void pageQueryRequest() throws Exception {
         Map<String, Object> termMap = new HashMap<>();
@@ -248,6 +229,116 @@ public class BenchmarkUser4AExcelImport {
         RestResult<PageUtils<EquipmentData>> restResult = es6ServiceImpl.pageQueryRequest(queryEntry);
         System.out.println(restResult);
     }
+
+
+    @Test
+    public void pageQueryRequest2() throws Exception {
+        Map map = new HashMap();
+        map.put("name", "刘芸");
+        PageUtils<OaMatchPerson> pageUtils = oaMatchPersonServiceImpl.oaMatchPersonQueryPageMap(map);
+        if(pageUtils != null && pageUtils.getList() != null && pageUtils.getList().size() > 0){
+            List<OaMatchPerson> list = pageUtils.getList();
+            OaMatchPerson oa = list.get(0);
+
+            Map<String, Object> termMap = new HashMap<>();
+            termMap.put("user_name", oa.getName());
+
+            Map<String, Object> shouldMap = new HashMap<>();
+            shouldMap.put("name_base_org_name", oa.getParentUnitName());
+
+
+            Map<String, Object> shouldsMap = new HashMap<>();
+            // 施金润/企业管理部（全面深化改革办公室）/云南电网公司   从人名开始 小到大的顺序
+            String fullName = oa.getFullName();
+            String[] strs = CharacterSegmentUtil.SlashSegmentation(fullName, CharacterSegmentUtil.POSITIVE_SLANT);
+
+            Object[] objShould = new Object[strs.length - 1];   // 0位置为人名 排除，从1位置开始。
+            for(int i=0,j=1; i<objShould.length; i++,j++){   // 将数组顺序反转
+                objShould[i] = strs[strs.length - j];
+            }
+            for (int i = 0, j = 1; i < 10 && j <= 10; i++, j++) {
+                shouldsMap.put("org_path" + j, objShould);
+            }
+
+            QueryEntry queryEntry = new QueryEntry();
+            queryEntry.setTClass(BenchmarkUser4AData.class);
+            EsPageInfo esPageInfo = new EsPageInfo();
+            esPageInfo.setPageSize(10);
+            esPageInfo.setPageNum(1);
+            queryEntry.setEsPageInfo(esPageInfo);
+
+            queryEntry.setTerm(termMap);
+            queryEntry.setShouldTerm(shouldMap);
+            queryEntry.setShouldTerms(shouldsMap);
+            queryEntry.setConstantScore(false);
+            queryEntry.setSortState(false);
+
+            String str = JSON.toJSONString(queryEntry);
+
+            RestResult<PageUtils<BenchmarkUser4AData>> restResult = es6ServiceImpl.pageQueryRequest(queryEntry);
+            List<BenchmarkUser4AData> listBenchmark = restResult.getData().getList();
+            if(listBenchmark.size() == 1){
+                oa.setAssociationId(listBenchmark.get(0).getUserId());
+                oa.setAssociationReason("1");
+            }else if(listBenchmark.size() > 1){
+                oa.setAssociationReason("3");
+            }else if(listBenchmark.size() == 0) {
+                RestResult<PageUtils<BenchmarkUser4AData>> newResult = pageQueryRequest3(oa);
+                List<BenchmarkUser4AData> newListBenchmark = restResult.getData().getList();
+                if (newListBenchmark.size() == 1) {
+                    oa.setAssociationId(listBenchmark.get(0).getUserId());
+                    oa.setAssociationReason("5");
+                }else if(newListBenchmark.size() > 1){
+                    oa.setAssociationReason("3");
+                }else if(newListBenchmark.size() == 0){
+                    oa.setAssociationReason("0");
+                }
+            }
+            exportOaMatchPerson(list);
+        }
+    }
+    private RestResult pageQueryRequest3(OaMatchPerson oa) throws Exception {
+        Map<String, Object> termMap = new HashMap<>();
+        termMap.put("user_name", oa.getName());
+
+        QueryEntry queryEntry = new QueryEntry();
+        queryEntry.setTClass(BenchmarkUser4AData.class);
+        EsPageInfo esPageInfo = new EsPageInfo();
+        esPageInfo.setPageSize(10);
+        esPageInfo.setPageNum(1);
+        queryEntry.setEsPageInfo(esPageInfo);
+
+        queryEntry.setTerm(termMap);
+        queryEntry.setConstantScore(false);
+        queryEntry.setSortState(false);
+        RestResult<PageUtils<BenchmarkUser4AData>> restResult = es6ServiceImpl.pageQueryRequest(queryEntry);
+        return restResult;
+    }
+    private void exportOaMatchPerson(List<OaMatchPerson> list) throws Exception{
+        Map map = new HashMap<>();
+        map.put("pageNum", 1);
+        map.put("pageSize", 2000);
+        ExcelExportResult exportResult = excelContext.createExcelForPart(ExcelConfig.Bean.OA_MATCH_PERSON, list);
+        OutputStream ops = new FileOutputStream("C:\\Users\\Administrator\\Desktop\\excel新\\oa剩余未匹配的人员导出数据_新导出1.xlsx");
+        Workbook workbook = exportResult.build();
+        workbook.write(ops);
+        ops.close();
+        workbook.close();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Test
     public void searchMatchScrollByField() throws Exception {

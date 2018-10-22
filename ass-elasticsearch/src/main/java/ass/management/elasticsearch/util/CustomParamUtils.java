@@ -61,7 +61,7 @@ public class CustomParamUtils {
         }else if(rangeValues != null && !rangeValues.isEmpty()){
             queryEntry.setRange(rangeMap);
         }else if(shouldTermValues != null && !shouldTermValues.isEmpty()){
-            queryEntry.setShouldTerm(shouldMap);
+            queryEntry.setShouldTerms(shouldMap);
         }
 
         return queryEntry;

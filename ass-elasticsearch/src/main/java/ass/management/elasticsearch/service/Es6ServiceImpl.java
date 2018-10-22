@@ -251,6 +251,7 @@ public class Es6ServiceImpl{
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(queryEntry.getTClass().getAnnotation(Es6Index.class).indexName());
         searchRequest.types(queryEntry.getTClass().getAnnotation(Es6Index.class).typeName());
+        boolean miniMumShouldMatchState = false;
 
         // 这个sourcebuilder就类似于查询语句中最外层的部分。包括查询分页的起始，
         // 查询语句的核心，查询结果的排序，查询结果截取部分返回等一系列配置
@@ -313,18 +314,35 @@ public class Es6ServiceImpl{
             }
         }
 
-        Map<String, Object[]> shouldTermMap = queryEntry.getShouldTerm();
+        Map<String, Object> shouldTermMap = queryEntry.getShouldTerm();
         if(shouldTermMap != null && !shouldTermMap.isEmpty()){
-            for (Map.Entry<String, Object[]> entry : shouldTermMap.entrySet()) {
+            for (Map.Entry<String, Object> entry : shouldTermMap.entrySet()) {
+                log.info("Key = " + entry.getKey() + ", Value = " + entry.getValue());
+                if(StringUtils.isNotBlank(entry.getKey()) && entry.getValue() != null ) {
+                    TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery(entry.getKey(), entry.getValue());
+                    boolBuilder.should(termQueryBuilder);
+                    miniMumShouldMatchState = true;
+                }
+            }
+        }
+
+        Map<String, Object[]> shouldTermsMap = queryEntry.getShouldTerms();
+        if(shouldTermMap != null && !shouldTermMap.isEmpty()){
+            for (Map.Entry<String, Object[]> entry : shouldTermsMap.entrySet()) {
                 log.info("Key = " + entry.getKey() + ", Value = " + entry.getValue());
                 if(StringUtils.isNotBlank(entry.getKey()) && entry.getValue() != null && entry.getValue().length > 0) {
                     for(int i = 0; i < entry.getValue().length; i++){
                         TermQueryBuilder termQueryBuilder = QueryBuilders.termQuery(entry.getKey(), entry.getValue()[i]);
                         boolBuilder.should(termQueryBuilder);
-                        boolBuilder.minimumShouldMatch(elasticsClientProperties.getMiniMumShouldMatch());
+                        if(!miniMumShouldMatchState){
+                            miniMumShouldMatchState = true;
+                        }
                     }
                 }
             }
+        }
+        if(miniMumShouldMatchState) {
+            boolBuilder.minimumShouldMatch(elasticsClientProperties.getMiniMumShouldMatch());
         }
 
         // 排序
