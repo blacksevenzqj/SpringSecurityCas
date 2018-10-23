@@ -40,6 +40,12 @@ public class TestPojo {
 //        for(String c : ccc){
 //            System.out.println(c);
 //        }
+
+        String strs4 = "UserLoginValidator/";
+        String[] ccc = CharacterSegmentUtil.SlashSegmentation(strs4, CharacterSegmentUtil.POSITIVE_SLANT);
+        for(String c : ccc){
+            System.out.println(c);
+        }
 //
 //        Object[] objShould = new Object[3];
 //        for(Object o : objShould){

@@ -240,33 +240,11 @@ public class BenchmarkUser4AExcelImport {
     public void realPageQueryRequest() throws Exception {
         Map map = new HashMap();
         map.put("pageNum", 1);
-        map.put("pageSize", 100);
-//        map.put("name", "刘芸");
+        map.put("pageSize", 2000);
+//        map.put("name", "施金润");
         PageUtils<OaMatchPerson> pageUtils = oaMatchPersonServiceImpl.oaMatchPersonQueryPageMap(map);
         if(pageUtils != null && pageUtils.getList() != null && pageUtils.getList().size() > 0) {
             for (OaMatchPerson oa : pageUtils.getList()) {
-                Map<String, Object> termMap = new HashMap<>();
-                termMap.put("user_name", oa.getName());
-
-                Map<String, Object> shouldMap = new HashMap<>();
-                shouldMap.put("name_base_org_name", oa.getParentUnitName());
-
-
-                Map<String, Object> shouldsMap = new HashMap<>();
-                // 更新表：施金润/企业管理部（全面深化改革办公室）/云南电网公司   从 姓名 开始 小到大的顺序
-                String fullName = oa.getFullName();
-                String[] strs = CharacterSegmentUtil.SlashSegmentation(fullName, CharacterSegmentUtil.POSITIVE_SLANT);
-                Object[] objShould = new Object[strs.length - 2];   // 1、0位置为 “姓名” 排除，2、最后位置为 “云南电网公司” 排除。
-                for (int i = 0, j = 2; i < objShould.length; i++, j++) {   // 将数组顺序反转填充（从大到小）
-                    objShould[i] = strs[strs.length - j];
-                }
-                // 被查询表：\中国南方电网责任有限公司\云南电网有限责任公司\企业管理部（全面深化改革办公室）\部门负责人   从大到小
-                // 添加数据时已经按从大到小的顺序放进org_path1---org_path10中，所以现在填充查询值时 也是从大到小。
-                // 排除：1、0位置为 “中国南方电网责任有限公司”，2、1位置为 “云南电网有限责任公司”。从2位置开始循环填充值。
-                for (int i = 2, j = 3; i < 10 && j <= 10; i++, j++) {
-                    shouldsMap.put("org_path" + j, objShould);
-                }
-
                 QueryEntry queryEntry = new QueryEntry();
                 queryEntry.setTClass(BenchmarkUser4AData.class);
                 EsPageInfo esPageInfo = new EsPageInfo();
@@ -274,36 +252,82 @@ public class BenchmarkUser4AExcelImport {
                 esPageInfo.setPageNum(1);
                 queryEntry.setEsPageInfo(esPageInfo);
 
+                Map<String, Object> termMap = new HashMap<>();
+                termMap.put("user_name", oa.getName());
+
+                // 更新表：施金润/企业管理部（全面深化改革办公室）/云南电网公司   从 姓名 开始 小到大的顺序
+                String fullName = oa.getFullName();
+                String[] strs = CharacterSegmentUtil.SlashSegmentation(fullName, CharacterSegmentUtil.POSITIVE_SLANT);
+                int stepping = 0;
+                int subCapacity = 0;
+                if(strs != null && strs.length > 2){
+                    stepping = 2;
+                    subCapacity = 2;
+                }else if(strs != null && strs.length == 2){   // 没见过这种情况，类似 施金润/部门 或 云南电网公司，那么就 排除 “姓名”（先跑着看）
+                    stepping = 1;
+                    subCapacity = 1;
+                }
+                // else 没写了：strs数组长度为1：只有开头的“姓名”，就没有必要查询EL了（也就是strs数组为null）。
+
+                if(stepping != 0 && subCapacity != 0) {   // strs数组长度为1 或 strs数组长度为0：就不设置should查询条件了。
+                    Map<String, Object> shouldMap = new HashMap<>();
+                    shouldMap.put("name_base_org_name", oa.getParentUnitName());
+
+                    Map<String, Object> shouldsMap = new HashMap<>();
+                    Object[] objShould = new Object[strs.length - subCapacity];   // 1、0位置为 “姓名” 排除，2、最后位置为 “云南电网公司” 排除。
+                    for (int i = 0; i < objShould.length; i++, stepping++) {   // 将数组顺序反转填充（从大到小）
+                        objShould[i] = strs[strs.length - stepping];
+                    }
+
+                    // 被查询表：\中国南方电网责任有限公司\云南电网有限责任公司\企业管理部（全面深化改革办公室）\部门负责人   从大到小
+                    // 添加数据时已经按从大到小的顺序放进org_path1---org_path10中，所以现在填充查询值时 也是从大到小。
+                    // 排除：1、0位置为 “中国南方电网责任有限公司”，2、1位置为 “云南电网有限责任公司”。从2位置开始循环填充值，从org_path3开始。
+                    for (int i = 2, j = 3; i < 10 && j <= 10; i++, j++) {
+                        shouldsMap.put("org_path" + j, objShould);
+                    }
+                    queryEntry.setShouldTerm(shouldMap);
+                    queryEntry.setShouldTerms(shouldsMap);
+                }
+
                 queryEntry.setTerm(termMap);
-                queryEntry.setShouldTerm(shouldMap);
-                queryEntry.setShouldTerms(shouldsMap);
-                queryEntry.setConstantScore(false);
+//                queryEntry.setConstantScore(false);   // 默认最外层就用filter
                 queryEntry.setSortState(false);
 
 //                String str = JSON.toJSONString(queryEntry);
 
                 RestResult<PageUtils<BenchmarkUser4AData>> restResult = es6ServiceImpl.pageQueryRequest(queryEntry);
                 List<BenchmarkUser4AData> listBenchmark = restResult.getData().getList();
-                if (listBenchmark.size() == 1) {
-                    oa.setAssociationId(listBenchmark.get(0).getUserId());
-                    oa.setAssociationReason("1");
-                } else if (listBenchmark.size() > 1) {
-                    oa.setAssociationReason("3");
-                } else if (listBenchmark.size() == 0) {
-                    RestResult<PageUtils<BenchmarkUser4AData>> newResult = pageQueryRequest3(oa);
-                    List<BenchmarkUser4AData> newListBenchmark = newResult.getData().getList();
-                    if (newListBenchmark.size() == 1) {
-                        oa.setAssociationId(newListBenchmark.get(0).getUserId());
-                        oa.setAssociationReason("5");
-                    } else if (newListBenchmark.size() > 1) {
+                if(stepping != 0 && subCapacity != 0){
+                    if (listBenchmark.size() == 1) {
+                        oa.setAssociationId(listBenchmark.get(0).getUserId());
+                        oa.setAssociationReason("1");
+                    } else if (listBenchmark.size() > 1) {
                         oa.setAssociationReason("3");
-                    } else if (newListBenchmark.size() == 0) {
+                    } else if (listBenchmark.size() == 0) {
+                        RestResult<PageUtils<BenchmarkUser4AData>> newResult = pageQueryRequest3(oa);
+                        List<BenchmarkUser4AData> newListBenchmark = newResult.getData().getList();
+                        if (newListBenchmark.size() == 1) {
+                            oa.setAssociationId(newListBenchmark.get(0).getUserId());
+                            oa.setAssociationReason("5");
+                        } else if (newListBenchmark.size() > 1) {
+                            oa.setAssociationReason("3");
+                        } else if (newListBenchmark.size() == 0) {
+                            oa.setAssociationReason("0");
+                        }
+                    }
+                }else {   // 只查询了“姓名”，没有查询 “部门”信息。
+                    if(listBenchmark.size() == 1){
+                        oa.setAssociationId(listBenchmark.get(0).getUserId());
+                        oa.setAssociationReason("5");
+                    }else if(listBenchmark.size() > 1){
+                        oa.setAssociationReason("3");
+                    }else if(listBenchmark.size() == 0){
                         oa.setAssociationReason("0");
                     }
                 }
-                exportOaMatchPerson(pageUtils.getList());
-//                upDateOaMatchPerson(pageUtils.getList());
             }
+            exportOaMatchPerson(pageUtils.getList());
+            upDateOaMatchPerson(pageUtils.getList());
         }
     }
     private RestResult pageQueryRequest3(OaMatchPerson oa) throws Exception {
