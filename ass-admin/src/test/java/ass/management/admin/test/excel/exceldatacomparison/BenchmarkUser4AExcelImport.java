@@ -131,7 +131,8 @@ public class BenchmarkUser4AExcelImport {
 
     @Test
     public void importBenchmarkUser4AToEl() throws Exception{
-        FileInputStream in = new FileInputStream(new File("C:\\Users\\dell\\Desktop\\excel新\\4A基准用户.xls"));
+        FileInputStream in = new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\excel新\\4A基准用户.xls"));
+//        FileInputStream in = new FileInputStream(new File("C:\\Users\\dell\\Desktop\\excel新\\4A基准用户.xls"));
         ExcelImportResult excelImportResult = excelContext.readExcel(ExcelConfig.Bean.BENCH_MARK_USER_4A, 0, in,true);
         //通过导入结果集的hasErrors方法判断
         if(excelImportResult.hasErrors()){
@@ -239,7 +240,7 @@ public class BenchmarkUser4AExcelImport {
     public void realPageQueryRequest() throws Exception {
         Map map = new HashMap();
         map.put("pageNum", 1);
-        map.put("pageSize", 20);
+        map.put("pageSize", 100);
 //        map.put("name", "刘芸");
         PageUtils<OaMatchPerson> pageUtils = oaMatchPersonServiceImpl.oaMatchPersonQueryPageMap(map);
         if(pageUtils != null && pageUtils.getList() != null && pageUtils.getList().size() > 0) {
@@ -252,15 +253,17 @@ public class BenchmarkUser4AExcelImport {
 
 
                 Map<String, Object> shouldsMap = new HashMap<>();
-                // 施金润/企业管理部（全面深化改革办公室）/云南电网公司   从人名开始 小到大的顺序
+                // 更新表：施金润/企业管理部（全面深化改革办公室）/云南电网公司   从 姓名 开始 小到大的顺序
                 String fullName = oa.getFullName();
                 String[] strs = CharacterSegmentUtil.SlashSegmentation(fullName, CharacterSegmentUtil.POSITIVE_SLANT);
-
-                Object[] objShould = new Object[strs.length - 1];   // 0位置为人名 排除，从1位置开始。
-                for (int i = 0, j = 1; i < objShould.length; i++, j++) {   // 将数组顺序反转
+                Object[] objShould = new Object[strs.length - 2];   // 1、0位置为 “姓名” 排除，2、最后位置为 “云南电网公司” 排除。
+                for (int i = 0, j = 2; i < objShould.length; i++, j++) {   // 将数组顺序反转填充（从大到小）
                     objShould[i] = strs[strs.length - j];
                 }
-                for (int i = 0, j = 1; i < 10 && j <= 10; i++, j++) {
+                // 被查询表：\中国南方电网责任有限公司\云南电网有限责任公司\企业管理部（全面深化改革办公室）\部门负责人   从大到小
+                // 添加数据时已经按从大到小的顺序放进org_path1---org_path10中，所以现在填充查询值时 也是从大到小。
+                // 排除：1、0位置为 “中国南方电网责任有限公司”，2、1位置为 “云南电网有限责任公司”。从2位置开始循环填充值。
+                for (int i = 2, j = 3; i < 10 && j <= 10; i++, j++) {
                     shouldsMap.put("org_path" + j, objShould);
                 }
 
@@ -277,7 +280,7 @@ public class BenchmarkUser4AExcelImport {
                 queryEntry.setConstantScore(false);
                 queryEntry.setSortState(false);
 
-                String str = JSON.toJSONString(queryEntry);
+//                String str = JSON.toJSONString(queryEntry);
 
                 RestResult<PageUtils<BenchmarkUser4AData>> restResult = es6ServiceImpl.pageQueryRequest(queryEntry);
                 List<BenchmarkUser4AData> listBenchmark = restResult.getData().getList();
@@ -288,9 +291,9 @@ public class BenchmarkUser4AExcelImport {
                     oa.setAssociationReason("3");
                 } else if (listBenchmark.size() == 0) {
                     RestResult<PageUtils<BenchmarkUser4AData>> newResult = pageQueryRequest3(oa);
-                    List<BenchmarkUser4AData> newListBenchmark = restResult.getData().getList();
+                    List<BenchmarkUser4AData> newListBenchmark = newResult.getData().getList();
                     if (newListBenchmark.size() == 1) {
-                        oa.setAssociationId(listBenchmark.get(0).getUserId());
+                        oa.setAssociationId(newListBenchmark.get(0).getUserId());
                         oa.setAssociationReason("5");
                     } else if (newListBenchmark.size() > 1) {
                         oa.setAssociationReason("3");
@@ -299,7 +302,7 @@ public class BenchmarkUser4AExcelImport {
                     }
                 }
                 exportOaMatchPerson(pageUtils.getList());
-                upDateOaMatchPerson(pageUtils.getList());
+//                upDateOaMatchPerson(pageUtils.getList());
             }
         }
     }

@@ -55,6 +55,7 @@ public class OaMatchPersonExcelImport {
 
     @Test
     public void importOaMatchPerson() throws Exception{
+//        FileInputStream in = new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\excel新\\oa剩余未匹配的人员导出数据_新.xlsx"));
         FileInputStream in = new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\excel新\\oa剩余未匹配的人员导出数据_新.xlsx"));
         ExcelImportResult excelImportResult = excelContext.readExcel(ExcelConfig.Bean.OA_MATCH_PERSON, 0, in,true);
         log.info(String.valueOf(excelImportResult.getHeader()));
