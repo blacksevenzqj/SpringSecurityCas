@@ -129,6 +129,7 @@ public class BenchmarkUser4AExcelImport {
     }
 
 
+    // 直接从Excel中将数据导入进EL中：每次批量1000条，大概60多次的批量请求EL。
     @Test
     public void importBenchmarkUser4AToEl() throws Exception{
         FileInputStream in = new FileInputStream(new File("C:\\Users\\Administrator\\Desktop\\excel新\\4A基准用户.xls"));
