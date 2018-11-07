@@ -1,12 +1,19 @@
 package ass.management.admin.test.codec;
 
 
+import ass.management.admin.test.Test1;
+import ass.management.admin.test.Test2;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 public class TestGetBytes {
 
     public static void main(String[] args) throws Exception{
+
+//        Test2 t3 = new Test2();
+//        Test1 t4 = t3;
+//        t4.name = "123";   不同包中的 其他类 不可以访问protected属性。
 
         String downloadFielName = new String("白马东区17幢1单元601.txt".getBytes("UTF-8"),
                 "iso-8859-1");

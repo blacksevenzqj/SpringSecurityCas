@@ -17,6 +17,7 @@ public class TestPojo {
 
         Test2 t3 = new Test2();
         Test1 t4 = t3;
+        t4.name = "123";   // 同一包中的 其他类 可以访问protected属性。
 
 //        SysUserEntity sysUserEntity = new SysUserEntity();
 //        System.out.println(sysUserEntity);
