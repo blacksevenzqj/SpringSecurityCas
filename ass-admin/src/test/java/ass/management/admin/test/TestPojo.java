@@ -11,6 +11,13 @@ import java.util.List;
 public class TestPojo {
 
     public static void main(String[] args) throws Exception{
+
+//        Test1 t1 = new Test1();    // 父类实例不能赋值给子类实例
+//        Test2 t2 = t1;
+
+        Test2 t3 = new Test2();
+        Test1 t4 = t3;
+
 //        SysUserEntity sysUserEntity = new SysUserEntity();
 //        System.out.println(sysUserEntity);
 //        String str = "123456";
@@ -41,11 +48,11 @@ public class TestPojo {
 //            System.out.println(c);
 //        }
 
-        String strs4 = "UserLoginValidator/";
-        String[] ccc = CharacterSegmentUtil.SlashSegmentation(strs4, CharacterSegmentUtil.POSITIVE_SLANT);
-        for(String c : ccc){
-            System.out.println(c);
-        }
+//        String strs4 = "UserLoginValidator/";
+//        String[] ccc = CharacterSegmentUtil.SlashSegmentation(strs4, CharacterSegmentUtil.POSITIVE_SLANT);
+//        for(String c : ccc){
+//            System.out.println(c);
+//        }
 //
 //        Object[] objShould = new Object[3];
 //        for(Object o : objShould){
