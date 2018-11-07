@@ -1,6 +1,5 @@
 package ass.management.admin.common.word;
 
-//import ass.management.admin.common.word.NumberingWrapper;
 import ass.management.admin.common.word.util.TableTools;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -335,12 +334,12 @@ public class NiceXWPFDocument extends XWPFDocument {
             numbering = this.createNumbering();
         }
 
-//        NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
+        NumberingWrapper numberingWrapper = new NumberingWrapper(numbering);
         CTAbstractNum cTAbstractNum = CTAbstractNum.Factory.newInstance();
         // if we have an existing document, we must determine the next
         // free number first.
-//        cTAbstractNum
-//                .setAbstractNumId(BigInteger.valueOf(numberingWrapper.getAbstractNumsSize() + 10));
+        cTAbstractNum
+                .setAbstractNumId(BigInteger.valueOf(numberingWrapper.getAbstractNumsSize() + 10));
 
         Enum fmt = numFmt.getLeft();
         String val = numFmt.getRight();
@@ -503,27 +502,27 @@ public class NiceXWPFDocument extends XWPFDocument {
         Map<BigInteger, BigInteger> numIdsMap = new HashMap<BigInteger, BigInteger>();
         XWPFNumbering numberingMerge = docMerge.getNumbering();
         if (null == numberingMerge) return numIdsMap;
-//        NumberingWrapper wrapperMerge = new NumberingWrapper(numberingMerge);
-//        List<XWPFNum> nums = wrapperMerge.getNums();
-//        if (null == nums) return numIdsMap;
+        NumberingWrapper wrapperMerge = new NumberingWrapper(numberingMerge);
+        List<XWPFNum> nums = wrapperMerge.getNums();
+        if (null == nums) return numIdsMap;
         
         XWPFNumbering numbering = this.getNumbering();
         if (null == numbering) numbering = this.createNumbering();
-//        NumberingWrapper wrapper = new NumberingWrapper(numbering);
+        NumberingWrapper wrapper = new NumberingWrapper(numbering);
 
         XWPFAbstractNum xwpfAbstractNum;
         CTAbstractNum cTAbstractNum;
-//        for (XWPFNum xwpfNum : nums) {
-//            BigInteger mergeNumId = xwpfNum.getCTNum().getNumId();
-//
-//            xwpfAbstractNum = numberingMerge.getAbstractNum(xwpfNum.getCTNum().getAbstractNumId().getVal());
-//            cTAbstractNum = xwpfAbstractNum.getCTAbstractNum();
-//            cTAbstractNum.setAbstractNumId(BigInteger.valueOf(wrapper.getAbstractNumsSize() + 20));
-//
-//            BigInteger numID = numbering.addNum(numbering.addAbstractNum(new XWPFAbstractNum(cTAbstractNum)));
-//
-//            numIdsMap.put(mergeNumId, numID);
-//        }
+        for (XWPFNum xwpfNum : nums) {
+            BigInteger mergeNumId = xwpfNum.getCTNum().getNumId();
+
+            xwpfAbstractNum = numberingMerge.getAbstractNum(xwpfNum.getCTNum().getAbstractNumId().getVal());
+            cTAbstractNum = xwpfAbstractNum.getCTAbstractNum();
+            cTAbstractNum.setAbstractNumId(BigInteger.valueOf(wrapper.getAbstractNumsSize() + 20));
+            
+            BigInteger numID = numbering.addNum(numbering.addAbstractNum(new XWPFAbstractNum(cTAbstractNum)));
+
+            numIdsMap.put(mergeNumId, numID);
+        }
         return numIdsMap;
     }
 
