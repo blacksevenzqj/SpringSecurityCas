@@ -7,19 +7,20 @@
 	sheetname="测试学生列表" enableStyle="true" defaultAlign="center" sheetIndex="0">
 		<field name="id" align="center" titleBgColor="dark_blue" uniformStyle="true"
 		columnWidth="3000" titleFountColor="white" title="ID"/>
-		<field name="name" title="学生姓名" uniformStyle="true"/>
-		<field name="age" title="年龄" align="center" titleFountColor="red" titleBgColor="dark_blue" isNull="false" regex="^[1-9]\d*$" regexErrMsg="必须是数字"/>
-		<field name="studentNo" title="学号" titleFountColor="blue" isNull="false" />
-		<field name="createTime" columnWidth="4000" title="创建时间" pattern="yyyy-MM-dd"/>
-		<field name="status" title="状态" titleBgColor="green" format="1:正常,0:禁用,-1:无效" />
+		<!--<field name="name" title="学生姓名" uniformStyle="true"/>-->
+		<!--<field name="age" title="年龄" align="center" titleFountColor="red" titleBgColor="dark_blue" isNull="false" regex="^[1-9]\d*$" regexErrMsg="必须是数字"/>-->
+		<!--<field name="studentNo" title="学号" titleFountColor="blue" isNull="false" />-->
+		<!--<field name="createTime" columnWidth="4000" title="创建时间" pattern="yyyy-MM-dd"/>-->
+		<!--<field name="status" title="状态" titleBgColor="green" format="1:正常,0:禁用,-1:无效" />-->
+
 		<!-- 创建人,可能需要查询数据库校验,这里使用自定义解析器 -->
-		<field name="createUser" title="创建人" 
-		cellValueConverter="ass.management.admin.common.excel.converter.CreateUserCellValueConverter" otherConfig="Test动态传递的一个变量"/>
+		<!--<field name="createUser" title="创建人" -->
+		<!--cellValueConverter="ass.management.admin.common.excel.converter.CreateUserCellValueConverter" otherConfig="Test动态传递的一个变量"/>-->
 		
 		<!-- 复杂对象 -->
-		<field name="book.bookName" title="图书名称" columnWidth="6000"/>
-		<field name="book.price" title="图书价格" columnWidth="6000" decimalFormatPattern="###,##0.00" roundingMode="up" defaultValue="0.00"/>
-		<field name="book.author.authorName" title="作者名称" columnWidth="6000"/>
+		<!--<field name="book.bookName" title="图书名称" columnWidth="6000"/>-->
+		<!--<field name="book.price" title="图书价格" columnWidth="6000" decimalFormatPattern="###,##0.00" roundingMode="up" defaultValue="0.00"/>-->
+		<!--<field name="book.author.authorName" title="作者名称" columnWidth="6000"/>-->
 
 		<field name="list" title="子集合属性，不直接生成单位，而是新起一个EXCEL子表格" assExcelId="dcdbgzmbfjAO" />
 	</excel>

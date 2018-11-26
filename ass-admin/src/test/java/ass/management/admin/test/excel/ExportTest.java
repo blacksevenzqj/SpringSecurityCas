@@ -3,6 +3,7 @@ package ass.management.admin.test.excel;
 import ass.management.admin.common.excel.ExcelContext;
 import ass.management.admin.common.excel.config.ExcelDefinition;
 import ass.management.admin.common.excel.config.FieldValue;
+import ass.management.admin.common.excel.model.DcdbgzmbfjAO;
 import ass.management.admin.common.excel.parsing.ExcelHeader;
 import ass.management.admin.common.excel.result.ExcelExportResult;
 import ass.management.admin.test.excel.model.AuthorModel;
@@ -29,7 +30,8 @@ public class ExportTest {
 	
 	//测试时文件磁盘路径
 //	private static String path = "src/test/resources/test-export-excel.xlsx";
-	private static String path = "C:\\Users\\Administrator\\Desktop\\123123\\test-export-excel.xlsx";
+//	private static String path = "C:\\Users\\Administrator\\Desktop\\123123\\test-export-excel.xlsx";
+	private static String path = "C:\\Users\\dell\\Desktop\\123123\\test-export-excel.xlsx";
 
 	//配置文件路径
 	private static ExcelContext context = new ExcelContext("config/excel/excel-config.xml");
@@ -44,7 +46,7 @@ public class ExportTest {
 	public void testExporPart()throws Exception{
 		//需求概述.数据量较大,可能大批量数据导出,会对DB造成压力,这里分批次检索数据,一部分一部分向Excel中写
 		OutputStream ops = new FileOutputStream(path);
-		ExcelExportResult exportResult = context.createExcelForPart(excelId,getStudents());
+		ExcelExportResult exportResult = context.createExcelForPart(excelId, getStudents());
 		//假设这是第二次从数据库或其他平台查询到到数据
 //		exportResult.append(getStudents());
 //		//第n次....
@@ -206,7 +208,7 @@ public class ExportTest {
 	
 	//获取模拟数据,数据库数据...
 	public static List<StudentModel> getStudents(){
-		int size = 1;
+		int size = 2;
 		List<StudentModel> students = new ArrayList<StudentModel>(size);
 		for(int i=0;i<size;i++){
 			StudentModel stu = new StudentModel();
@@ -228,6 +230,20 @@ public class ExportTest {
 				book.setAuthor(author);
 				stu.setBook(book);
 			}
+
+			if(i == 0) {
+				List<DcdbgzmbfjAO> list = new ArrayList<DcdbgzmbfjAO>();
+				DcdbgzmbfjAO dcdbgzmbfjAO = new DcdbgzmbfjAO();
+				dcdbgzmbfjAO.setMbfjdseq("123");
+				dcdbgzmbfjAO.setWorktarget("456");
+				dcdbgzmbfjAO.setZrunitname("789");
+				dcdbgzmbfjAO.setXbunitname("101112");
+				dcdbgzmbfjAO.setBfqxStr("2018-11-26");
+				dcdbgzmbfjAO.setBz("161718");
+				list.add(dcdbgzmbfjAO);
+				stu.setList(list);
+			}
+
 			students.add(stu);
 		}
 		return students;

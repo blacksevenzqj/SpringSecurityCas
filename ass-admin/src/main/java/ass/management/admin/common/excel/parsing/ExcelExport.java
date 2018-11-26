@@ -16,6 +16,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.TypeUtils;
 
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ import java.util.Map;
  * @author zhaoqingjie
  */
 public class ExcelExport extends AbstractExcelResolver {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ExcelExport.class);
 
     public ExcelExport(ExcelDefinitionReader definitionReader) {
         super(definitionReader);
@@ -52,6 +56,7 @@ public class ExcelExport extends AbstractExcelResolver {
             }
             //实际传入的bean类型
             Class<?> realClass = beans.get(0).getClass();
+            LOG.info(String.valueOf(realClass == excelDefinition.getClazz()));
             //传入的类型是excel配置class的类型,或者是它的子类,直接进行生成
             if (realClass == excelDefinition.getClazz()
                     || TypeUtils.isAssignable(excelDefinition.getClazz(), realClass)) {
@@ -245,11 +250,12 @@ public class ExcelExport extends AbstractExcelResolver {
      * @throws Exception
      */
     protected void createRow(ExcelDefinition excelDefinition, Row row, Object bean, Workbook workbook, Sheet sheet, Row titleRow, int rowNum) throws Exception {
+        LOG.info(String.valueOf(rowNum));
 		List<FieldValue> fieldValues = excelDefinition.getFieldValues();
 		for(int i=0;i<fieldValues.size();i++) {
             FieldValue fieldValue = fieldValues.get(i);
             if (StringUtils.isNotBlank(fieldValue.getAssExcelId())) {
-                createChildExcel(fieldValue.getAssExcelId(), bean, workbook, sheet);
+                createChildExcel(fieldValue, bean, workbook, sheet);
             } else {
                 String name = fieldValue.getName();
                 Object value = ReflectUtil.getProperty(bean, name);
@@ -272,44 +278,52 @@ public class ExcelExport extends AbstractExcelResolver {
             }
         }
 	}
-    private ExcelExportResult createChildExcel(String id, Object bean, Workbook workbook, Sheet sheet) throws Exception {
-        ExcelExportResult exportResult = null;
-        if (bean != null) {
+    private void createChildExcel(FieldValue parentFieldValue, Object parentBean, Workbook workbook, Sheet sheet) throws Exception {
+        if (parentBean != null) {
             //从注册信息中获取Bean信息
-            ExcelDefinition excelDefinition = definitionReader.getRegistry().get(id);
-            if (excelDefinition == null) {
-                throw new ExcelException("没有找到 [" + id + "] 的配置信息");
+            ExcelDefinition childExcelDefinition = definitionReader.getRegistry().get(parentFieldValue.getAssExcelId());
+            if (childExcelDefinition == null) {
+                throw new ExcelException("没有找到 [" + parentFieldValue.getAssExcelId() + "] 的配置信息");
             }
             //实际传入的bean类型
-            Class<?> realClass = bean.getClass();
-            System.out.println(realClass == excelDefinition.getClazz());
-            exportResult = doCreateChildExcel(excelDefinition, bean, workbook, sheet);
+            Class<?> childClass = childExcelDefinition.getClazz();
+            String parentFieldName = parentFieldValue.getName();
+            Object listValues = ReflectUtil.getProperty(parentBean, parentFieldName);
+            if(listValues == null){
+                return;
+            }
+            List<?> list;
+            if(listValues instanceof List<?>){
+                list = (List<?>)listValues;
+            }else{
+                throw new Exception("子属性类型错误：应为List");
+            }
+            if(list.size() > 0){
+                LOG.info(String.valueOf(list.get(0).getClass() == childExcelDefinition.getClazz()));
+                doCreateChildExcel(childExcelDefinition, list, workbook, sheet);
+            }
         }
-        return exportResult;
     }
-    private ExcelExportResult doCreateChildExcel(ExcelDefinition excelDefinition, Object bean, Workbook workbook, Sheet sheet) throws Exception {
-        Row titleRow = createTitle(excelDefinition, sheet, workbook);
+    private void doCreateChildExcel(ExcelDefinition childExcelDefinition, List<?> beans, Workbook workbook, Sheet sheet) throws Exception {
+        Row titleRow = createTitle(childExcelDefinition, sheet, workbook);
         //如果listBean不为空,创建数据行
-        if (bean != null) {
-            createChildRows(excelDefinition, sheet, bean, workbook, titleRow);
+        if (beans != null) {
+            createChildRows(childExcelDefinition, sheet, beans, workbook, titleRow);
         }
-        ExcelExportResult exportResult = new ExcelExportResult(excelDefinition, sheet, workbook, titleRow, this);
-        return exportResult;
     }
-    private void createChildRows(ExcelDefinition excelDefinition, Sheet sheet, Object bean, Workbook workbook, Row titleRow) throws Exception {
+    private void createChildRows(ExcelDefinition excelDefinition, Sheet sheet, List<?> beans, Workbook workbook, Row titleRow) throws Exception {
         int num = sheet.getPhysicalNumberOfRows();
         int startRow = num;
-//        for (int i = 0; i < beans.size(); i++) {
-//            Row row = sheet.createRow(i + num);
-//            if (excelDefinition.getEachRowHeightInPoints() != null) {
-//                row.setHeightInPoints(excelDefinition.getEachRowHeightInPoints());
-//            } else if (excelDefinition.getDefaultRowHeightInPoints() != null) {
-//                row.setHeightInPoints(excelDefinition.getDefaultRowHeightInPoints());
-//            }
-//            createRow(excelDefinition, row, beans.get(i), workbook, sheet, titleRow, startRow++);
-//        }
+        for (int i = 0; i < beans.size(); i++) {
+            Row row = sheet.createRow(i + num);
+            if (excelDefinition.getEachRowHeightInPoints() != null) {
+                row.setHeightInPoints(excelDefinition.getEachRowHeightInPoints());
+            } else if (excelDefinition.getDefaultRowHeightInPoints() != null) {
+                row.setHeightInPoints(excelDefinition.getDefaultRowHeightInPoints());
+            }
+            createRow(excelDefinition, row, beans.get(i), workbook, sheet, titleRow, startRow++);
+        }
     }
-
 
     //设置cell 水平对齐方式
     private void setAlignStyle(FieldValue fieldValue, Workbook workbook, Cell cell, ExcelDefinition excelDefinition) {
