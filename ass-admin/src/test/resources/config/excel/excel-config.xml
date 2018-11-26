@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<excels>
+	<!-- excel标签参看:ExcelDefinition,Field标签参看:FieldValue -->
+	
+	<!-- 测试使用 ,学生类-->
+	<excel id="student" class="ass.management.admin.test.excel.model.StudentModel"
+	sheetname="测试学生列表" enableStyle="true" defaultAlign="center" sheetIndex="0">
+		<field name="id" align="center" titleBgColor="dark_blue" uniformStyle="true"
+		columnWidth="3000" titleFountColor="white" title="ID"/>
+		<field name="name" title="学生姓名" uniformStyle="true"/>
+		<field name="age" title="年龄" align="center" titleFountColor="red" titleBgColor="dark_blue" isNull="false" regex="^[1-9]\d*$" regexErrMsg="必须是数字"/>
+		<field name="studentNo" title="学号" titleFountColor="blue" isNull="false" />
+		<field name="createTime" columnWidth="4000" title="创建时间" pattern="yyyy-MM-dd"/>
+		<field name="status" title="状态" titleBgColor="green" format="1:正常,0:禁用,-1:无效" />
+		<!-- 创建人,可能需要查询数据库校验,这里使用自定义解析器 -->
+		<field name="createUser" title="创建人" 
+		cellValueConverter="ass.management.admin.common.excel.converter.CreateUserCellValueConverter" otherConfig="Test动态传递的一个变量"/>
+		
+		<!-- 复杂对象 -->
+		<field name="book.bookName" title="图书名称" columnWidth="6000"/>
+		<field name="book.price" title="图书价格" columnWidth="6000" decimalFormatPattern="###,##0.00" roundingMode="up" defaultValue="0.00"/>
+		<field name="book.author.authorName" title="作者名称" columnWidth="6000"/>
+	</excel>
+	
+	<excel id="student2" class="ass.management.admin.common.excel.model.StudentModel">
+		<field name="id" title="ID"/>
+		<field name="name" title="学生姓名"/>
+		<field name="age" title="年龄" isNull="false" regex="^[1-9]\d*$" regexErrMsg="必须是数字"/>
+		<field name="studentNo" title="学号" isNull="false" />
+		<field name="createTime" title="创建时间" pattern="yyyy-MM-dd"/>
+		<field name="status" title="状态" format="1:正常,0:禁用,-1:无效" />
+		<field name="createUser" title="创建人"/>
+		<!-- 复杂对象 -->
+		<field name="book.bookName" title="图书名称" />
+		<field name="book.author.authorName" title="作者名称" isNull="false"/>
+	</excel>
+
+	<!-- ExcelXmlBuilder 生成的配置文件 -->
+	<excel id="student3" class="ass.management.admin.common.excel.model.StudentModel" sheetname="学生信息列表" defaultColumnWidth="5000" enableStyle="true">
+		<field name="id" title="id" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="id不合法"/>
+		<field name="createTime" title="createTime" pattern="yyyy/MM/dd" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="createTime不合法"/>
+		<field name="name" title="name" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="name不合法"/>
+		<field name="age" title="age" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="age不合法"/>
+		<field name="studentNo" title="studentNo" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="studentNo不合法"/>
+		<field name="createUser" title="createUser" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="createUser不合法"/>
+		<field name="createUserId" title="createUserId" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="createUserId不合法"/>
+		<field name="status" title="status" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="status不合法"/>
+		<field name="book.bookName" title="book.bookName" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="book.bookName不合法"/>
+		<field name="book.author.authorName" title="book.author.authorName" isNull="true" uniformStyle="true" columnWidth="5000" align="left" regex="" regexErrMsg="book.author.authorName不合法"/>
+	</excel>
+
+
+	<!-- 一级任务 -->
+	<excel id = "dcdbgzmbfjAO" class="ass.management.admin.common.excel.model.DcdbgzmbfjAO" sheetname="一级任务列表" enableStyle="true" defaultAlign="center" defaultVertical="center" sheetIndex="0" defaultColumnWidth="6000" defaultRowHeightInPoints="40" eachRowHeightInPoints="40">
+		<field name="mbfjdseq" title="编号" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
+		<field name="worktarget" title="工作内容" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="zrunitname" title="主办部门"  align="center" vertical="top" uniformStyle="true" columnWidth="7000" titleFountColor="blue" isNull="false" cellValueConverter="ass.management.admin.common.excel.converter.CreateDcdbgzmbfjAOCellValueConverter" otherConfig="动态设置主办部门编码" />
+		<field name="xbunitname" title="协办部门"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="true" cellValueConverter="ass.management.admin.common.excel.converter.CreateDcdbgzmbfjAOCellValueConverter" otherConfig="动态设置协办部门编码" />
+		<field name="bfqxStr" title="办结期限"  align="center" uniformStyle="true" columnWidth="6000" isNull="false"/>
+		<field name="bz" title="备注" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+	</excel>
+
+	<!-- 二级任务 -->
+	<excel id = "dbxitemAO" class="ass.management.admin.common.excel.model.DbxitemAO" sheetname="二级任务列表" enableStyle="true" defaultAlign="center" sheetIndex="0">
+		<field name="dbxsequence" title="一级任务序号" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
+		<field name="workitem" title="工作内容" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="schedul" title="主要进度安排"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="false" />
+		<field name="dbxbfqxStr" title="办结期限"  align="center" uniformStyle="true" columnWidth="6000" isNull="false" cellValueConverter="ass.management.admin.common.excel.converter.CreateDbxitemAOCellValueConverter" otherConfig="动态判断办结期限是否合法" />
+		<field name="dbxbz" title="备注" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+	</excel>
+
+	<!-- 反馈下载 -->
+	<excel id = "dcdbFkInfoItemAO" class="ass.management.admin.common.excel.model.DcdbFkInfoItemAOExport" sheetname="反馈列表" enableStyle="true" defaultAlign="center" sheetIndex="0">
+		<field name="index" title="序号" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
+		<field name="mbfjdseq" title="编号" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="zrunitname" title="主办部门"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="false" />
+		<field name="worktarget" title="工作目标及内容"  align="center" uniformStyle="true" columnWidth="20000" isNull="false" cellValueConverter="ass.management.admin.common.excel.converter.CreateDbxitemAOCellValueConverter" otherConfig="动态判断办结期限是否合法" />
+		<field name="workCont" title="主要进度安排" align="center" uniformStyle="true" columnWidth="20000" isNull="true"/>
+		<field name="bjqxStr" title="办结期限"  align="center" uniformStyle="true" columnWidth="6000" isNull="false"/>
+		<field name="mainSchedule" title="进展情况（包括主要措施及成效、存在问题及原因分析、下一步安排等）"  align="center" uniformStyle="true" columnWidth="30000" isNull="false"/>
+		<field name="curProgress" title="当前进度"  align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+	</excel>
+
+
+	<excel id = "oaMatchPerson" class="ass.management.admin.common.excel.model.datacomparison.OaMatchPerson" sheetname="未匹配人员导出" enableStyle="true" defaultAlign="center" defaultVertical="center" sheetIndex="0" defaultColumnWidth="6000" defaultRowHeightInPoints="40" eachRowHeightInPoints="40">
+		<field name="id" title="ID" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="true"/>
+		<field name="idUser" title="ID_USER" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
+		<field name="name" title="NAME" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="fullName" title="FULLNAME"  align="center" vertical="top" uniformStyle="true" columnWidth="7000" titleFountColor="blue" isNull="true" />
+		<field name="orgName" title="ORGNAME"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="true" />
+		<field name="parentUnitName" title="PARENTUNITNAME"  align="center" uniformStyle="true" columnWidth="6000" isNull="true"/>
+		<field name="associationId" title="ASSOCIATIONID" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+		<field name="associationReason" title="ASSOCIATIONREASON" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+	</excel>
+
+	<excel id = "benchmarkUser4A" class="ass.management.admin.common.excel.model.datacomparison.BenchmarkUser4A" sheetname="4A基准用户列表" enableStyle="true" defaultAlign="center" defaultVertical="center" sheetIndex="0" defaultColumnWidth="6000" defaultRowHeightInPoints="40" eachRowHeightInPoints="40">
+		<field name="id" title="ID" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="true"/>
+		<field name="userId" title="USERID" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
+		<field name="userName" title="USERNAME" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="userOrgId" title="用户基准组织ID"  align="center" vertical="top" uniformStyle="true" columnWidth="7000" titleFountColor="blue" isNull="true" />
+		<field name="nameCode" title="NAMECODE"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="true" />
+		<field name="idSaphrUserId" title="用户人资IDSAPHRUSERID"  align="center" uniformStyle="true" columnWidth="6000" isNull="true"/>
+		<field name="idBaseOrgId" title="基准组织IDBASEORGID" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+		<field name="nameBaseOrgName" title="基准组织NAMEBASEORGNAME" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+		<field name="humanOrgId" title="人资组织ID" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+		<field name="orgPath" title="ORGPATH" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+		<field name="pki" title="PKI" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
+	</excel>
+
+</excels>

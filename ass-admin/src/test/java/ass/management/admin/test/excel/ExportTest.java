@@ -28,9 +28,11 @@ import java.util.List;
 public class ExportTest {
 	
 	//测试时文件磁盘路径
-	private static String path = "src/test/resources/test-export-excel.xlsx";
+//	private static String path = "src/test/resources/test-export-excel.xlsx";
+	private static String path = "C:\\Users\\Administrator\\Desktop\\123123\\test-export-excel.xlsx";
+
 	//配置文件路径
-	private static ExcelContext context = new ExcelContext("excel-config.xml");
+	private static ExcelContext context = new ExcelContext("config/excel/excel-config.xml");
 	//Excel配置文件中配置的id
 	private static String excelId = "student";
 	
@@ -44,12 +46,12 @@ public class ExportTest {
 		OutputStream ops = new FileOutputStream(path);
 		ExcelExportResult exportResult = context.createExcelForPart(excelId,getStudents());
 		//假设这是第二次从数据库或其他平台查询到到数据
-		exportResult.append(getStudents());
-		//第n次....
-		exportResult.append(getStudents());
-		exportResult.append(getStudents());
-		exportResult.append(getStudents());
-		exportResult.append(getStudents());
+//		exportResult.append(getStudents());
+//		//第n次....
+//		exportResult.append(getStudents());
+//		exportResult.append(getStudents());
+//		exportResult.append(getStudents());
+//		exportResult.append(getStudents());
 
 		Workbook workbook = exportResult.build();
 		workbook.write(ops);
@@ -204,7 +206,7 @@ public class ExportTest {
 	
 	//获取模拟数据,数据库数据...
 	public static List<StudentModel> getStudents(){
-		int size = 5;
+		int size = 1;
 		List<StudentModel> students = new ArrayList<StudentModel>(size);
 		for(int i=0;i<size;i++){
 			StudentModel stu = new StudentModel();
@@ -226,7 +228,6 @@ public class ExportTest {
 				book.setAuthor(author);
 				stu.setBook(book);
 			}
-			
 			students.add(stu);
 		}
 		return students;

@@ -41,8 +41,7 @@ public class ExcelExport extends AbstractExcelResolver {
      * @return
      * @throws Exception
      */
-    public ExcelExportResult createExcel(String id, List<?> beans, ExcelHeader header, List<String> fields)
-            throws Exception {
+    public ExcelExportResult createExcel(String id, List<?> beans, ExcelHeader header, List<String> fields) throws Exception {
         ExcelExportResult exportResult = null;
         if (CollectionUtils.isNotEmpty(beans)) {
             //从注册信息中获取Bean信息
@@ -136,8 +135,7 @@ public class ExcelExport extends AbstractExcelResolver {
 
     }
 
-    protected ExcelExportResult doCreateExcel(ExcelDefinition excelDefinition, List<?> beans, ExcelHeader header)
-            throws Exception {
+    protected ExcelExportResult doCreateExcel(ExcelDefinition excelDefinition, List<?> beans, ExcelHeader header) throws Exception {
         // 创建Workbook
         Workbook workbook = new SXSSFWorkbook();
         Sheet sheet = null;
@@ -214,8 +212,7 @@ public class ExcelExport extends AbstractExcelResolver {
      * @param titleRow
      * @throws Exception
      */
-    public void createRows(ExcelDefinition excelDefinition, Sheet sheet, List<?> beans, Workbook workbook, Row titleRow)
-            throws Exception {
+    public void createRows(ExcelDefinition excelDefinition, Sheet sheet, List<?> beans, Workbook workbook, Row titleRow) throws Exception {
         int num = sheet.getPhysicalNumberOfRows();
         int startRow = num;
         for (int i = 0; i < beans.size(); i++) {
