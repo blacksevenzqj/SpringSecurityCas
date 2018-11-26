@@ -377,6 +377,11 @@ public class XMLExcelDefinitionReader implements ExcelDefinitionReader {
                         fieldValue.setDefaultValue(defaultValue);
                     }
 
+                    String assExcelId = fieldEle.getAttribute("assExcelId");
+                    if (StringUtils.isNotBlank(assExcelId)) {
+                        fieldValue.setAssExcelId(assExcelId);
+                    }
+
                     excelDefinition.getFieldValues().add(fieldValue);
                 }
             }

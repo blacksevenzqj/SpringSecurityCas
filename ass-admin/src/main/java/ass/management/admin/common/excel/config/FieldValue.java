@@ -78,6 +78,9 @@ public class FieldValue {
      */
     private String otherConfig;
 
+    /** EXCEL配置文件中的关联配置ID **/
+    private String assExcelId;
+
     public FieldValue() {
     }
 
@@ -238,5 +241,12 @@ public class FieldValue {
 
     public void setVertical(Short vertical) {
         this.vertical = vertical;
+    }
+
+    public String getAssExcelId() {
+        return assExcelId;
+    }
+    public void setAssExcelId(String assExcelId) {
+        this.assExcelId = assExcelId;
     }
 }

@@ -13,6 +13,7 @@ import ass.management.admin.common.excel.exception.ExcelException;
 import ass.management.admin.common.excel.result.ExcelExportResult;
 import ass.management.admin.common.utils.ReflectUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.util.TypeUtils;
@@ -174,6 +175,12 @@ public class ExcelExport extends AbstractExcelResolver {
         List<FieldValue> fieldValues = excelDefinition.getFieldValues();
         for (int i = 0; i < fieldValues.size(); i++) {
             FieldValue fieldValue = fieldValues.get(i);
+
+            // 如果是 关联子EXCEL字段，则直接跳过。
+            if(StringUtils.isNotBlank(fieldValue.getAssExcelId())){
+                continue;
+            }
+
             //设置单元格宽度
             if (fieldValue.getColumnWidth() != null) {
                 sheet.setColumnWidth(i, fieldValue.getColumnWidth());
@@ -239,28 +246,70 @@ public class ExcelExport extends AbstractExcelResolver {
      */
     protected void createRow(ExcelDefinition excelDefinition, Row row, Object bean, Workbook workbook, Sheet sheet, Row titleRow, int rowNum) throws Exception {
 		List<FieldValue> fieldValues = excelDefinition.getFieldValues();
-		for(int i=0;i<fieldValues.size();i++){
-			FieldValue fieldValue = fieldValues.get(i);
-			String name = fieldValue.getName();
-			Object value = ReflectUtil.getProperty(bean, name);
-			Map map = new HashMap<>();
-			map.put(ExcelConfig.Convert.DEFAULT_KEY, value);
-			//从解析器获取值
-			Object val = convert(bean, map, fieldValue, Type.EXPORT, rowNum);
-			Cell cell = row.createCell(i);
-			//cell样式是否与标题一致,如果一致,找到对应的标题样式进行设置
-			if(excelDefinition.getEnableStyle()){
-				if(fieldValue.isUniformStyle()){
-					//获取标题行
-					//获取对应的标题行样式
-					Cell titleCell = titleRow.getCell(i);
-					CellStyle cellStyle = titleCell.getCellStyle();
-					cell.setCellStyle(cellStyle);
-				}
-			}
-			setCellValue(cell, val);
-		}
+		for(int i=0;i<fieldValues.size();i++) {
+            FieldValue fieldValue = fieldValues.get(i);
+            if (StringUtils.isNotBlank(fieldValue.getAssExcelId())) {
+                createChildExcel(fieldValue.getAssExcelId(), bean, workbook, sheet);
+            } else {
+                String name = fieldValue.getName();
+                Object value = ReflectUtil.getProperty(bean, name);
+                Map map = new HashMap<>();
+                map.put(ExcelConfig.Convert.DEFAULT_KEY, value);
+                //从解析器获取值
+                Object val = convert(bean, map, fieldValue, Type.EXPORT, rowNum);
+                Cell cell = row.createCell(i);
+                //cell样式是否与标题一致,如果一致,找到对应的标题样式进行设置
+                if (excelDefinition.getEnableStyle()) {
+                    if (fieldValue.isUniformStyle()) {
+                        //获取标题行
+                        //获取对应的标题行样式
+                        Cell titleCell = titleRow.getCell(i);
+                        CellStyle cellStyle = titleCell.getCellStyle();
+                        cell.setCellStyle(cellStyle);
+                    }
+                }
+                setCellValue(cell, val);
+            }
+        }
 	}
+    private ExcelExportResult createChildExcel(String id, Object bean, Workbook workbook, Sheet sheet) throws Exception {
+        ExcelExportResult exportResult = null;
+        if (bean != null) {
+            //从注册信息中获取Bean信息
+            ExcelDefinition excelDefinition = definitionReader.getRegistry().get(id);
+            if (excelDefinition == null) {
+                throw new ExcelException("没有找到 [" + id + "] 的配置信息");
+            }
+            //实际传入的bean类型
+            Class<?> realClass = bean.getClass();
+            System.out.println(realClass == excelDefinition.getClazz());
+            exportResult = doCreateChildExcel(excelDefinition, bean, workbook, sheet);
+        }
+        return exportResult;
+    }
+    private ExcelExportResult doCreateChildExcel(ExcelDefinition excelDefinition, Object bean, Workbook workbook, Sheet sheet) throws Exception {
+        Row titleRow = createTitle(excelDefinition, sheet, workbook);
+        //如果listBean不为空,创建数据行
+        if (bean != null) {
+            createChildRows(excelDefinition, sheet, bean, workbook, titleRow);
+        }
+        ExcelExportResult exportResult = new ExcelExportResult(excelDefinition, sheet, workbook, titleRow, this);
+        return exportResult;
+    }
+    private void createChildRows(ExcelDefinition excelDefinition, Sheet sheet, Object bean, Workbook workbook, Row titleRow) throws Exception {
+        int num = sheet.getPhysicalNumberOfRows();
+        int startRow = num;
+//        for (int i = 0; i < beans.size(); i++) {
+//            Row row = sheet.createRow(i + num);
+//            if (excelDefinition.getEachRowHeightInPoints() != null) {
+//                row.setHeightInPoints(excelDefinition.getEachRowHeightInPoints());
+//            } else if (excelDefinition.getDefaultRowHeightInPoints() != null) {
+//                row.setHeightInPoints(excelDefinition.getDefaultRowHeightInPoints());
+//            }
+//            createRow(excelDefinition, row, beans.get(i), workbook, sheet, titleRow, startRow++);
+//        }
+    }
+
 
     //设置cell 水平对齐方式
     private void setAlignStyle(FieldValue fieldValue, Workbook workbook, Cell cell, ExcelDefinition excelDefinition) {

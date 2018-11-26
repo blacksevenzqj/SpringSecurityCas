@@ -1,6 +1,9 @@
 package ass.management.admin.test.excel.model;
 
+import ass.management.admin.common.excel.model.DcdbgzmbfjAO;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * 测试学生类
@@ -28,6 +31,8 @@ public class StudentModel {
 	private Integer status;
 	/** 图书信息 */
 	private BookModel book;
+
+	private List<DcdbgzmbfjAO> list;
 	
 	
 	public String getId() {
@@ -84,6 +89,14 @@ public class StudentModel {
 	public void setBook(BookModel book) {
 		this.book = book;
 	}
+
+	public List<DcdbgzmbfjAO> getList() {
+		return list;
+	}
+	public void setList(List<DcdbgzmbfjAO> list) {
+		this.list = list;
+	}
+
 	@Override
 	public String toString() {
 		return "StudentModel [id=" + id + ", createTime=" + createTime + ", name=" + name + ", age=" + age

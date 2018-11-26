@@ -20,6 +20,8 @@
 		<field name="book.bookName" title="图书名称" columnWidth="6000"/>
 		<field name="book.price" title="图书价格" columnWidth="6000" decimalFormatPattern="###,##0.00" roundingMode="up" defaultValue="0.00"/>
 		<field name="book.author.authorName" title="作者名称" columnWidth="6000"/>
+
+		<field name="list" title="子集合属性，不直接生成单位，而是新起一个EXCEL子表格" assExcelId="dcdbgzmbfjAO" />
 	</excel>
 	
 	<excel id="student2" class="ass.management.admin.common.excel.model.StudentModel">

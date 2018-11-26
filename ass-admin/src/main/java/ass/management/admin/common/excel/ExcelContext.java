@@ -101,6 +101,16 @@ public class ExcelContext {
     public ExcelExportResult createExcelForPart(String id, List<?> beans) throws Exception {
         return createExcelForPart(id, beans, null, null);
     }
+    /**
+     * 创建Excel部分信息
+     * @param id 配置ID
+     * @param beans 配置class对应的List
+     * @return Workbook
+     * @throws Exception
+     */
+    public ExcelExportResult createExcelForPartNew(String id, List<?> beans) throws Exception {
+        return createExcelForPartNew(id, beans, null, null);
+    }
 
     /**
      * 创建Excel
@@ -151,6 +161,11 @@ public class ExcelContext {
     public ExcelExportResult createExcelForPart(String id, List<?> beans, ExcelHeader header, List<String> fields)
             throws Exception {
         return excelExport.createExcel(id, beans, header, fields);
+    }
+    public ExcelExportResult createExcelForPartNew(String id, List<?> beans, ExcelHeader header, List<String> fields)
+            throws Exception {
+//        return excelExport.createExcelNew(id, beans, header, fields);
+        return null;
     }
 
     /**
