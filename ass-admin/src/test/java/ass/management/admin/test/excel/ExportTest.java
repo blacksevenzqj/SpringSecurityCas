@@ -3,6 +3,7 @@ package ass.management.admin.test.excel;
 import ass.management.admin.common.excel.ExcelContext;
 import ass.management.admin.common.excel.config.ExcelDefinition;
 import ass.management.admin.common.excel.config.FieldValue;
+import ass.management.admin.common.excel.model.DbxitemAO;
 import ass.management.admin.common.excel.model.DcdbgzmbfjAO;
 import ass.management.admin.common.excel.parsing.ExcelHeader;
 import ass.management.admin.common.excel.result.ExcelExportResult;
@@ -63,7 +64,7 @@ public class ExportTest {
 
 	//获取模拟数据,数据库数据...
 	public static List<StudentModel> getStudents(){
-		int size = 10;
+		int size = 3;
 		List<StudentModel> students = new ArrayList<StudentModel>(size);
 		for(int i=0;i<size;i++){
 			StudentModel stu = new StudentModel();
@@ -95,6 +96,18 @@ public class ExportTest {
 				dcdbgzmbfjAO.setXbunitname("1");
 				dcdbgzmbfjAO.setBfqxStr("2018-11-26");
 				dcdbgzmbfjAO.setBz("1");
+				List<DbxitemAO> dbxitemAOList = new ArrayList<DbxitemAO>();
+				DbxitemAO dbxitemAO = new DbxitemAO();
+				dbxitemAO.setDbxsequence("11");
+				DbxitemAO dbxitemAO2 = new DbxitemAO();
+				dbxitemAO2.setDbxsequence("11");
+				DbxitemAO dbxitemAO3 = new DbxitemAO();
+				dbxitemAO3.setDbxsequence("11");
+				dbxitemAOList.add(dbxitemAO);
+				dbxitemAOList.add(dbxitemAO2);
+				dbxitemAOList.add(dbxitemAO3);
+				dcdbgzmbfjAO.setDbxitemAOList(dbxitemAOList);
+
 				DcdbgzmbfjAO dcdbgzmbfjAO2 = new DcdbgzmbfjAO();
 				dcdbgzmbfjAO2.setMbfjdseq("2");
 				dcdbgzmbfjAO2.setWorktarget("2");
@@ -102,6 +115,15 @@ public class ExportTest {
 				dcdbgzmbfjAO2.setXbunitname("2");
 				dcdbgzmbfjAO2.setBfqxStr("2018-11-27");
 				dcdbgzmbfjAO2.setBz("2");
+//				List<DbxitemAO> dbxitemAOList2 = new ArrayList<DbxitemAO>();
+//				DbxitemAO dbxitemAO11 = new DbxitemAO();
+//				dbxitemAO11.setDbxsequence("22");
+//				DbxitemAO dbxitemAO22 = new DbxitemAO();
+//				dbxitemAO22.setDbxsequence("22");
+//				dbxitemAOList2.add(dbxitemAO11);
+//				dbxitemAOList2.add(dbxitemAO22);
+//				dcdbgzmbfjAO2.setDbxitemAOList(dbxitemAOList2);
+
 				DcdbgzmbfjAO dcdbgzmbfjAO3 = new DcdbgzmbfjAO();
 				dcdbgzmbfjAO3.setMbfjdseq("3");
 				dcdbgzmbfjAO3.setWorktarget("3");
@@ -109,6 +131,14 @@ public class ExportTest {
 				dcdbgzmbfjAO3.setXbunitname("3");
 				dcdbgzmbfjAO3.setBfqxStr("2018-11-28");
 				dcdbgzmbfjAO3.setBz("3");
+				List<DbxitemAO> dbxitemAOList3 = new ArrayList<DbxitemAO>();
+				DbxitemAO dbxitemAO111 = new DbxitemAO();
+				dbxitemAO111.setDbxsequence("33");
+				DbxitemAO dbxitemAO222 = new DbxitemAO();
+				dbxitemAO222.setDbxsequence("33");
+				dbxitemAOList3.add(dbxitemAO111);
+				dbxitemAOList3.add(dbxitemAO222);
+				dcdbgzmbfjAO3.setDbxitemAOList(dbxitemAOList3);
 
 				list.add(dcdbgzmbfjAO);
 				list.add(dcdbgzmbfjAO2);
@@ -123,7 +153,25 @@ public class ExportTest {
 				dcdbgzmbfjAO.setXbunitname("a");
 				dcdbgzmbfjAO.setBfqxStr("2018-11-26");
 				dcdbgzmbfjAO.setBz("a");
+				List<DbxitemAO> dbxitemAOList = new ArrayList<DbxitemAO>();
+				DbxitemAO dbxitemAO = new DbxitemAO();
+				dbxitemAO.setDbxsequence("aa");
+				DbxitemAO dbxitemAO1 = new DbxitemAO();
+				dbxitemAO1.setDbxsequence("aa");
+				dbxitemAOList.add(dbxitemAO);
+				dbxitemAOList.add(dbxitemAO1);
+				dcdbgzmbfjAO.setDbxitemAOList(dbxitemAOList);
+
+				DcdbgzmbfjAO dcdbgzmbfjAO2 = new DcdbgzmbfjAO();
+				dcdbgzmbfjAO2.setMbfjdseq("b");
+				dcdbgzmbfjAO2.setWorktarget("b");
+				dcdbgzmbfjAO2.setZrunitname("b");
+				dcdbgzmbfjAO2.setXbunitname("b");
+				dcdbgzmbfjAO2.setBfqxStr("2018-11-26");
+				dcdbgzmbfjAO2.setBz("b");
+
 				list.add(dcdbgzmbfjAO);
+				list.add(dcdbgzmbfjAO2);
 				stu.setList(list);
 			}
 

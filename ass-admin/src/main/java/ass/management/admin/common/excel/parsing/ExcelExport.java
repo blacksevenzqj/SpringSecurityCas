@@ -299,6 +299,7 @@ public class ExcelExport extends AbstractExcelResolver {
         }
         return resultChildRowNum;
 	}
+
     private Integer createChildExcel(FieldValue parentFieldValue, Object parentBean, Workbook workbook, Sheet sheet) throws Exception {
         if (parentBean != null) {
             //从注册信息中获取Bean信息
@@ -331,24 +332,69 @@ public class ExcelExport extends AbstractExcelResolver {
         //如果listBean不为空,创建数据行
         if (beans != null) {
             return createChildRows(childExcelDefinition, sheet, beans, workbook, titleRow);
+//            return createRows(childExcelDefinition, sheet, beans, workbook, titleRow);
         }
         return null;
     }
+
+//    private Integer createChildRows(ExcelDefinition excelDefinition, Sheet sheet, List<?> beans, Workbook workbook, Row titleRow) throws Exception {
+//        int num = sheet.getPhysicalNumberOfRows();
+//        int startRow = num;
+//        int resultChildRowNum = num;
+//        for (int i = 0; i < beans.size(); i++) {
+//            Row row = sheet.createRow(resultChildRowNum = i + num);
+//            if (excelDefinition.getEachRowHeightInPoints() != null) {
+//                row.setHeightInPoints(excelDefinition.getEachRowHeightInPoints());
+//            } else if (excelDefinition.getDefaultRowHeightInPoints() != null) {
+//                row.setHeightInPoints(excelDefinition.getDefaultRowHeightInPoints());
+//            }
+//            createRow(excelDefinition, row, beans.get(i), workbook, sheet, titleRow, startRow++);
+//        }
+//        return resultChildRowNum;
+//    }
+
+    // 可以 使用createRows，递归调用，暂时还是使用这个方法，其实这个方法已经在递归了。
     private Integer createChildRows(ExcelDefinition excelDefinition, Sheet sheet, List<?> beans, Workbook workbook, Row titleRow) throws Exception {
-        int num = sheet.getPhysicalNumberOfRows();
+        int num = sheet.getPhysicalNumberOfRows(); // EXCEL的行从0开始计算，返回“可用行”（之前行加1）
         int startRow = num;
-        int resultChildRowNum = num;
+        Integer resultChildRowNum = num;
         for (int i = 0; i < beans.size(); i++) {
-            Row row = sheet.createRow(resultChildRowNum = i + num);
+            Row row = sheet.createRow(resultChildRowNum);  // 1、麻烦的很方式
+//            Row row = sheet.createRow(sheet.getPhysicalNumberOfRows());  // 2、用这个方法最省事：下面的判断方法一律可以省略。
+
             if (excelDefinition.getEachRowHeightInPoints() != null) {
                 row.setHeightInPoints(excelDefinition.getEachRowHeightInPoints());
             } else if (excelDefinition.getDefaultRowHeightInPoints() != null) {
                 row.setHeightInPoints(excelDefinition.getDefaultRowHeightInPoints());
             }
-            createRow(excelDefinition, row, beans.get(i), workbook, sheet, titleRow, startRow++);
+            resultChildRowNum = createRow(excelDefinition, row, beans.get(i), workbook, sheet, titleRow, startRow++);
+            if(resultChildRowNum != null){    // 返回的是 子行的当前行号码。
+                /**
+                 * 下一主行：不设置标题
+                 *  num = resultChildRowNum;  // 子行的当前行号码 赋值给 主循环中 的行号，for循环下一主行+1 。
+                 *  startRow = resultChildRowNum + 1;  // startRow：提前计算下一主行的行号，因为for循环不会操作startRow。
+                 */
+
+                /**
+                 * 下一主行：设置标题
+                 */
+                if(i + 1 < beans.size()) {  // 如果下一主行还有数据再执行，这里不能 i++
+                    Row tempRow = createTitle(excelDefinition, sheet, workbook);
+                    num = tempRow.getRowNum() - i;   // 这里要-i：先减去i，循环i++后，num + i相当于下一主行。  现在改成：必须重新赋值给num，因为有子EXCEL的行时必须重设num。
+                    resultChildRowNum = tempRow.getRowNum() + 1;
+                    startRow = tempRow.getRowNum() + 1;
+                }
+            }else{
+                if(i + 1 < beans.size()) {
+                    resultChildRowNum = i + num + 1;
+                }else{
+                    resultChildRowNum = i + num;
+                }
+            }
         }
         return resultChildRowNum;
     }
+
 
     //设置cell 水平对齐方式
     private void setAlignStyle(FieldValue fieldValue, Workbook workbook, Cell cell, ExcelDefinition excelDefinition) {
