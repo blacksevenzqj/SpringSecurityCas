@@ -30,8 +30,8 @@ public class ExportTest {
 	
 	//测试时文件磁盘路径
 //	private static String path = "src/test/resources/test-export-excel.xlsx";
-//	private static String path = "C:\\Users\\Administrator\\Desktop\\123123\\test-export-excel.xlsx";
-	private static String path = "C:\\Users\\dell\\Desktop\\123123\\test-export-excel.xlsx";
+	private static String path = "C:\\Users\\Administrator\\Desktop\\123123\\test-export-excel.xlsx";
+//	private static String path = "C:\\Users\\dell\\Desktop\\123123\\test-export-excel.xlsx";
 
 	//配置文件路径
 	private static ExcelContext context = new ExcelContext("config/excel/excel-config.xml");
@@ -60,7 +60,79 @@ public class ExportTest {
 		ops.close();
 		workbook.close();
 	}
-	
+
+	//获取模拟数据,数据库数据...
+	public static List<StudentModel> getStudents(){
+		int size = 10;
+		List<StudentModel> students = new ArrayList<StudentModel>(size);
+		for(int i=0;i<size;i++){
+			StudentModel stu = new StudentModel();
+			stu.setId(""+(i+1));
+			stu.setName("张三"+i);
+			stu.setAge(20+i);
+			stu.setStudentNo("Stu_"+i);
+			stu.setCreateTime(new Date());
+			stu.setStatus(i%2==0?1:0);
+			stu.setCreateUser("王五"+i);
+
+			//创建复杂对象
+			if(i % 2==0){
+				BookModel book = new BookModel();
+				book.setBookName("Thinking in java");
+				book.setPrice(12345.1253);
+				AuthorModel author = new AuthorModel();
+				author.setAuthorName("Bruce Eckel");
+				book.setAuthor(author);
+				stu.setBook(book);
+			}
+
+			if(i % 2==0) {
+				List<DcdbgzmbfjAO> list = new ArrayList<DcdbgzmbfjAO>();
+				DcdbgzmbfjAO dcdbgzmbfjAO = new DcdbgzmbfjAO();
+				dcdbgzmbfjAO.setMbfjdseq("1");
+				dcdbgzmbfjAO.setWorktarget("1");
+				dcdbgzmbfjAO.setZrunitname("1");
+				dcdbgzmbfjAO.setXbunitname("1");
+				dcdbgzmbfjAO.setBfqxStr("2018-11-26");
+				dcdbgzmbfjAO.setBz("1");
+				DcdbgzmbfjAO dcdbgzmbfjAO2 = new DcdbgzmbfjAO();
+				dcdbgzmbfjAO2.setMbfjdseq("2");
+				dcdbgzmbfjAO2.setWorktarget("2");
+				dcdbgzmbfjAO2.setZrunitname("2");
+				dcdbgzmbfjAO2.setXbunitname("2");
+				dcdbgzmbfjAO2.setBfqxStr("2018-11-27");
+				dcdbgzmbfjAO2.setBz("2");
+				DcdbgzmbfjAO dcdbgzmbfjAO3 = new DcdbgzmbfjAO();
+				dcdbgzmbfjAO3.setMbfjdseq("3");
+				dcdbgzmbfjAO3.setWorktarget("3");
+				dcdbgzmbfjAO3.setZrunitname("3");
+				dcdbgzmbfjAO3.setXbunitname("3");
+				dcdbgzmbfjAO3.setBfqxStr("2018-11-28");
+				dcdbgzmbfjAO3.setBz("3");
+
+				list.add(dcdbgzmbfjAO);
+				list.add(dcdbgzmbfjAO2);
+				list.add(dcdbgzmbfjAO3);
+				stu.setList(list);
+			}else{
+				List<DcdbgzmbfjAO> list = new ArrayList<DcdbgzmbfjAO>();
+				DcdbgzmbfjAO dcdbgzmbfjAO = new DcdbgzmbfjAO();
+				dcdbgzmbfjAO.setMbfjdseq("a");
+				dcdbgzmbfjAO.setWorktarget("a");
+				dcdbgzmbfjAO.setZrunitname("a");
+				dcdbgzmbfjAO.setXbunitname("a");
+				dcdbgzmbfjAO.setBfqxStr("2018-11-26");
+				dcdbgzmbfjAO.setBz("a");
+				list.add(dcdbgzmbfjAO);
+				stu.setList(list);
+			}
+
+			students.add(stu);
+		}
+		return students;
+	}
+
+
 	/***
 	 * 导出测试,简单版
 	 * @throws Exception
@@ -148,7 +220,7 @@ public class ExportTest {
 		ops.close();
 		workbook.close();
 	}
-	
+
 	/**
 	 * 获取配置信息测试
 	 */
@@ -204,48 +276,5 @@ public class ExportTest {
 		workbook.write(ops);
 		ops.close();
 		workbook.close();
-	}
-	
-	//获取模拟数据,数据库数据...
-	public static List<StudentModel> getStudents(){
-		int size = 2;
-		List<StudentModel> students = new ArrayList<StudentModel>(size);
-		for(int i=0;i<size;i++){
-			StudentModel stu = new StudentModel();
-			stu.setId(""+(i+1));
-			stu.setName("张三"+i);
-			stu.setAge(20+i);
-			stu.setStudentNo("Stu_"+i);
-			stu.setCreateTime(new Date());
-			stu.setStatus(i%2==0?1:0);
-			stu.setCreateUser("王五"+i);
-			
-			//创建复杂对象
-			if(i % 2==0){
-				BookModel book = new BookModel();
-				book.setBookName("Thinking in java");
-				book.setPrice(12345.1253);
-				AuthorModel author = new AuthorModel();
-				author.setAuthorName("Bruce Eckel");
-				book.setAuthor(author);
-				stu.setBook(book);
-			}
-
-			if(i == 0) {
-				List<DcdbgzmbfjAO> list = new ArrayList<DcdbgzmbfjAO>();
-				DcdbgzmbfjAO dcdbgzmbfjAO = new DcdbgzmbfjAO();
-				dcdbgzmbfjAO.setMbfjdseq("123");
-				dcdbgzmbfjAO.setWorktarget("456");
-				dcdbgzmbfjAO.setZrunitname("789");
-				dcdbgzmbfjAO.setXbunitname("101112");
-				dcdbgzmbfjAO.setBfqxStr("2018-11-26");
-				dcdbgzmbfjAO.setBz("161718");
-				list.add(dcdbgzmbfjAO);
-				stu.setList(list);
-			}
-
-			students.add(stu);
-		}
-		return students;
 	}
 }

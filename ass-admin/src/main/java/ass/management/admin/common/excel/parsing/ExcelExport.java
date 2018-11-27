@@ -172,7 +172,7 @@ public class ExcelExport extends AbstractExcelResolver {
      */
     protected Row createTitle(ExcelDefinition excelDefinition, Sheet sheet, Workbook workbook) {
         //标题索引号
-        int titleIndex = sheet.getPhysicalNumberOfRows();
+        int titleIndex = sheet.getPhysicalNumberOfRows();   // EXCEL的行从0开始计算。
         Row titleRow = sheet.createRow(titleIndex);
         if (excelDefinition.getDefaultRowHeightInPoints() != null) {
             titleRow.setHeightInPoints(excelDefinition.getDefaultRowHeightInPoints());
@@ -225,16 +225,35 @@ public class ExcelExport extends AbstractExcelResolver {
      * @throws Exception
      */
     public void createRows(ExcelDefinition excelDefinition, Sheet sheet, List<?> beans, Workbook workbook, Row titleRow) throws Exception {
-        int num = sheet.getPhysicalNumberOfRows();
+        int num = sheet.getPhysicalNumberOfRows(); // EXCEL的行从0开始计算。
         int startRow = num;
+        Integer resultChildRowNum = null;
         for (int i = 0; i < beans.size(); i++) {
-            Row row = sheet.createRow(i + num);
+            Row row = sheet.createRow(i + num);  // 1、麻烦的很方式
+//            Row row = sheet.createRow(sheet.getPhysicalNumberOfRows());  // 2、用这个方法最省事。
+
             if (excelDefinition.getEachRowHeightInPoints() != null) {
                 row.setHeightInPoints(excelDefinition.getEachRowHeightInPoints());
             } else if (excelDefinition.getDefaultRowHeightInPoints() != null) {
                 row.setHeightInPoints(excelDefinition.getDefaultRowHeightInPoints());
             }
-            createRow(excelDefinition, row, beans.get(i), workbook, sheet, titleRow, startRow++);
+            resultChildRowNum = createRow(excelDefinition, row, beans.get(i), workbook, sheet, titleRow, startRow++);
+            if(resultChildRowNum != null){    // 返回的是 子行的当前行号码。
+                /**
+                 * 下一主行：不设置标题
+                 *  num = resultChildRowNum;  // 子行的当前行号码 赋值给 主循环中 的行号，for循环下一主行+1 。
+                 *  startRow = resultChildRowNum + 1;  // startRow：提前计算下一主行的行号，因为for循环不会操作startRow。
+                 */
+
+                /**
+                 * 下一主行：设置标题
+                 */
+                if(i + 1 < beans.size()) {  // 如果下一主行还有数据再执行，这里不能 i++
+                    Row tempRow = createTitle(excelDefinition, sheet, workbook);
+                    num = tempRow.getRowNum() - i;   // 这里要-i：先减去i，循环i++后，num + i相当于下一主行。
+                    startRow = tempRow.getRowNum() + 1;
+                }
+            }
         }
     }
 
@@ -249,13 +268,14 @@ public class ExcelExport extends AbstractExcelResolver {
      * @param rowNum
      * @throws Exception
      */
-    protected void createRow(ExcelDefinition excelDefinition, Row row, Object bean, Workbook workbook, Sheet sheet, Row titleRow, int rowNum) throws Exception {
+    protected Integer createRow(ExcelDefinition excelDefinition, Row row, Object bean, Workbook workbook, Sheet sheet, Row titleRow, int rowNum) throws Exception {
         LOG.info(String.valueOf(rowNum));
 		List<FieldValue> fieldValues = excelDefinition.getFieldValues();
+		Integer resultChildRowNum = null;
 		for(int i=0;i<fieldValues.size();i++) {
             FieldValue fieldValue = fieldValues.get(i);
-            if (StringUtils.isNotBlank(fieldValue.getAssExcelId())) {
-                createChildExcel(fieldValue, bean, workbook, sheet);
+            if (StringUtils.isNotBlank(fieldValue.getAssExcelId())) {   //约定大于配置：ExcelId字段必须配置在 最后的字段位置。
+                resultChildRowNum = createChildExcel(fieldValue, bean, workbook, sheet);
             } else {
                 String name = fieldValue.getName();
                 Object value = ReflectUtil.getProperty(bean, name);
@@ -277,8 +297,9 @@ public class ExcelExport extends AbstractExcelResolver {
                 setCellValue(cell, val);
             }
         }
+        return resultChildRowNum;
 	}
-    private void createChildExcel(FieldValue parentFieldValue, Object parentBean, Workbook workbook, Sheet sheet) throws Exception {
+    private Integer createChildExcel(FieldValue parentFieldValue, Object parentBean, Workbook workbook, Sheet sheet) throws Exception {
         if (parentBean != null) {
             //从注册信息中获取Bean信息
             ExcelDefinition childExcelDefinition = definitionReader.getRegistry().get(parentFieldValue.getAssExcelId());
@@ -290,7 +311,7 @@ public class ExcelExport extends AbstractExcelResolver {
             String parentFieldName = parentFieldValue.getName();
             Object listValues = ReflectUtil.getProperty(parentBean, parentFieldName);
             if(listValues == null){
-                return;
+                return null;
             }
             List<?> list;
             if(listValues instanceof List<?>){
@@ -300,22 +321,25 @@ public class ExcelExport extends AbstractExcelResolver {
             }
             if(list.size() > 0){
                 LOG.info(String.valueOf(list.get(0).getClass() == childExcelDefinition.getClazz()));
-                doCreateChildExcel(childExcelDefinition, list, workbook, sheet);
+                return doCreateChildExcel(childExcelDefinition, list, workbook, sheet);
             }
         }
+        return null;
     }
-    private void doCreateChildExcel(ExcelDefinition childExcelDefinition, List<?> beans, Workbook workbook, Sheet sheet) throws Exception {
+    private Integer doCreateChildExcel(ExcelDefinition childExcelDefinition, List<?> beans, Workbook workbook, Sheet sheet) throws Exception {
         Row titleRow = createTitle(childExcelDefinition, sheet, workbook);
         //如果listBean不为空,创建数据行
         if (beans != null) {
-            createChildRows(childExcelDefinition, sheet, beans, workbook, titleRow);
+            return createChildRows(childExcelDefinition, sheet, beans, workbook, titleRow);
         }
+        return null;
     }
-    private void createChildRows(ExcelDefinition excelDefinition, Sheet sheet, List<?> beans, Workbook workbook, Row titleRow) throws Exception {
+    private Integer createChildRows(ExcelDefinition excelDefinition, Sheet sheet, List<?> beans, Workbook workbook, Row titleRow) throws Exception {
         int num = sheet.getPhysicalNumberOfRows();
         int startRow = num;
+        int resultChildRowNum = num;
         for (int i = 0; i < beans.size(); i++) {
-            Row row = sheet.createRow(i + num);
+            Row row = sheet.createRow(resultChildRowNum = i + num);
             if (excelDefinition.getEachRowHeightInPoints() != null) {
                 row.setHeightInPoints(excelDefinition.getEachRowHeightInPoints());
             } else if (excelDefinition.getDefaultRowHeightInPoints() != null) {
@@ -323,6 +347,7 @@ public class ExcelExport extends AbstractExcelResolver {
             }
             createRow(excelDefinition, row, beans.get(i), workbook, sheet, titleRow, startRow++);
         }
+        return resultChildRowNum;
     }
 
     //设置cell 水平对齐方式

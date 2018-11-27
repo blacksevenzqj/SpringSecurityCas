@@ -12,12 +12,19 @@ public class TestPojo {
 
     public static void main(String[] args) throws Exception{
 
+        int seven = 1;
+        for(int i = 0;i<3;i++){
+            testAdd(seven++);
+            System.out.println("主方法中seven=" + seven);
+        }
+
+
 //        Test1 t1 = new Test1();    // 父类实例不能赋值给子类实例
 //        Test2 t2 = t1;
 
-        Test2 t3 = new Test2();
-        Test1 t4 = t3;
-        t4.name = "123";   // 同一包中的 其他类 可以访问protected属性。
+//        Test2 t3 = new Test2();
+//        Test1 t4 = t3;
+//        t4.name = "123";   // 同一包中的 其他类 可以访问protected属性。
 
 //        SysUserEntity sysUserEntity = new SysUserEntity();
 //        System.out.println(sysUserEntity);
@@ -65,6 +72,10 @@ public class TestPojo {
 //            list.add(i);
 //        }
 //        dealBySubList(list, 10);
+    }
+
+    public static void testAdd(int num){
+        System.out.println("子方法中seven=" + num);
     }
 
     public static void dealBySubList(List<Integer> sourList, int batchCount){
