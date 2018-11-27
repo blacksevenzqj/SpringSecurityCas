@@ -229,8 +229,8 @@ public class ExcelExport extends AbstractExcelResolver {
         int startRow = num;
         Integer resultChildRowNum = null;
         for (int i = 0; i < beans.size(); i++) {
-            Row row = sheet.createRow(i + num);  // 1、麻烦的很方式
-//            Row row = sheet.createRow(sheet.getPhysicalNumberOfRows());  // 2、用这个方法最省事。
+//            Row row = sheet.createRow(i + num);  // 1、麻烦的很方式
+            Row row = sheet.createRow(sheet.getPhysicalNumberOfRows());  // 2、用这个方法最省事。
 
             if (excelDefinition.getEachRowHeightInPoints() != null) {
                 row.setHeightInPoints(excelDefinition.getEachRowHeightInPoints());
