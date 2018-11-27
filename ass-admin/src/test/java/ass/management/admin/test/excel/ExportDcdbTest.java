@@ -32,8 +32,8 @@ public class ExportDcdbTest {
 	
 	//测试时文件磁盘路径
 //	private static String path = "src/test/resources/test-export-excel.xlsx";
-	private static String path = "C:\\Users\\Administrator\\Desktop\\123123\\test-export-excel.xlsx";
-//	private static String path = "C:\\Users\\dell\\Desktop\\123123\\test-export-excel.xlsx";
+//	private static String path = "C:\\Users\\Administrator\\Desktop\\123123\\test-export-excel.xlsx";
+	private static String path = "C:\\Users\\dell\\Desktop\\123123\\test-export-excel.xlsx";
 
 	//配置文件路径
 	private static ExcelContext context = new ExcelContext("config/excel/excel-config.xml");
@@ -49,6 +49,7 @@ public class ExportDcdbTest {
 		//需求概述.数据量较大,可能大批量数据导出,会对DB造成压力,这里分批次检索数据,一部分一部分向Excel中写
 		OutputStream ops = new FileOutputStream(path);
 		ExcelExportResult exportResult = context.createExcelForPart(excelId, getData());
+//		ExcelExportResult exportResult = context.createExcelForPart(excelId, getData2());
 
 		Workbook workbook = exportResult.build();
 		workbook.write(ops);
@@ -58,7 +59,7 @@ public class ExportDcdbTest {
 
 	//获取模拟数据,数据库数据...
 	public static List<DcdbgzmbfjAO> getData(){
-		int size = 3;
+		int size = 5;
 		List<DcdbgzmbfjAO> dcdbgzmbfjAOList = new ArrayList<DcdbgzmbfjAO>(size);
 		for(int i=0;i<size;i++){
 			DcdbgzmbfjAO yjrw = new DcdbgzmbfjAO();
@@ -80,18 +81,18 @@ public class ExportDcdbTest {
 				dbxitemAO.setDcdbFkInfoItemAOList(dcdbFkInfoItemAOList);
 
 				DbxitemAO dbxitemAO2 = new DbxitemAO();
-				dbxitemAO2.setDbxsequence("11");
+				dbxitemAO2.setDbxsequence("22");
 				List<DcdbFkInfoItemAO> dcdbFkInfoItemAOList2 = new ArrayList<>();
 				DcdbFkInfoItemAO dcdbFkInfoItemAO2 = new DcdbFkInfoItemAO();
-				dcdbFkInfoItemAO2.setCurProgress("111");
+				dcdbFkInfoItemAO2.setCurProgress("222");
 				dcdbFkInfoItemAOList2.add(dcdbFkInfoItemAO2);
 				dbxitemAO2.setDcdbFkInfoItemAOList(dcdbFkInfoItemAOList2);
 
 				DbxitemAO dbxitemAO3 = new DbxitemAO();
-				dbxitemAO3.setDbxsequence("11");
+				dbxitemAO3.setDbxsequence("33");
 				List<DcdbFkInfoItemAO> dcdbFkInfoItemAOList3 = new ArrayList<>();
 				DcdbFkInfoItemAO dcdbFkInfoItemAO3 = new DcdbFkInfoItemAO();
-				dcdbFkInfoItemAO3.setCurProgress("111");
+				dcdbFkInfoItemAO3.setCurProgress("333");
 				dcdbFkInfoItemAOList3.add(dcdbFkInfoItemAO2);
 				dbxitemAO3.setDcdbFkInfoItemAOList(dcdbFkInfoItemAOList3);
 
@@ -101,11 +102,71 @@ public class ExportDcdbTest {
 				yjrw.setDbxitemAOList(dbxitemAOList);
 
 			}else{
+				List<DbxitemAO> dbxitemAOList = new ArrayList<DbxitemAO>();
+				DbxitemAO dbxitemAO = new DbxitemAO();
+				dbxitemAO.setDbxsequence("aa");
 				List<DcdbFkInfoItemAO> dcdbFkInfoItemAOList = new ArrayList<>();
 				DcdbFkInfoItemAO dcdbFkInfoItemAO = new DcdbFkInfoItemAO();
 				dcdbFkInfoItemAO.setCurProgress("aaa");
+				dcdbFkInfoItemAOList.add(dcdbFkInfoItemAO);
+				dbxitemAO.setDcdbFkInfoItemAOList(dcdbFkInfoItemAOList);
+
+				DbxitemAO dbxitemAO2 = new DbxitemAO();
+				dbxitemAO2.setDbxsequence("bb");
+				List<DcdbFkInfoItemAO> dcdbFkInfoItemAOList2 = new ArrayList<>();
 				DcdbFkInfoItemAO dcdbFkInfoItemAO2 = new DcdbFkInfoItemAO();
 				dcdbFkInfoItemAO2.setCurProgress("bbb");
+				dcdbFkInfoItemAOList2.add(dcdbFkInfoItemAO2);
+				dbxitemAO2.setDcdbFkInfoItemAOList(dcdbFkInfoItemAOList2);
+
+				dbxitemAOList.add(dbxitemAO);
+				dbxitemAOList.add(dbxitemAO2);
+				yjrw.setDbxitemAOList(dbxitemAOList);
+			}
+			dcdbgzmbfjAOList.add(yjrw);
+		}
+		return dcdbgzmbfjAOList;
+	}
+
+	//获取模拟数据,数据库数据...
+	public static List<DcdbgzmbfjAO> getData2(){
+		int size = 5;
+		List<DcdbgzmbfjAO> dcdbgzmbfjAOList = new ArrayList<DcdbgzmbfjAO>(size);
+		for(int i=0;i<size;i++){
+			DcdbgzmbfjAO yjrw = new DcdbgzmbfjAO();
+			yjrw.setMbfjdseq("1");
+			yjrw.setWorktarget("1");
+			yjrw.setZrunitname("1");
+			yjrw.setXbunitname("1");
+			yjrw.setBfqxStr("2018-11-26");
+			yjrw.setBz("1");
+
+			if(i % 2 == 0) {
+				List<DcdbFkInfoItemAO> dcdbFkInfoItemAOList = new ArrayList<>();
+
+				DcdbFkInfoItemAO dcdbFkInfoItemAO = new DcdbFkInfoItemAO();
+				dcdbFkInfoItemAO.setCurProgress("111");
+
+				DcdbFkInfoItemAO dcdbFkInfoItemAO2 = new DcdbFkInfoItemAO();
+				dcdbFkInfoItemAO2.setCurProgress("222");
+
+				DcdbFkInfoItemAO dcdbFkInfoItemAO3 = new DcdbFkInfoItemAO();
+				dcdbFkInfoItemAO3.setCurProgress("333");
+
+				dcdbFkInfoItemAOList.add(dcdbFkInfoItemAO);
+				dcdbFkInfoItemAOList.add(dcdbFkInfoItemAO2);
+				dcdbFkInfoItemAOList.add(dcdbFkInfoItemAO3);
+				yjrw.setDcdbFkInfoItemAOList(dcdbFkInfoItemAOList);
+
+			}else{
+				List<DcdbFkInfoItemAO> dcdbFkInfoItemAOList = new ArrayList<>();
+
+				DcdbFkInfoItemAO dcdbFkInfoItemAO = new DcdbFkInfoItemAO();
+				dcdbFkInfoItemAO.setCurProgress("aaa");
+
+				DcdbFkInfoItemAO dcdbFkInfoItemAO2 = new DcdbFkInfoItemAO();
+				dcdbFkInfoItemAO2.setCurProgress("bbb");
+
 				DcdbFkInfoItemAO dcdbFkInfoItemAO3 = new DcdbFkInfoItemAO();
 				dcdbFkInfoItemAO3.setCurProgress("ccc");
 

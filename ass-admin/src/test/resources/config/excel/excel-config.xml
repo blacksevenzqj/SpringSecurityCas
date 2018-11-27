@@ -52,12 +52,12 @@
 
 	<!-- 一级任务 -->
 	<excel id = "dcdbgzmbfjAO" class="ass.management.admin.common.excel.model.DcdbgzmbfjAO" sheetname="一级任务列表" enableStyle="true" defaultAlign="center" defaultVertical="center" sheetIndex="0" defaultColumnWidth="6000" defaultRowHeightInPoints="40" eachRowHeightInPoints="40">
-		<field name="mbfjdseq" title="编号" align="center" titleBgColor="dark_blue" uniformStyle="true" columnWidth="5000" titleFountColor="white" isNull="false"/>
-		<!--<field name="worktarget" title="工作内容" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>-->
-		<!--<field name="zrunitname" title="主办部门"  align="center" vertical="top" uniformStyle="true" columnWidth="7000" titleFountColor="blue" isNull="false" cellValueConverter="ass.management.admin.common.excel.converter.CreateDcdbgzmbfjAOCellValueConverter" otherConfig="动态设置主办部门编码" />-->
-		<!--<field name="xbunitname" title="协办部门"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="true" cellValueConverter="ass.management.admin.common.excel.converter.CreateDcdbgzmbfjAOCellValueConverter" otherConfig="动态设置协办部门编码" />-->
-		<!--<field name="bfqxStr" title="办结期限"  align="center" uniformStyle="true" columnWidth="6000" isNull="false"/>-->
-		<!--<field name="bz" title="备注" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>-->
+		<field name="mbfjdseq" title="编号" align="center" uniformStyle="true" columnWidth="5000" titleFountColor="black" isNull="false"/>
+		<field name="worktarget" title="工作内容" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="zrunitname" title="主办部门"  align="center" vertical="center" uniformStyle="true" columnWidth="7000" titleFountColor="black" isNull="false" cellValueConverter="ass.management.admin.common.excel.converter.CreateDcdbgzmbfjAOCellValueConverter" otherConfig="动态设置主办部门编码" />
+		<field name="xbunitname" title="协办部门"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="black" isNull="true" cellValueConverter="ass.management.admin.common.excel.converter.CreateDcdbgzmbfjAOCellValueConverter" otherConfig="动态设置协办部门编码" />
+		<field name="bfqxStr" title="办结期限"  align="center" uniformStyle="true" columnWidth="6000" isNull="false"/>
+		<field name="bz" title="备注" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
 
 		<field name="dcdbFkInfoItemAOList" title="子集合属性，不直接生成单位，而是新起一个EXCEL子表格" assExcelId="dcdbFkInfoItemAO" />
 		<field name="dbxitemAOList" title="子集合属性，不直接生成单位，而是新起一个EXCEL子表格" assExcelId="dbxitemAO" />
@@ -65,11 +65,11 @@
 
 	<!-- 二级任务 -->
 	<excel id = "dbxitemAO" class="ass.management.admin.common.excel.model.DbxitemAO" sheetname="二级任务列表" enableStyle="true" defaultAlign="center" sheetIndex="0">
-		<field name="dbxsequence" title="一级任务序号" align="center" columnWidth="5000" isNull="false"/>
-		<!--<field name="workitem" title="工作内容" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>-->
-		<!--<field name="schedul" title="主要进度安排"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="blue" isNull="false" />-->
-		<!--<field name="dbxbfqxStr" title="办结期限"  align="center" uniformStyle="true" columnWidth="6000" isNull="false" cellValueConverter="ass.management.admin.common.excel.converter.CreateDbxitemAOCellValueConverter" otherConfig="动态判断办结期限是否合法" />-->
-		<!--<field name="dbxbz" title="备注" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>-->
+		<field name="dbxsequence" title="一级任务序号" align="center" uniformStyle="true" columnWidth="5000" isNull="false"/>
+		<field name="workitem" title="工作内容" align="center" uniformStyle="true" columnWidth="10000" isNull="false"/>
+		<field name="schedul" title="主要进度安排"  align="center" uniformStyle="true" columnWidth="10000" titleFountColor="black" isNull="false" />
+		<field name="dbxbfqxStr" title="办结期限"  align="center" uniformStyle="true" columnWidth="6000" isNull="false" cellValueConverter="ass.management.admin.common.excel.converter.CreateDbxitemAOCellValueConverter" otherConfig="动态判断办结期限是否合法" />
+		<field name="dbxbz" title="备注" align="center" uniformStyle="true" columnWidth="7000" isNull="true"/>
 
 		<field name="dcdbFkInfoItemAOList" title="子集合属性，不直接生成单位，而是新起一个EXCEL子表格" assExcelId="dcdbFkInfoItemAO" />
 	</excel>
