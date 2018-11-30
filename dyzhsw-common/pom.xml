@@ -24,6 +24,10 @@
             <version>${project.version}</version>
         </dependency>
 
+
+        <!-- 1、spring-boot-starter-web 包含 spring-boot-starter
+             2、common项目配置中不从spring-boot-starter移除日志，是因为后面CAS项目用的是logback，在admin项目中重新后移除logback
+         -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
