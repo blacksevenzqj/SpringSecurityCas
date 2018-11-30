@@ -32,8 +32,8 @@ public class ExportDcdbTest {
 	
 	//测试时文件磁盘路径
 //	private static String path = "src/test/resources/test-export-excel.xlsx";
-//	private static String path = "C:\\Users\\Administrator\\Desktop\\123123\\test-export-excel.xlsx";
-	private static String path = "C:\\Users\\dell\\Desktop\\123123\\test-export-excel.xlsx";
+	private static String path = "C:\\Users\\Administrator\\Desktop\\123123\\test-export-excel.xlsx";
+//	private static String path = "C:\\Users\\dell\\Desktop\\123123\\test-export-excel.xlsx";
 
 	//配置文件路径
 	private static ExcelContext context = new ExcelContext("config/excel/excel-config.xml");
