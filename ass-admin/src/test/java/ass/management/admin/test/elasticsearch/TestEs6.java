@@ -4,6 +4,7 @@ import ass.management.db.utils.PageUtils;
 import ass.management.elasticsearch.client.EsClient;
 import ass.management.elasticsearch.common.EsConfig;
 import ass.management.elasticsearch.common.RestResult;
+import ass.management.elasticsearch.entity.EsHotNew;
 import ass.management.elasticsearch.entity.base.EsPageInfo;
 import ass.management.elasticsearch.entity.group.EquipmentData;
 import ass.management.elasticsearch.entity.search.AggQueryEntry;
@@ -34,6 +35,14 @@ public class TestEs6 {
 
     @Autowired
     Es6ServiceImpl es6ServiceImpl;
+
+
+    @Test
+    public void createIndexMapping() throws Exception{
+//        esClient.createIndexMapping(EsHotNew.class);
+        es6ServiceImpl.createIndexMapping(EsHotNew.class);
+        Thread.currentThread().sleep(10000L);
+    }
 
 
     @Test
