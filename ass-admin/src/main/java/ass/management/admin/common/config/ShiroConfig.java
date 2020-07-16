@@ -87,7 +87,7 @@ public class ShiroConfig {
 //        return proxyCreator;
 //    }
 
-    // 注解生效
+    // 让 @RequiresPermissions("business:advisory:consultant:save") 注解生效
     @Bean
     public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
         AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
